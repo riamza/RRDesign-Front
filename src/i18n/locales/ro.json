@@ -1,0 +1,204 @@
+{
+  "header": {
+    "home": "Acasă",
+    "services": "Servicii",
+    "projects": "Proiecte",
+    "templates": "Template-uri",
+    "contact": "Contact"
+  },
+  "footer": {
+    "contact": "Contact",
+    "links": "Link-uri",
+    "allRightsReserved": "Toate drepturile rezervate."
+  },
+  "home": {
+    "hero": {
+      "title": "Transformăm idei în",
+      "titleHighlight": "soluții software",
+      "titleEnd": "de excepție",
+      "viewProjects": "Vezi proiectele",
+      "contactUs": "Contactează-ne"
+    },
+    "services": {
+      "title": "Serviciile noastre",
+      "description": "Oferim soluții complete pentru nevoile tale digitale"
+    },
+    "cta": {
+      "title": "Pregătit să începem?",
+      "description": "Hai să transformăm ideile tale în realitate",
+      "button": "Începe un proiect"
+    }
+  },
+  "services": {
+    "pageTitle": "Serviciile noastre",
+    "pageDescription": "Oferim soluții complete de dezvoltare software adaptate nevoilor business-ului tău",
+    "whatWeOffer": "Ce oferim:",
+    "technologies": "Tehnologii:",
+    "pricing": {
+      "title": "Planuri de prețuri",
+      "description": "Alege pachetul care se potrivește cel mai bine nevoilor tale",
+      "button": "Cere ofertă"
+    },
+    "cta": {
+      "title": "Hai să discutăm despre proiectul tău",
+      "description": "Suntem gata să transformăm viziunea ta în realitate",
+      "button": "Solicită o consultație gratuită"
+    }
+  },
+  "projects": {
+    "pageTitle": "Proiectele noastre",
+    "pageDescription": "Descoperă portofoliul nostru de proiecte realizate cu succes",
+    "viewDetails": "Vezi detalii",
+    "technologies": "Tehnologii folosite:",
+    "features": "Caracteristici:",
+    "cta": {
+      "title": "Următorul proiect de succes poate fi al tău",
+      "description": "Hai să creăm împreună ceva extraordinar",
+      "button": "Discută proiectul tău"
+    }
+  },
+  "templates": {
+    "pageTitle": "Template-uri Web",
+    "pageDescription": "Template-uri moderne și responsive, gata de utilizare pentru proiectul tău",
+    "features": "Caracteristici:",
+    "technologies": "Stack tehnologic:",
+    "viewDemo": "Vezi demo",
+    "buyNow": "Cumpără acum",
+    "cta": {
+      "title": "Ai nevoie de ceva personalizat?",
+      "description": "Putem crea template-uri personalizate pentru nevoile tale specifice",
+      "button": "Solicită o ofertă"
+    }
+  },
+  "contact": {
+    "pageTitle": "Contactează-ne",
+    "pageDescription": "Hai să discutăm despre cum te putem ajuta să îți atingi obiectivele",
+    "info": {
+      "title": "Informații de contact",
+      "description": "Suntem aici să răspundem la toate întrebările tale și să te ajutăm cu proiectul tău.",
+      "email": "Email",
+      "phone": "Telefon",
+      "address": "Adresă"
+    },
+    "form": {
+      "title": "Trimite-ne un mesaj",
+      "fullName": "Nume complet",
+      "email": "Email",
+      "phone": "Telefon",
+      "company": "Companie",
+      "message": "Mesaj",
+      "namePlaceholder": "Ion Popescu",
+      "emailPlaceholder": "adresa@email.com",
+      "phonePlaceholder": "+40 123 456 789",
+      "companyPlaceholder": "Numele companiei (opțional)",
+      "messagePlaceholder": "Descrie proiectul sau întrebarea ta...",
+      "required": "*",
+      "submit": "Trimite mesajul",
+      "successMessage": "Formularul a fost trimis! Vă vom contacta în curând."
+    }
+  },
+  "login": {
+    "title": "Bun venit înapoi",
+    "subtitle": "Conectează-te la contul tău RRDesign",
+    "email": "Email",
+    "password": "Parolă",
+    "emailPlaceholder": "adresa@email.com",
+    "passwordPlaceholder": "••••••••",
+    "rememberMe": "Ține-mă minte",
+    "forgotPassword": "Ai uitat parola?",
+    "loginButton": "Conectează-te",
+    "noAccount": "Nu ai cont?",
+    "contactLink": "Contactează-ne",
+    "demo": "Demo:"
+  },
+  "dashboard": {
+    "brand": "RRDesign",
+    "admin": "Admin",
+    "logout": "Delogare",
+    "services": "Servicii",
+    "projects": "Proiecte",
+    "templates": "Template-uri",
+    "pricing": "Prețuri",
+    "servicesManager": {
+      "add": "Adaugă serviciu",
+      "edit": "Editează",
+      "delete": "Șterge",
+      "cancel": "Anulează",
+      "save": "Adaugă",
+      "update": "Actualizează",
+      "title": "Titlu",
+      "description": "Descriere",
+      "icon": "Icon (emoji)",
+      "features": "Caracteristici",
+      "addFeature": "Adaugă caracteristică",
+      "technologies": "Tehnologii",
+      "addTechnology": "Adaugă tehnologie",
+      "featurePlaceholder": "Caracteristică",
+      "technologyPlaceholder": "Tehnologie",
+      "confirmDelete": "Sigur vrei să ștergi acest serviciu?"
+    },
+    "projectsManager": {
+      "add": "Adaugă proiect",
+      "edit": "Editează",
+      "delete": "Șterge",
+      "cancel": "Anulează",
+      "save": "Adaugă",
+      "update": "Actualizează",
+      "title": "Titlu",
+      "description": "Descriere",
+      "image": "URL imagine",
+      "link": "Link proiect",
+      "category": "Categorie",
+      "completionDate": "Data Finalizării",
+      "datePlaceholder": "ex: Ianuarie 2024",
+      "features": "Caracteristici",
+      "addFeature": "Adaugă caracteristică",
+      "technologies": "Tehnologii",
+      "addTechnology": "Adaugă tehnologie",
+      "technologyPlaceholder": "Tehnologie",
+      "confirmDelete": "Sigur vrei să ștergi acest proiect?"
+    },
+    "templatesManager": {
+      "add": "Adaugă template",
+      "edit": "Editează",
+      "delete": "Șterge",
+      "cancel": "Anulează",
+      "save": "Adaugă",
+      "update": "Actualizează",
+      "title": "Titlu",
+      "description": "Descriere",
+      "image": "URL imagine",
+      "demoLink": "Link demo",
+      "price": "Preț",
+      "category": "Categorie",
+      "features": "Caracteristici",
+      "addFeature": "Adaugă caracteristică",
+      "technologies": "Tehnologii",
+      "addTechnology": "Adaugă tehnologie",
+      "featurePlaceholder": "Caracteristică",
+      "technologyPlaceholder": "Tehnologie",
+      "confirmDelete": "Sigur vrei să ștergi acest template?"
+    },
+    "pricingManager": {
+      "add": "Adaugă pachet",
+      "edit": "Editează",
+      "delete": "Șterge",
+      "cancel": "Anulează",
+      "save": "Adaugă",
+      "update": "Actualizează",
+      "title": "Titlu",
+      "price": "Preț",
+      "description": "Descriere",
+      "highlight": "Evidențiat (Popular)",
+      "features": "Beneficii",
+      "addFeature": "Adaugă beneficiu",
+      "featurePlaceholder": "Beneficiu",
+      "confirmDelete": "Sigur vrei să ștergi acest pachet?"
+    }
+  },
+  "common": {
+    "loading": "Se încarcă...",
+    "error": "Eroare",
+    "success": "Succes"
+  }
+}
