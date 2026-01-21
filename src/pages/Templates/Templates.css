@@ -1,0 +1,78 @@
+.templates-page {
+  min-height: 100vh;
+  background: #F8F9FA;
+}
+
+.templates-section {
+  padding: 4rem 0;
+}
+
+.templates-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2.5rem;
+  align-items: stretch;
+}
+
+.template-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.template-image {
+  margin-bottom: 0.5rem;
+}
+
+.template-category {
+  display: inline-block;
+  background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  width: fit-content;
+}
+
+.template-title {
+  margin-bottom: 0.5rem;
+}
+
+.template-description {
+  margin-bottom: 0.5rem;
+}
+
+.template-features {
+  margin: 0.5rem 0;
+}
+
+.template-features h4 {
+  color: #2C3E50;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.template-tags {
+  margin-bottom: 0.5rem;
+}
+
+.template-card .button {
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .templates-grid {
+    grid-template-columns: 1fr;
+  }
+}

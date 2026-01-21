@@ -1,0 +1,204 @@
+{
+  "header": {
+    "home": "Home",
+    "services": "Services",
+    "projects": "Projects",
+    "templates": "Templates",
+    "contact": "Contact"
+  },
+  "footer": {
+    "contact": "Contact",
+    "links": "Links",
+    "allRightsReserved": "All rights reserved."
+  },
+  "home": {
+    "hero": {
+      "title": "Transforming ideas into",
+      "titleHighlight": "exceptional software",
+      "titleEnd": "solutions",
+      "viewProjects": "View projects",
+      "contactUs": "Contact us"
+    },
+    "services": {
+      "title": "Our services",
+      "description": "We offer complete solutions for your digital needs"
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "description": "Let's turn your ideas into reality",
+      "button": "Start a project"
+    }
+  },
+  "services": {
+    "pageTitle": "Our services",
+    "pageDescription": "We offer complete software development solutions tailored to your business needs",
+    "whatWeOffer": "What we offer:",
+    "technologies": "Technologies:",
+    "pricing": {
+      "title": "Pricing Plans",
+      "description": "Choose the package that best fits your needs",
+      "button": "Request Quote"
+    },
+    "cta": {
+      "title": "Let's talk about your project",
+      "description": "We're ready to turn your vision into reality",
+      "button": "Request a free consultation"
+    }
+  },
+  "projects": {
+    "pageTitle": "Our projects",
+    "pageDescription": "Discover our portfolio of successfully completed projects",
+    "viewDetails": "View details",
+    "technologies": "Technologies used:",
+    "features": "Features:",
+    "cta": {
+      "title": "Your next success story starts here",
+      "description": "Let's create something extraordinary together",
+      "button": "Discuss your project"
+    }
+  },
+  "templates": {
+    "pageTitle": "Web Templates",
+    "pageDescription": "Modern and responsive templates, ready to use for your project",
+    "features": "Features:",
+    "technologies": "Tech stack:",
+    "viewDemo": "View demo",
+    "buyNow": "Buy now",
+    "cta": {
+      "title": "Need something custom?",
+      "description": "We can create custom templates for your specific needs",
+      "button": "Request a quote"
+    }
+  },
+  "contact": {
+    "pageTitle": "Contact us",
+    "pageDescription": "Let's discuss how we can help you achieve your goals",
+    "info": {
+      "title": "Contact information",
+      "description": "We're here to answer all your questions and help with your project.",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address"
+    },
+    "form": {
+      "title": "Send us a message",
+      "fullName": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "message": "Message",
+      "namePlaceholder": "John Doe",
+      "emailPlaceholder": "email@address.com",
+      "phonePlaceholder": "+40 123 456 789",
+      "companyPlaceholder": "Company name (optional)",
+      "messagePlaceholder": "Describe your project or question...",
+      "required": "*",
+      "submit": "Send message",
+      "successMessage": "Form submitted! We'll contact you soon."
+    }
+  },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to your RRDesign account",
+    "email": "Email",
+    "password": "Password",
+    "emailPlaceholder": "email@address.com",
+    "passwordPlaceholder": "••••••••",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "loginButton": "Sign in",
+    "noAccount": "Don't have an account?",
+    "contactLink": "Contact us",
+    "demo": "Demo:"
+  },
+  "dashboard": {
+    "brand": "RRDesign",
+    "admin": "Admin",
+    "logout": "Log out",
+    "services": "Services",
+    "projects": "Projects",
+    "templates": "Templates",
+    "pricing": "Pricing",
+    "servicesManager": {
+      "add": "Add service",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Add",
+      "update": "Update",
+      "title": "Title",
+      "description": "Description",
+      "icon": "Icon (emoji)",
+      "features": "Features",
+      "addFeature": "Add feature",
+      "technologies": "Technologies",
+      "addTechnology": "Add technology",
+      "featurePlaceholder": "Feature",
+      "technologyPlaceholder": "Technology",
+      "confirmDelete": "Are you sure you want to delete this service?"
+    },
+    "projectsManager": {
+      "add": "Add project",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Add",
+      "update": "Update",
+      "title": "Title",
+      "description": "Description",
+      "image": "Image URL",
+      "link": "Project link",
+      "category": "Category",
+      "completionDate": "Completion Date",
+      "datePlaceholder": "e.g. January 2024",
+      "features": "Features",
+      "addFeature": "Add feature",
+      "technologies": "Technologies",
+      "addTechnology": "Add technology",
+      "technologyPlaceholder": "Technology",
+      "confirmDelete": "Are you sure you want to delete this project?"
+    },
+    "templatesManager": {
+      "add": "Add template",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Add",
+      "update": "Update",
+      "title": "Title",
+      "description": "Description",
+      "image": "Image URL",
+      "demoLink": "Demo link",
+      "price": "Price",
+      "category": "Category",
+      "features": "Features",
+      "addFeature": "Add feature",
+      "technologies": "Technologies",
+      "addTechnology": "Add technology",
+      "featurePlaceholder": "Feature",
+      "technologyPlaceholder": "Technology",
+      "confirmDelete": "Are you sure you want to delete this template?"
+    },
+    "pricingManager": {
+      "add": "Add package",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Add",
+      "update": "Update",
+      "title": "Title",
+      "price": "Price",
+      "description": "Description",
+      "highlight": "Highlighted (Popular)",
+      "features": "Features",
+      "addFeature": "Add feature",
+      "featurePlaceholder": "Feature",
+      "confirmDelete": "Are you sure you want to delete this package?"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  }
+}
