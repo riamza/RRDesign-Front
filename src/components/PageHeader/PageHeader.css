@@ -66,27 +66,7 @@
   flex-shrink: 0;
 }
 
-.page-header .btn-primary {
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-  color: white;
-}
-
-.page-header .btn-primary:hover {
-  background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-}
-
-.page-header .btn-add-project {
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-  color: white;
-}
-
-.page-header .btn-add-project:hover {
-  background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-}
+/* Butoanele folosesc clasele globale .btn-primary, .btn-add-project din index.css */
 
 @media (max-width: 768px) {
   .page-header {

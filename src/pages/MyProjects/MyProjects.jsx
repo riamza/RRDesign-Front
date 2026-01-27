@@ -115,7 +115,7 @@ const MyProjects = () => {
     <div className="page-with-sidebar">
       <UserSidebar />
       <div className="page-content">
-        <div className="my-projects-page">
+        <div className="page-layout my-projects-page">
           <PageHeader
             icon={FolderKanban}
             title={t('myProjects.title')}
@@ -126,10 +126,10 @@ const MyProjects = () => {
             buttonClassName="btn-add-project"
           />
 
-          <div className="my-projects-container">
+          <div className="page-container my-projects-container">
             <div className="projects-stats">
           <div className="stat-card">
-            <div className="stat-icon progress-icon">
+            <div className="stat-icon blue">
               <FolderKanban size={24} />
             </div>
             <div className="stat-info">
@@ -138,7 +138,7 @@ const MyProjects = () => {
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon completed-icon">
+            <div className="stat-icon green">
               <FolderKanban size={24} />
             </div>
             <div className="stat-info">
@@ -147,7 +147,7 @@ const MyProjects = () => {
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon planning-icon">
+            <div className="stat-icon yellow">
               <FolderKanban size={24} />
             </div>
             <div className="stat-info">
@@ -159,7 +159,7 @@ const MyProjects = () => {
 
         <div className="projects-list">
           {projects.map(project => (
-            <div key={project.id} className="project-card">
+            <div key={project.id} className="card project-card">
               <div className="project-card-header">
                 <div className="project-title-section">
                   <h3>{project.title}</h3>

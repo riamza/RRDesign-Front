@@ -57,9 +57,9 @@ const Profile = () => {
     <div className="page-with-sidebar">
       <UserSidebar />
       <div className="page-content">
-        <div className="profile-page">
+        <div className="page-layout profile-page">
           <div className="profile-container">
-        <div className="profile-header">
+        <div className="card profile-header">
           <div className="profile-header-content">
             <div className="profile-avatar-large">
               {getInitials(formData.name)}
@@ -81,8 +81,8 @@ const Profile = () => {
         </div>
 
         <div className="profile-body">
-          <div className="profile-card">
-            <div className="profile-card-header">
+          <div className="card profile-card">
+            <div className="card-header profile-card-header">
               <h2>{t('profile.personalInfo')}</h2>
             </div>
 

@@ -1,14 +1,5 @@
-.my-projects-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-  padding: 0;
-}
-
-.my-projects-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
+/* Folosește .page-layout din index.css pentru background */
+/* Folosește .page-container din index.css pentru container */
 
 .projects-stats {
   display: grid;
@@ -17,81 +8,19 @@
   margin-bottom: 3rem;
 }
 
-.stat-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  transition: all 0.3s;
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
-
-.stat-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.progress-icon {
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  color: #2563eb;
-}
-
-.completed-icon {
-  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-  color: #16a34a;
-}
-
-.planning-icon {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  color: #ca8a04;
-}
-
-.stat-info {
-  flex: 1;
-}
-
-.stat-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 0.25rem;
-}
-
-.stat-label {
-  color: #6b7280;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
+/* Folosește .stat-card, .stat-icon, .stat-info, .stat-value, .stat-label din index.css */
 
 .projects-list {
   display: grid;
   gap: 2rem;
 }
 
+/* Folosește .card din index.css ca bază */
 .project-card {
-  background: white;
-  padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s;
   border: 2px solid transparent;
 }
 
 .project-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   border-color: #e5e7eb;
 }
 

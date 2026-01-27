@@ -1,6 +1,5 @@
+/* Folosește .page-layout din index.css pentru background */
 .profile-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
   padding: 2rem 0;
 }
 
@@ -10,13 +9,11 @@
   padding: 0 2rem;
 }
 
+/* Folosește .card din index.css ca bază */
 .profile-header {
-  background: white;
-  border-radius: 16px;
-  padding: 2.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
@@ -86,18 +83,7 @@
   gap: 2rem;
 }
 
-.profile-card {
-  background: white;
-  border-radius: 16px;
-  padding: 2.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.profile-card-header {
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #f3f4f6;
-}
+/* Folosește .card și .card-header din index.css */
 
 .profile-card-header h2 {
   font-size: 1.5rem;
@@ -215,10 +201,6 @@
 
   .profile-container {
     padding: 0 1rem;
-  }
-
-  .profile-header {
-    padding: 2rem;
   }
 
   .profile-header-content {

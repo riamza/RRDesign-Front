@@ -154,7 +154,7 @@ const Messages = () => {
     <div className="page-with-sidebar">
       <UserSidebar />
       <div className="page-content">
-        <div className="messages-page">
+        <div className="page-layout messages-page">
           <PageHeader
             icon={MessageSquare}
             title={t('messages.title')}
@@ -165,7 +165,7 @@ const Messages = () => {
             buttonClassName="btn-primary"
           />
 
-          <div className="messages-container">
+          <div className="page-container messages-container">
             <div className="messages-content">
               <div className="messages-sidebar">
             <div className="search-box">
