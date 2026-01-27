@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import './Services.css';
 import Card from '../../components/Card/Card';
 import { services, pricingPackages } from '../../data/mockData';
+import { getIcon } from '../../utils/iconMapper';
 
 const Services = () => {
   const { t } = useTranslation();
@@ -59,7 +60,7 @@ const Services = () => {
               <div key={service.id} className="service-card-wrapper">
                 <Card className="service-card-full">
                   <div className="service-section service-header">
-                    <div className="service-icon-large">{service.icon}</div>
+                    <div className="service-icon-large">{getIcon(service.icon, 48)}</div>
                     <h3 className="card-title">{service.title}</h3>
                   </div>
                   <div className="service-section service-description">

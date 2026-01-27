@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Pencil, Trash2 } from 'lucide-react';
 import { pricingPackages as initialPricing } from '../../../data/mockData';
 import Modal from '../../../components/Modal/Modal';
+import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
 import './Manager.css';
 
 const PricingManager = () => {
@@ -9,6 +11,9 @@ const PricingManager = () => {
   const [pricing, setPricing] = useState(initialPricing);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteItemName, setDeleteItemName] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     price: '',
@@ -29,10 +34,15 @@ const PricingManager = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm(t('dashboard.pricingManager.confirmDelete'))) {
-      setPricing(pricing.filter(p => p.id !== id));
-    }
+  const handleDelete = (pkg) => {
+    setDeleteId(pkg.id);
+    setDeleteItemName(pkg.title);
+    setShowConfirmDelete(true);
+  };
+
+  const confirmDelete = () => {
+    setPricing(pricing.filter(p => p.id !== deleteId));
+    setDeleteId(null);
   };
 
   const handleSubmit = (e) => {
@@ -175,15 +185,23 @@ const PricingManager = () => {
             </div>
             <div className="item-actions">
               <button className="btn-edit" onClick={() => handleEdit(pkg)}>
-                ✏️ {t('dashboard.pricingManager.edit')}
+                <Pencil size={16} /> {t('dashboard.pricingManager.edit')}
               </button>
-              <button className="btn-delete" onClick={() => handleDelete(pkg.id)}>
-                🗑️ {t('dashboard.pricingManager.delete')}
+              <button className="btn-delete" onClick={() => handleDelete(pkg)}>
+                <Trash2 size={16} /> {t('dashboard.pricingManager.delete')}
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      <ConfirmModal
+        isOpen={showConfirmDelete}
+        onClose={() => setShowConfirmDelete(false)}
+        onConfirm={confirmDelete}
+        title={t('dashboard.pricingManager.confirmDelete')}
+        message={`Ești sigur că vrei să ștergi pachetul "${deleteItemName}"? Această acțiune nu poate fi anulată.`}
+      />
     </div>
   );
 };

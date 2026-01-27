@@ -142,23 +142,14 @@
 
 .form-group input,
 .form-group textarea {
-  width: 100%;
-  padding: 0.875rem 1rem;
   border: 2px solid #E0E0E0;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: inherit;
-  transition: border-color 0.3s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
+/* Specific border color override for contact form */
+.contact-form .form-group input:focus,
+.contact-form .form-group textarea:focus {
   border-color: #FF6B6B;
-}
-
-.form-group textarea {
-  resize: vertical;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
 }
 
 .contact-form .button {

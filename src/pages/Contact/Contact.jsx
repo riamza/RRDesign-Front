@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Mail, Phone, MapPin } from 'lucide-react';
 import './Contact.css';
 import Button from '../../components/Button/Button';
 import { companyInfo } from '../../data/mockData';
@@ -50,7 +51,7 @@ const Contact = () => {
 
               <div className="contact-details">
                 <div className="contact-item">
-                  <div className="contact-icon">📧</div>
+                  <div className="contact-icon"><Mail size={24} /></div>
                   <div>
                     <h4>{t('contact.info.email')}</h4>
                     <a href={`mailto:${companyInfo.email}`}>{companyInfo.email}</a>
@@ -58,7 +59,7 @@ const Contact = () => {
                 </div>
 
                 <div className="contact-item">
-                  <div className="contact-icon">📞</div>
+                  <div className="contact-icon"><Phone size={24} /></div>
                   <div>
                     <h4>{t('contact.info.phone')}</h4>
                     <a href={`tel:${companyInfo.phone.replace(/\s/g, '')}`}>{companyInfo.phone}</a>
@@ -66,7 +67,7 @@ const Contact = () => {
                 </div>
 
                 <div className="contact-item">
-                  <div className="contact-icon">📍</div>
+                  <div className="contact-icon"><MapPin size={24} /></div>
                   <div>
                     <h4>{t('contact.info.address')}</h4>
                     <p>{companyInfo.address}</p>

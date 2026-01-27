@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Pencil, Trash2 } from 'lucide-react';
 import { projects as initialProjects } from '../../../data/mockData';
 import Modal from '../../../components/Modal/Modal';
+import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
 import './Manager.css';
 
 const ProjectsManager = () => {
@@ -9,6 +11,9 @@ const ProjectsManager = () => {
   const [projects, setProjects] = useState(initialProjects);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteItemName, setDeleteItemName] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -33,10 +38,15 @@ const ProjectsManager = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm(t('dashboard.projectsManager.confirmDelete'))) {
-      setProjects(projects.filter(p => p.id !== id));
-    }
+  const handleDelete = (project) => {
+    setDeleteId(project.id);
+    setDeleteItemName(project.title);
+    setShowConfirmDelete(true);
+  };
+
+  const confirmDelete = () => {
+    setProjects(projects.filter(p => p.id !== deleteId));
+    setDeleteId(null);
   };
 
   const handleSubmit = (e) => {
@@ -224,15 +234,23 @@ const ProjectsManager = () => {
             </p>
             <div className="item-actions">
               <button className="btn-edit" onClick={() => handleEdit(project)}>
-                {t('dashboard.projectsManager.edit')}
+                <Pencil size={16} /> {t('dashboard.projectsManager.edit')}
               </button>
-              <button className="btn-delete" onClick={() => handleDelete(project.id)}>
-                {t('dashboard.projectsManager.delete')}
+              <button className="btn-delete" onClick={() => handleDelete(project)}>
+                <Trash2 size={16} /> {t('dashboard.projectsManager.delete')}
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      <ConfirmModal
+        isOpen={showConfirmDelete}
+        onClose={() => setShowConfirmDelete(false)}
+        onConfirm={confirmDelete}
+        title={t('dashboard.projectsManager.confirmDelete')}
+        message={`Ești sigur că vrei să ștergi proiectul "${deleteItemName}"? Această acțiune nu poate fi anulată.`}
+      />
     </div>
   );
 };

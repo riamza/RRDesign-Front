@@ -121,7 +121,7 @@ export const services = [
     id: 1,
     title: "Web Development",
     description: "Dezvoltăm aplicații web moderne, scalabile și performante folosind cele mai noi tehnologii și best practices din industrie.",
-    icon: "💻",
+    icon: "monitor",
     features: [
       "Single Page Applications (SPA)",
       "Progressive Web Apps (PWA)",
@@ -134,7 +134,7 @@ export const services = [
     id: 2,
     title: "Mobile Development",
     description: "Creăm aplicații mobile native și cross-platform pentru iOS și Android cu experiențe de utilizator excepționale.",
-    icon: "📱",
+    icon: "smartphone",
     features: [
       "iOS & Android Apps",
       "Cross-Platform Development",
@@ -147,7 +147,7 @@ export const services = [
     id: 3,
     title: "Backend Development",
     description: "Dezvoltăm API-uri robuste și arhitecturi backend scalabile pentru aplicații de orice dimensiune.",
-    icon: "⚙️",
+    icon: "server",
     features: [
       "RESTful APIs",
       "Microservices Architecture",
@@ -160,7 +160,7 @@ export const services = [
     id: 4,
     title: "UI/UX Design",
     description: "Creăm interfețe intuitive și experiențe de utilizator memorabile prin design modern și functional.",
-    icon: "🎨",
+    icon: "palette",
     features: [
       "User Interface Design",
       "User Experience Research",
@@ -173,7 +173,7 @@ export const services = [
     id: 5,
     title: "Cloud Solutions",
     description: "Implementăm soluții cloud pentru scalabilitate, securitate și performanță optimă a aplicațiilor tale.",
-    icon: "☁️",
+    icon: "cloud",
     features: [
       "Cloud Migration",
       "Infrastructure as Code",
@@ -186,7 +186,7 @@ export const services = [
     id: 6,
     title: "Consulting & Support",
     description: "Oferim consultanță tehnică și suport continuu pentru a asigura succesul proiectelor tale.",
-    icon: "🤝",
+    icon: "users",
     features: [
       "Technical Consulting",
       "Code Review",
@@ -261,3 +261,76 @@ export const companyInfo = {
     twitter: "https://twitter.com/rrdesign"
   }
 };
+
+export const contactSubmissions = [
+  {
+    id: 1,
+    name: "Ion Popescu",
+    email: "ion.popescu@example.com",
+    phone: "+40 721 123 456",
+    company: "Tech Solutions SRL",
+    message: "Bună ziua, sunt interesat de dezvoltarea unui magazin online pentru afacerea noastră. Avem aproximativ 500 de produse și am dori o integrare cu un sistem de plăți securizat. Când putem discuta mai multe detalii?",
+    date: "2026-01-22T10:30:00",
+    status: "new"
+  },
+  {
+    id: 2,
+    name: "Maria Ionescu",
+    email: "maria.ionescu@company.ro",
+    phone: "+40 732 456 789",
+    company: "Marketing Plus",
+    message: "Salut! Am văzut proiectele voastre și sunt foarte impresionată. Aș vrea să discutăm despre dezvoltarea unui site de prezentare pentru agenția noastră de marketing. Bugetul nostru este în jurul sumei de 2000 RON.",
+    date: "2026-01-21T15:45:00",
+    status: "read"
+  },
+  {
+    id: 3,
+    name: "Andrei Gheorghe",
+    email: "andrei.g@startup.com",
+    phone: "",
+    company: "StartUp Innovations",
+    message: "Avem nevoie de o aplicație mobilă pentru iOS și Android. Este un proiect complex care implică integrare cu API-uri externe și sistem de plăți. Putem avea o întâlnire săptămâna viitoare?",
+    date: "2026-01-20T09:15:00",
+    status: "read"
+  },
+  {
+    id: 4,
+    name: "Elena Dumitrescu",
+    email: "elena.dumitrescu@medical.ro",
+    phone: "+40 744 567 890",
+    company: "Clinica MedLife",
+    message: "Bună ziua, căutăm o soluție software pentru management de pacienți și programări online. Am dori să integrăm și un sistem de consultații video. Aveți experiență în domeniul medical?",
+    date: "2026-01-19T14:20:00",
+    status: "archived"
+  },
+  {
+    id: 5,
+    name: "Cristian Marin",
+    email: "cristian.m@personal.ro",
+    phone: "+40 755 678 901",
+    company: "",
+    message: "Doresc să îmi fac un site portfolio pentru a-mi prezenta lucrările de fotografie. Aș vrea ceva modern și elegant, cu galerie foto și blog. Care ar fi timpul de dezvoltare și costul aproximativ?",
+    date: "2026-01-18T11:00:00",
+    status: "archived"
+  },
+  {
+    id: 6,
+    name: "Laura Stanciu",
+    email: "laura.stanciu@education.ro",
+    phone: "+40 766 789 012",
+    company: "Academia de Formare",
+    message: "Suntem interesați de o platformă LMS (Learning Management System) pentru cursurile noastre online. Ar trebui să suporte video streaming, teste interactive și certificări. Puteți oferi o soluție completă?",
+    date: "2026-01-22T08:30:00",
+    status: "new"
+  },
+  {
+    id: 7,
+    name: "Alexandru Popa",
+    email: "alex.popa@restaurant.ro",
+    phone: "+40 777 890 123",
+    company: "Restaurant Gustos",
+    message: "Am nevoie de un sistem de comenzi online pentru restaurantul nostru, cu livrare la domiciliu. Ceva similar cu aplicațiile de food delivery. Cât ar costa?",
+    date: "2026-01-17T16:40:00",
+    status: "read"
+  }
+];

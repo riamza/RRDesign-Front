@@ -3,31 +3,6 @@
   background: #F8F9FA;
 }
 
-.page-header {
-  padding: 5rem 0 3rem;
-  background: linear-gradient(135deg, #FFF5F5 0%, #FFF9E5 100%);
-  text-align: center;
-}
-
-.page-header .container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.page-title {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #2C3E50;
-  margin-bottom: 1rem;
-}
-
-.page-description {
-  font-size: 1.2rem;
-  color: #7F8C8D;
-  line-height: 1.7;
-}
-
 .projects-section {
   padding: 4rem 0;
 }
@@ -98,10 +73,6 @@
 }
 
 @media (max-width: 768px) {
-  .page-title {
-    font-size: 2rem;
-  }
-
   .projects-grid {
     grid-template-columns: 1fr;
   }

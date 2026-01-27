@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Pencil, Trash2 } from 'lucide-react';
 import { templates as initialTemplates } from '../../../data/mockData';
 import Modal from '../../../components/Modal/Modal';
+import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
 import './Manager.css';
 
 const TemplatesManager = () => {
@@ -9,6 +11,9 @@ const TemplatesManager = () => {
   const [templates, setTemplates] = useState(initialTemplates);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteItemName, setDeleteItemName] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -33,10 +38,15 @@ const TemplatesManager = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm(t('dashboard.templatesManager.confirmDelete'))) {
-      setTemplates(templates.filter(t => t.id !== id));
-    }
+  const handleDelete = (template) => {
+    setDeleteId(template.id);
+    setDeleteItemName(template.title);
+    setShowConfirmDelete(true);
+  };
+
+  const confirmDelete = () => {
+    setTemplates(templates.filter(t => t.id !== deleteId));
+    setDeleteId(null);
   };
 
   const handleSubmit = (e) => {
@@ -242,15 +252,23 @@ const TemplatesManager = () => {
             </p>
             <div className="item-actions">
               <button className="btn-edit" onClick={() => handleEdit(template)}>
-                {t('dashboard.templatesManager.edit')}
+                <Pencil size={16} /> {t('dashboard.templatesManager.edit')}
               </button>
-              <button className="btn-delete" onClick={() => handleDelete(template.id)}>
-                {t('dashboard.templatesManager.delete')}
+              <button className="btn-delete" onClick={() => handleDelete(template)}>
+                <Trash2 size={16} /> {t('dashboard.templatesManager.delete')}
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      <ConfirmModal
+        isOpen={showConfirmDelete}
+        onClose={() => setShowConfirmDelete(false)}
+        onConfirm={confirmDelete}
+        title={t('dashboard.templatesManager.confirmDelete')}
+        message={`Ești sigur că vrei să ștergi template-ul "${deleteItemName}"? Această acțiune nu poate fi anulată.`}
+      />
     </div>
   );
 };
