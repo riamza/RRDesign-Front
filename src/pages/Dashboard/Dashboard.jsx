@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Palette, Briefcase, FileText, DollarSign, Mail, LogOut, Users } from 'lucide-react';
+import { Palette, Briefcase, FileText, DollarSign, Mail, LogOut, Users, TrendingUp } from 'lucide-react';
 import './Dashboard.css';
 import { useAuth } from '../../context/AuthContext';
 import ServicesManager from './components/ServicesManager';
@@ -10,6 +10,7 @@ import TemplatesManager from './components/TemplatesManager';
 import PricingManager from './components/PricingManager';
 import ContactManager from './components/ContactManager';
 import UsersManager from './components/UsersManager';
+import FinanceManager from './components/FinanceManager';
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -27,6 +28,7 @@ const Dashboard = () => {
     { id: 'projects', label: t('dashboard.projects'), icon: <Briefcase size={20} /> },
     { id: 'templates', label: t('dashboard.templates'), icon: <FileText size={20} /> },
     { id: 'pricing', label: t('dashboard.pricing'), icon: <DollarSign size={20} /> },
+    { id: 'finance', label: t('dashboard.finance') || 'Finanțe', icon: <TrendingUp size={20} /> },
     { id: 'contact', label: t('dashboard.contact'), icon: <Mail size={20} /> },
     { id: 'users', label: t('dashboard.users'), icon: <Users size={20} /> }
   ];
@@ -68,6 +70,7 @@ const Dashboard = () => {
         {activeTab === 'projects' && <ProjectsManager />}
         {activeTab === 'templates' && <TemplatesManager />}
         {activeTab === 'pricing' && <PricingManager />}
+        {activeTab === 'finance' && <FinanceManager />}
         {activeTab === 'contact' && <ContactManager />}
         {activeTab === 'users' && <UsersManager />}
       </main>
