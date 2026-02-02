@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Upload, X } from 'lucide-react';
 import { projects as initialProjects } from '../../../data/mockData';
 import Modal from '../../../components/Modal/Modal';
+import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
+import ProjectCard from '../../../components/ProjectCard/ProjectCard';
 import './Manager.css';
 
 const ProjectsManager = () => {
@@ -9,6 +12,9 @@ const ProjectsManager = () => {
   const [projects, setProjects] = useState(initialProjects);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteItemName, setDeleteItemName] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -18,6 +24,62 @@ const ProjectsManager = () => {
     category: '',
     completionDate: ''
   });
+
+  const gridRef = useRef(null);
+
+  useEffect(() => {
+    const alignCardSections = () => {
+      if (!gridRef.current) return;
+
+      const images = gridRef.current.querySelectorAll('.project-image');
+      const categories = gridRef.current.querySelectorAll('.project-category');
+      const titles = gridRef.current.querySelectorAll('.project-title');
+      const descriptions = gridRef.current.querySelectorAll('.project-description');
+      const tags = gridRef.current.querySelectorAll('.project-tags');
+      const metas = gridRef.current.querySelectorAll('.project-meta');
+
+      // Reset heights
+      [...images, ...categories, ...titles, ...descriptions, ...tags, ...metas].forEach(el => {
+        el.style.height = 'auto';
+      });
+
+      // Calculate max heights
+      const maxImageHeight = Math.max(...Array.from(images).map(el => el.offsetHeight));
+      const maxCategoryHeight = Math.max(...Array.from(categories).map(el => el.offsetHeight));
+      const maxTitleHeight = Math.max(...Array.from(titles).map(el => el.offsetHeight));
+      const maxDescHeight = Math.max(...Array.from(descriptions).map(el => el.offsetHeight));
+      const maxTagsHeight = Math.max(...Array.from(tags).map(el => el.offsetHeight));
+      const maxMetaHeight = Math.max(...Array.from(metas).map(el => el.offsetHeight));
+
+      // Apply max heights
+      if (images.length) images.forEach(el => el.style.height = `${maxImageHeight}px`);
+      if (categories.length) categories.forEach(el => el.style.height = `${maxCategoryHeight}px`);
+      if (titles.length) titles.forEach(el => el.style.height = `${maxTitleHeight}px`);
+      if (descriptions.length) descriptions.forEach(el => el.style.height = `${maxDescHeight}px`);
+      if (tags.length) tags.forEach(el => el.style.height = `${maxTagsHeight}px`);
+      if (metas.length) metas.forEach(el => el.style.height = `${maxMetaHeight}px`);
+    };
+
+    alignCardSections();
+    // Re-run alignment when images load
+    const images = gridRef.current?.querySelectorAll('img');
+    images?.forEach(img => {
+      if (img.complete) {
+        alignCardSections();
+      } else {
+        img.addEventListener('load', alignCardSections);
+      }
+    });
+
+    window.addEventListener('resize', alignCardSections);
+    const timeoutId = setTimeout(alignCardSections, 100);
+    
+    return () => {
+      window.removeEventListener('resize', alignCardSections);
+      clearTimeout(timeoutId);
+      images?.forEach(img => img.removeEventListener('load', alignCardSections));
+    };
+  }, [projects]);
 
   const handleEdit = (project) => {
     setFormData({
@@ -33,10 +95,15 @@ const ProjectsManager = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm(t('dashboard.projectsManager.confirmDelete'))) {
-      setProjects(projects.filter(p => p.id !== id));
-    }
+  const handleDelete = (project) => {
+    setDeleteId(project.id);
+    setDeleteItemName(project.title);
+    setShowConfirmDelete(true);
+  };
+
+  const confirmDelete = () => {
+    setProjects(projects.filter(p => p.id !== deleteId));
+    setDeleteId(null);
   };
 
   const handleSubmit = (e) => {
@@ -131,16 +198,52 @@ const ProjectsManager = () => {
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>{t('dashboard.projectsManager.image')}</label>
-              <input
-                type="url"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                required
-              />
+          <div className="form-group">
+            <label>{t('dashboard.projectsManager.image')}</label>
+            <div className="image-upload-container">
+              {formData.image ? (
+                <div className="preview-wrapper">
+                  <img 
+                    src={formData.image} 
+                    alt="Preview" 
+                    className="image-preview" 
+                  />
+                  <button
+                    type="button"
+                    className="btn-remove-image"
+                    onClick={() => setFormData({ ...formData, image: '' })}
+                    title="Remove image"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ) : (
+                <label htmlFor="project-image-upload" className="image-upload-label">
+                  <Upload size={32} className="upload-icon" />
+                  <span className="upload-text">Click to upload image</span>
+                  <span className="upload-hint">SVG, PNG, JPG or GIF (max. 5MB)</span>
+                  <input
+                    id="project-image-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden-input"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setFormData({ ...formData, image: reader.result });
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                </label>
+              )}
             </div>
+          </div>
+
+          <div className="form-row">
             <div className="form-group">
               <label>{t('dashboard.projectsManager.link')}</label>
               <input
@@ -150,9 +253,6 @@ const ProjectsManager = () => {
                 required
               />
             </div>
-          </div>
-
-          <div className="form-row">
             <div className="form-group">
               <label>{t('dashboard.projectsManager.completionDate')}</label>
               <input
@@ -207,32 +307,25 @@ const ProjectsManager = () => {
         </form>
       </Modal>
 
-      <div className="manager-list">
+      <div className="services-manager-grid" ref={gridRef}>
         {projects.map(project => (
-          <div key={project.id} className="manager-item">
-            <div className="item-header">
-              <h3>{project.title}</h3>
-            </div>
-            <p className="item-description">{project.description}</p>
-            <div className="item-tags">
-              {project.technologies.map((tech, index) => (
-                <span key={index} className="tag">{tech}</span>
-              ))}
-            </div>
-            <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: '1rem' }}>
-              {project.category} • {project.completionDate}
-            </p>
-            <div className="item-actions">
-              <button className="btn-edit" onClick={() => handleEdit(project)}>
-                {t('dashboard.projectsManager.edit')}
-              </button>
-              <button className="btn-delete" onClick={() => handleDelete(project.id)}>
-                {t('dashboard.projectsManager.delete')}
-              </button>
-            </div>
-          </div>
+          <ProjectCard 
+            key={project.id} 
+            project={project} 
+            isAdmin={true}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ))}
       </div>
+
+      <ConfirmModal
+        isOpen={showConfirmDelete}
+        onClose={() => setShowConfirmDelete(false)}
+        onConfirm={confirmDelete}
+        title={t('dashboard.projectsManager.confirmDelete')}
+        message={`Ești sigur că vrei să ștergi proiectul "${deleteItemName}"? Această acțiune nu poate fi anulată.`}
+      />
     </div>
   );
 };

@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Projects.css';
-import Card from '../../components/Card/Card';
-import Button from '../../components/Button/Button';
+import ProjectCard from '../../components/ProjectCard/ProjectCard';
 import { projects } from '../../data/mockData';
 
 const Projects = () => {
@@ -63,33 +62,7 @@ const Projects = () => {
         <div className="container">
           <div className="projects-grid" ref={gridRef}>
             {projects.map(project => (
-              <Card key={project.id} className="project-card">
-                <div className="project-image">
-                  <img src={project.image} alt={project.title} className="card-image" />
-                </div>
-                <div className="project-category">{project.category}</div>
-                <div className="project-title">
-                  <h3 className="card-title">{project.title}</h3>
-                </div>
-                <div className="project-description">
-                  <p className="card-description">{project.description}</p>
-                </div>
-                <div className="project-tags">
-                  <div className="card-tags">
-                    {project.technologies.map((tech, index) => (
-                      <span key={index} className="card-tag">{tech}</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="project-meta">
-                  <span className="completion-date">
-                    Finalizat: {new Date(project.completionDate).toLocaleDateString('ro-RO', { year: 'numeric', month: 'long' })}
-                  </span>
-                </div>
-                <Button variant="primary" href={project.link} target="_blank" rel="noopener noreferrer">
-                  {t('projects.viewDetails')} →
-                </Button>
-              </Card>
+              <ProjectCard key={project.id} project={project} />
             ))}
           </div>
         </div>

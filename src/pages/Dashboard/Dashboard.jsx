@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Palette, Briefcase, FileText, DollarSign, Mail, LogOut, Users, TrendingUp } from 'lucide-react';
 import './Dashboard.css';
 import { useAuth } from '../../context/AuthContext';
 import ServicesManager from './components/ServicesManager';
 import ProjectsManager from './components/ProjectsManager';
 import TemplatesManager from './components/TemplatesManager';
 import PricingManager from './components/PricingManager';
+import ContactManager from './components/ContactManager';
+import UsersManager from './components/UsersManager';
+import FinanceManager from './components/FinanceManager';
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -20,10 +24,13 @@ const Dashboard = () => {
   };
 
   const tabs = [
-    { id: 'services', label: t('dashboard.services'), icon: '🎨' },
-    { id: 'projects', label: t('dashboard.projects'), icon: '💼' },
-    { id: 'templates', label: t('dashboard.templates'), icon: '📋' },
-    { id: 'pricing', label: t('dashboard.pricing'), icon: '💰' }
+    { id: 'services', label: t('dashboard.services'), icon: <Palette size={20} /> },
+    { id: 'projects', label: t('dashboard.projects'), icon: <Briefcase size={20} /> },
+    { id: 'templates', label: t('dashboard.templates'), icon: <FileText size={20} /> },
+    { id: 'pricing', label: t('dashboard.pricing'), icon: <DollarSign size={20} /> },
+    { id: 'finance', label: t('dashboard.finance') || 'Finanțe', icon: <TrendingUp size={20} /> },
+    { id: 'contact', label: t('dashboard.contact'), icon: <Mail size={20} /> },
+    { id: 'users', label: t('dashboard.users'), icon: <Users size={20} /> }
   ];
 
   return (
@@ -53,7 +60,7 @@ const Dashboard = () => {
             <span className="user-name">{user?.name}</span>
           </div>
           <button onClick={handleLogout} className="logout-btn">
-            <span>🚪</span> {t('dashboard.logout')}
+            <LogOut size={18} /> {t('dashboard.logout')}
           </button>
         </div>
       </aside>
@@ -63,6 +70,9 @@ const Dashboard = () => {
         {activeTab === 'projects' && <ProjectsManager />}
         {activeTab === 'templates' && <TemplatesManager />}
         {activeTab === 'pricing' && <PricingManager />}
+        {activeTab === 'finance' && <FinanceManager />}
+        {activeTab === 'contact' && <ContactManager />}
+        {activeTab === 'users' && <UsersManager />}
       </main>
     </div>
   );

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Pencil, Trash2 } from 'lucide-react';
 import { services as initialServices } from '../../../data/mockData';
 import Modal from '../../../components/Modal/Modal';
+import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
+import ServiceCard from '../../../components/ServiceCard/ServiceCard';
 import './Manager.css';
 
 const ServicesManager = () => {
@@ -9,6 +12,9 @@ const ServicesManager = () => {
   const [services, setServices] = useState(initialServices);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteItemName, setDeleteItemName] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -23,10 +29,15 @@ const ServicesManager = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm(t('dashboard.servicesManager.confirmDelete'))) {
-      setServices(services.filter(s => s.id !== id));
-    }
+  const handleDelete = (service) => {
+    setDeleteId(service.id);
+    setDeleteItemName(service.title);
+    setShowConfirmDelete(true);
+  };
+
+  const confirmDelete = () => {
+    setServices(services.filter(s => s.id !== deleteId));
+    setDeleteId(null);
   };
 
   const handleSubmit = (e) => {
@@ -96,7 +107,7 @@ const ServicesManager = () => {
                 type="text"
                 value={formData.icon}
                 onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                placeholder="💻"
+                placeholder="monitor, smartphone, server, palette, cloud, users"
               />
             </div>
           </div>
@@ -162,30 +173,25 @@ const ServicesManager = () => {
         </form>
       </Modal>
 
-      <div className="manager-list">
+      <div className="services-manager-grid">
         {services.map(service => (
-          <div key={service.id} className="manager-item">
-            <div className="item-header">
-              <span className="item-icon">{service.icon}</span>
-              <h3>{service.title}</h3>
-            </div>
-            <p className="item-description">{service.description}</p>
-            <div className="item-tags">
-              {service.technologies.map((tech, i) => (
-                <span key={i} className="tag">{tech}</span>
-              ))}
-            </div>
-            <div className="item-actions">
-              <button className="btn-edit" onClick={() => handleEdit(service)}>
-                ✏️ {t('dashboard.servicesManager.edit')}
-              </button>
-              <button className="btn-delete" onClick={() => handleDelete(service.id)}>
-                🗑️ {t('dashboard.servicesManager.delete')}
-              </button>
-            </div>
-          </div>
+          <ServiceCard
+            key={service.id}
+            service={service}
+            isAdmin={true}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ))}
       </div>
+
+      <ConfirmModal
+        isOpen={showConfirmDelete}
+        onClose={() => setShowConfirmDelete(false)}
+        onConfirm={confirmDelete}
+        title={t('dashboard.servicesManager.confirmDelete')}
+        message={`Ești sigur că vrei să ștergi serviciul "${deleteItemName}"? Această acțiune nu poate fi anulată.`}
+      />
     </div>
   );
 };

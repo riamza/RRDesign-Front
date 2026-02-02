@@ -1,0 +1,178 @@
+.pricing-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid #eee;
+  height: 100%;
+}
+
+.pricing-card.highlight {
+  border: 2px solid #FF6B6B;
+  transform: scale(1.05);
+  z-index: 1;
+  box-shadow: 0 10px 20px rgba(255, 107, 107, 0.15);
+}
+
+.pricing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-card.highlight:hover {
+  transform: scale(1.05) translateY(-5px);
+}
+
+.pricing-header {
+  text-align: center;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 2rem;
+}
+
+.pricing-header h3 {
+  color: #2D3436;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.pricing-header .price {
+  font-size: 2.5rem;
+  color: #FF6B6B;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.pricing-header .description {
+  color: #636e72;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.pricing-features {
+  flex: 1;
+}
+
+.pricing-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pricing-features li {
+  color: #4a4a4a;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.pricing-features .check-icon {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.pricing-action {
+  margin-top: auto;
+  padding-top: 2rem;
+  text-align: center;
+}
+
+.pricing-action .button {
+  width: 100%;
+  display: block;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.button-primary {
+  background: #FF6B6B;
+  color: white;
+  border: 2px solid #FF6B6B;
+}
+
+.button-primary:hover {
+  background: #FF8E53;
+  border-color: #FF8E53;
+  color: white;
+}
+
+.button-secondary {
+  background: transparent;
+  color: #2D3436;
+  border: 2px solid #dfe6e9;
+}
+
+.button-secondary:hover {
+  border-color: #2D3436;
+  background: #2D3436;
+  color: white;
+}
+
+/* Admin Actions */
+.pricing-actions-admin {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn-card-edit,
+.btn-card-delete {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-card-edit {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.btn-card-edit:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.btn-card-delete {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.btn-card-delete:hover {
+  background-color: #fecaca;
+  color: #b91c1c;
+}
+
+/* Responsiveness adjustments */
+@media (max-width: 1024px) {
+  .pricing-card.highlight {
+    transform: scale(1);
+    z-index: 0;
+  }
+  
+  .pricing-card.highlight:hover {
+    transform: translateY(-5px);
+  }
+}

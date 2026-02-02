@@ -1,24 +1,4 @@
-.templates-page {
-  min-height: 100vh;
-  background: #F8F9FA;
-}
-
-.templates-section {
-  padding: 4rem 0;
-}
-
-.templates-section .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.templates-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2.5rem;
-  align-items: stretch;
-}
+/* TemplateCard CSS */
 
 .template-card {
   display: flex;
@@ -67,14 +47,42 @@
   margin-bottom: 0.5rem;
 }
 
-.template-card .button {
-  margin-top: auto;
-  width: 100%;
-  text-align: center;
+/* Admin Actions */
+.template-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
 }
 
-@media (max-width: 768px) {
-  .templates-grid {
-    grid-template-columns: 1fr;
-  }
+.template-actions button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-card-edit {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.btn-card-edit:hover {
+  background: #dbeafe;
+}
+
+.btn-card-delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-card-delete:hover {
+  background: #fecaca;
 }

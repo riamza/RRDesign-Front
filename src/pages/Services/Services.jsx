@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Services.css';
-import Card from '../../components/Card/Card';
+import ServiceCard from '../../components/ServiceCard/ServiceCard';
+import PriceCard from '../../components/PriceCard/PriceCard';
 import { services, pricingPackages } from '../../data/mockData';
 
 const Services = () => {
@@ -57,33 +58,7 @@ const Services = () => {
           <div className="services-grid" ref={gridRef}>
             {services.map(service => (
               <div key={service.id} className="service-card-wrapper">
-                <Card className="service-card-full">
-                  <div className="service-section service-header">
-                    <div className="service-icon-large">{service.icon}</div>
-                    <h3 className="card-title">{service.title}</h3>
-                  </div>
-                  <div className="service-section service-description">
-                    <p className="card-description">{service.description}</p>
-                  </div>
-                  
-                  <div className="service-section service-features">
-                    <h4>{t('services.whatWeOffer')}</h4>
-                    <ul className="card-features">
-                      {service.features.map((feature, index) => (
-                        <li key={index}>{feature}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="service-section service-tech">
-                    <h4>{t('services.technologies')}</h4>
-                    <div className="card-tags">
-                      {service.technologies.map((tech, index) => (
-                        <span key={index} className="card-tag">{tech}</span>
-                      ))}
-                    </div>
-                  </div>
-                </Card>
+                <ServiceCard service={service} />
               </div>
             ))}
           </div>
@@ -97,28 +72,7 @@ const Services = () => {
           
           <div className="pricing-grid">
             {pricingPackages.map((pkg) => (
-              <div key={pkg.id} className={`pricing-card ${pkg.highlight ? 'highlight' : ''}`}>
-                <div className="pricing-header">
-                  <h3>{pkg.title}</h3>
-                  <div className="price">{pkg.price}</div>
-                  <p className="description">{pkg.description}</p>
-                </div>
-                <div className="pricing-features">
-                  <ul>
-                    {pkg.features.map((feature, index) => (
-                      <li key={index}>
-                        <span className="check-icon">✓</span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="pricing-action">
-                  <a href="/contact" className={`button ${pkg.highlight ? 'button-primary' : 'button-secondary'}`}>
-                    {t('services.pricing.button')}
-                  </a>
-                </div>
-              </div>
+              <PriceCard key={pkg.id} pkg={pkg} />
             ))}
           </div>
         </div>

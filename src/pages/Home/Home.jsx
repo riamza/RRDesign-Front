@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Monitor, Smartphone, Cloud } from 'lucide-react';
 import './Home.css';
 import Button from '../../components/Button/Button';
 import { companyInfo, services } from '../../data/mockData';
+import { getIcon } from '../../utils/iconMapper';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -60,15 +62,15 @@ const Home = () => {
           </div>
           <div className="hero-image">
             <div className="floating-card card-1">
-              <div className="card-icon">💻</div>
+              <div className="card-icon"><Monitor size={40} /></div>
               <div className="card-text">Web Development</div>
             </div>
             <div className="floating-card card-2">
-              <div className="card-icon">📱</div>
+              <div className="card-icon"><Smartphone size={40} /></div>
               <div className="card-text">Mobile Apps</div>
             </div>
             <div className="floating-card card-3">
-              <div className="card-icon">☁️</div>
+              <div className="card-icon"><Cloud size={40} /></div>
               <div className="card-text">Cloud Solutions</div>
             </div>
           </div>
@@ -85,7 +87,9 @@ const Home = () => {
           <div className="services-grid" ref={servicesGridRef}>
             {services.slice(0, 3).map(service => (
               <div key={service.id} className="service-card">
-                <div className="service-icon">{service.icon}</div>
+                <div className="service-icon-wrapper">
+                  <div className="service-icon">{getIcon(service.icon, 48)}</div>
+                </div>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
               </div>
@@ -99,29 +103,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="stats">
-        <div className="container">
-          <div className="stats-grid">
-            <div className="stat-item">
-              <div className="stat-number">50+</div>
-              <div className="stat-label">Proiecte finalizate</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">30+</div>
-              <div className="stat-label">Clienți mulțumiți</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">5+</div>
-              <div className="stat-label">Ani de experiență</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">100%</div>
-              <div className="stat-label">Dedicare</div>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* CTA Section */}
       <section className="cta">
