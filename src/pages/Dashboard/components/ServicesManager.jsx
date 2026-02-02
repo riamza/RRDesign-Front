@@ -4,7 +4,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { services as initialServices } from '../../../data/mockData';
 import Modal from '../../../components/Modal/Modal';
 import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
-import { getIcon } from '../../../utils/iconMapper';
+import ServiceCard from '../../../components/ServiceCard/ServiceCard';
 import './Manager.css';
 
 const ServicesManager = () => {
@@ -173,28 +173,15 @@ const ServicesManager = () => {
         </form>
       </Modal>
 
-      <div className="manager-list">
+      <div className="services-manager-grid">
         {services.map(service => (
-          <div key={service.id} className="manager-item">
-            <div className="item-header">
-              <span className="item-icon">{getIcon(service.icon, 32)}</span>
-              <h3>{service.title}</h3>
-            </div>
-            <p className="item-description">{service.description}</p>
-            <div className="item-tags">
-              {service.technologies.map((tech, i) => (
-                <span key={i} className="tag">{tech}</span>
-              ))}
-            </div>
-            <div className="item-actions">
-              <button className="btn-edit" onClick={() => handleEdit(service)}>
-                <Pencil size={16} /> {t('dashboard.servicesManager.edit')}
-              </button>
-              <button className="btn-delete" onClick={() => handleDelete(service)}>
-                <Trash2 size={16} /> {t('dashboard.servicesManager.delete')}
-              </button>
-            </div>
-          </div>
+          <ServiceCard
+            key={service.id}
+            service={service}
+            isAdmin={true}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ))}
       </div>
 

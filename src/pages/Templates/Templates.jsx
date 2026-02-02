@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Templates.css';
-import Card from '../../components/Card/Card';
-import Button from '../../components/Button/Button';
+import TemplateCard from '../../components/TemplateCard/TemplateCard';
 import { templates } from '../../data/mockData';
 
 const Templates = () => {
@@ -63,39 +62,7 @@ const Templates = () => {
         <div className="container">
           <div className="templates-grid" ref={gridRef}>
             {templates.map(template => (
-              <Card key={template.id} className="template-card">
-                <div className="template-image">
-                  <img src={template.image} alt={template.title} className="card-image" />
-                </div>
-                <div className="template-category">{template.category}</div>
-                <div className="template-title">
-                  <h3 className="card-title">{template.title}</h3>
-                </div>
-                <div className="template-description">
-                  <p className="card-description">{template.description}</p>
-                </div>
-                
-                <div className="template-features">
-                  <h4>{t('templates.features')}</h4>
-                  <ul className="card-features">
-                    {template.features.map((feature, index) => (
-                      <li key={index}>{feature}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="template-tags">
-                  <div className="card-tags">
-                    {template.technologies.map((tech, index) => (
-                      <span key={index} className="card-tag">{tech}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <Button variant="primary" href={template.demoLink}>
-                  {t('templates.viewDemo')} →
-                </Button>
-              </Card>
+              <TemplateCard key={template.id} template={template} />
             ))}
           </div>
         </div>

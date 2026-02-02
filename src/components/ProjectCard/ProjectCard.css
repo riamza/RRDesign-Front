@@ -1,0 +1,83 @@
+/* ProjectCard CSS - extracted from Projects.css/Card.css */
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.project-image {
+  margin-bottom: 0.5rem;
+}
+
+.project-category {
+  display: inline-block;
+  background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  width: fit-content;
+}
+
+.project-title {
+  margin-bottom: 0.5rem;
+}
+
+.project-description {
+  margin-bottom: 0.5rem;
+}
+
+.project-tags {
+  margin-bottom: 0.5rem;
+}
+
+.project-meta {
+  margin-top: auto;
+  padding: 1rem 0;
+  border-top: 1px solid #f0f0f0;
+  color: #7F8C8D;
+  font-size: 0.9rem;
+}
+
+/* Admin Actions */
+.project-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+
+.project-actions button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-card-edit {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.btn-card-edit:hover {
+  background: #dbeafe;
+}
+
+.btn-card-delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-card-delete:hover {
+  background: #fecaca;
+}

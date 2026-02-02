@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pencil, Trash2 } from 'lucide-react';
 import { pricingPackages as initialPricing } from '../../../data/mockData';
 import Modal from '../../../components/Modal/Modal';
 import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
+import PriceCard from '../../../components/PriceCard/PriceCard';
 import './Manager.css';
 
 const PricingManager = () => {
@@ -21,6 +21,37 @@ const PricingManager = () => {
     features: [''],
     highlight: false
   });
+
+  const gridRef = useRef(null);
+
+  useEffect(() => {
+    const alignCardSections = () => {
+      if (!gridRef.current) return;
+
+      const headers = gridRef.current.querySelectorAll('.pricing-header');
+      const features = gridRef.current.querySelectorAll('.pricing-features');
+      
+      // Reset
+      [...headers, ...features].forEach(el => el.style.height = 'auto');
+
+      // Calc max
+      const maxHeaderHeight = Math.max(...Array.from(headers).map(el => el.offsetHeight));
+      const maxFeaturesHeight = Math.max(...Array.from(features).map(el => el.offsetHeight));
+
+      // Apply
+      if(headers.length) headers.forEach(el => el.style.height = `${maxHeaderHeight}px`);
+      if(features.length) features.forEach(el => el.style.height = `${maxFeaturesHeight}px`);
+    };
+
+    alignCardSections();
+    window.addEventListener('resize', alignCardSections);
+    const timeoutId = setTimeout(alignCardSections, 100);
+    
+    return () => {
+      window.removeEventListener('resize', alignCardSections);
+      clearTimeout(timeoutId);
+    };
+  }, [pricing]);
 
   const handleEdit = (pkg) => {
     setFormData({
@@ -169,29 +200,15 @@ const PricingManager = () => {
         </form>
       </Modal>
 
-      <div className="manager-list">
+      <div className="services-manager-grid" ref={gridRef}>
         {pricing.map(pkg => (
-          <div key={pkg.id} className="manager-item">
-            <div className={`item-header ${pkg.highlight ? 'highlight-item' : ''}`}>
-              <h3>{pkg.title} <span style={{fontSize: '0.8em', color: '#666'}}>({pkg.price})</span></h3>
-              {pkg.highlight && <span className="tag" style={{background: '#FF6B6B', color: 'white'}}>Highlighted</span>}
-            </div>
-            <p className="item-description">{pkg.description}</p>
-            <div className="item-tags">
-              {pkg.features.slice(0, 3).map((feature, i) => (
-                <span key={i} className="tag">{feature}</span>
-              ))}
-              {pkg.features.length > 3 && <span className="tag">...</span>}
-            </div>
-            <div className="item-actions">
-              <button className="btn-edit" onClick={() => handleEdit(pkg)}>
-                <Pencil size={16} /> {t('dashboard.pricingManager.edit')}
-              </button>
-              <button className="btn-delete" onClick={() => handleDelete(pkg)}>
-                <Trash2 size={16} /> {t('dashboard.pricingManager.delete')}
-              </button>
-            </div>
-          </div>
+          <PriceCard 
+            key={pkg.id} 
+            pkg={pkg} 
+            isAdmin={true}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ))}
       </div>
 

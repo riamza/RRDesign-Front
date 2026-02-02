@@ -1,0 +1,92 @@
+.service-card-full {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0;
+}
+
+.service-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+}
+
+.service-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.service-icon-large {
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.service-description {
+  padding-bottom: 0;
+}
+
+.service-features {
+  padding-bottom: 0;
+  flex: 1;
+}
+
+.service-features h4,
+.service-tech h4 {
+  color: #2C3E50;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  margin-top: 0;
+  font-weight: 600;
+}
+
+.service-tech {
+  padding-top: 0;
+}
+
+.service-tech .card-tags {
+  margin-top: 1rem;
+}
+
+/* Admin Actions */
+.service-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+
+.service-actions button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-card-edit {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.btn-card-edit:hover {
+  background: #dbeafe;
+}
+
+.btn-card-delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-card-delete:hover {
+  background: #fecaca;
+}

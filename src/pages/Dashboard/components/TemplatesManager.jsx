@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 import { templates as initialTemplates } from '../../../data/mockData';
 import Modal from '../../../components/Modal/Modal';
 import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
+import TemplateCard from '../../../components/TemplateCard/TemplateCard';
 import './Manager.css';
 
 const TemplatesManager = () => {
@@ -23,6 +24,63 @@ const TemplatesManager = () => {
     category: '',
     features: ['']
   });
+
+  const gridRef = useRef(null);
+
+  useEffect(() => {
+    const alignCardSections = () => {
+      if (!gridRef.current) return;
+
+      const images = gridRef.current.querySelectorAll('.template-image');
+      const categories = gridRef.current.querySelectorAll('.template-category');
+      const titles = gridRef.current.querySelectorAll('.template-title');
+      const descriptions = gridRef.current.querySelectorAll('.template-description');
+      const features = gridRef.current.querySelectorAll('.template-features');
+      const tags = gridRef.current.querySelectorAll('.template-tags');
+
+      // Reset heights
+      [...images, ...categories, ...titles, ...descriptions, ...features, ...tags].forEach(el => {
+        el.style.height = 'auto';
+      });
+
+      // Calculate max heights
+      const maxImageHeight = Math.max(...Array.from(images).map(el => el.offsetHeight));
+      const maxCategoryHeight = Math.max(...Array.from(categories).map(el => el.offsetHeight));
+      const maxTitleHeight = Math.max(...Array.from(titles).map(el => el.offsetHeight));
+      const maxDescHeight = Math.max(...Array.from(descriptions).map(el => el.offsetHeight));
+      const maxFeaturesHeight = Math.max(...Array.from(features).map(el => el.offsetHeight));
+      const maxTagsHeight = Math.max(...Array.from(tags).map(el => el.offsetHeight));
+
+      // Apply max heights
+      if (images.length) images.forEach(el => el.style.height = `${maxImageHeight}px`);
+      if (categories.length) categories.forEach(el => el.style.height = `${maxCategoryHeight}px`);
+      if (titles.length) titles.forEach(el => el.style.height = `${maxTitleHeight}px`);
+      if (descriptions.length) descriptions.forEach(el => el.style.height = `${maxDescHeight}px`);
+      if (features.length) features.forEach(el => el.style.height = `${maxFeaturesHeight}px`);
+      if (tags.length) tags.forEach(el => el.style.height = `${maxTagsHeight}px`);
+    };
+
+    alignCardSections();
+    
+    // Re-run alignment when images load
+    const images = gridRef.current?.querySelectorAll('img');
+    images?.forEach(img => {
+      if (img.complete) {
+        alignCardSections();
+      } else {
+        img.addEventListener('load', alignCardSections);
+      }
+    });
+
+    window.addEventListener('resize', alignCardSections);
+    const timeoutId = setTimeout(alignCardSections, 100);
+    
+    return () => {
+      window.removeEventListener('resize', alignCardSections);
+      clearTimeout(timeoutId);
+      images?.forEach(img => img.removeEventListener('load', alignCardSections));
+    };
+  }, [templates]);
 
   const handleEdit = (template) => {
     setFormData({
@@ -141,25 +199,59 @@ const TemplatesManager = () => {
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>{t('dashboard.templatesManager.image')}</label>
-              <input
-                type="url"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                required
-              />
+          <div className="form-group">
+            <label>{t('dashboard.templatesManager.image')}</label>
+            <div className="image-upload-container">
+              {formData.image ? (
+                <div className="preview-wrapper">
+                  <img 
+                    src={formData.image} 
+                    alt="Preview" 
+                    className="image-preview" 
+                  />
+                  <button
+                    type="button"
+                    className="btn-remove-image"
+                    onClick={() => setFormData({ ...formData, image: '' })}
+                    title="Remove image"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ) : (
+                <label htmlFor="template-image-upload" className="image-upload-label">
+                  <Upload size={32} className="upload-icon" />
+                  <span className="upload-text">Click to upload image</span>
+                  <span className="upload-hint">SVG, PNG, JPG or GIF (max. 5MB)</span>
+                  <input
+                    id="template-image-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden-input"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setFormData({ ...formData, image: reader.result });
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                </label>
+              )}
             </div>
-            <div className="form-group">
-              <label>{t('dashboard.templatesManager.demoLink')}</label>
-              <input
-                type="url"
-                value={formData.demoLink}
-                onChange={(e) => setFormData({ ...formData, demoLink: e.target.value })}
-                required
-              />
-            </div>
+          </div>
+
+          <div className="form-group">
+            <label>{t('dashboard.templatesManager.demoLink')}</label>
+            <input
+              type="url"
+              value={formData.demoLink}
+              onChange={(e) => setFormData({ ...formData, demoLink: e.target.value })}
+              required
+            />
           </div>
 
           <div className="form-group">
@@ -235,30 +327,15 @@ const TemplatesManager = () => {
         </form>
       </Modal>
 
-      <div className="manager-list">
+      <div className="services-manager-grid" ref={gridRef}>
         {templates.map(template => (
-          <div key={template.id} className="manager-item">
-            <div className="item-header">
-              <h3>{template.title}</h3>
-            </div>
-            <p className="item-description">{template.description}</p>
-            <div className="item-tags">
-              {template.technologies.map((tech, index) => (
-                <span key={index} className="tag">{tech}</span>
-              ))}
-            </div>
-            <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: '1rem' }}>
-              {template.category}
-            </p>
-            <div className="item-actions">
-              <button className="btn-edit" onClick={() => handleEdit(template)}>
-                <Pencil size={16} /> {t('dashboard.templatesManager.edit')}
-              </button>
-              <button className="btn-delete" onClick={() => handleDelete(template)}>
-                <Trash2 size={16} /> {t('dashboard.templatesManager.delete')}
-              </button>
-            </div>
-          </div>
+          <TemplateCard 
+            key={template.id} 
+            template={template} 
+            isAdmin={true}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ))}
       </div>
 

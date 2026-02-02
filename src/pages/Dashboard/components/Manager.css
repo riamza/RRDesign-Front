@@ -202,7 +202,6 @@
 .item-header {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
@@ -212,6 +211,10 @@
   font-weight: 700;
   color: #111827;
   letter-spacing: -0.01em;
+}
+
+.item-icon {
+  margin-right: 1rem;
 }
 
 .item-description {
@@ -1557,3 +1560,111 @@
     min-width: 800px;
   }
 }
+
+/* Image Preview */
+.image-upload-container {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.2s;
+  background: #f9fafb;
+  position: relative;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-upload-container:hover {
+  border-color: #FF6B6B;
+  background: #fff;
+}
+
+.image-upload-label {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: #6b7280;
+  width: 100%;
+}
+
+.upload-icon {
+  color: #9ca3af;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s;
+}
+
+.image-upload-label:hover .upload-icon {
+  color: #FF6B6B;
+}
+
+.upload-text {
+  font-weight: 500;
+  color: #374151;
+}
+
+.upload-hint {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.preview-wrapper {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+.image-preview {
+  max-height: 200px;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: block;
+}
+
+.btn-remove-image {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #ef4444;
+  color: white;
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s;
+  padding: 0;
+  z-index: 10;
+}
+
+.btn-remove-image:hover {
+  transform: scale(1.1);
+  background: #dc2626;
+}
+
+.services-manager-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2.5rem;
+  align-items: start;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .services-manager-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
