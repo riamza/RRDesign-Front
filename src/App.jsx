@@ -1,8 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Home from './pages/Home/Home';
 import Projects from './pages/Projects/Projects';
@@ -10,6 +8,7 @@ import Templates from './pages/Templates/Templates';
 import Services from './pages/Services/Services';
 import Contact from './pages/Contact/Contact';
 import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
 import Dashboard from './pages/Dashboard/Dashboard';
 import ClientProjectDetails from './pages/Dashboard/components/ClientProjectDetails';
 import Profile from './pages/Profile/Profile';
@@ -17,17 +16,19 @@ import MyProjects from './pages/MyProjects/MyProjects';
 import Messages from './pages/Messages/Messages';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import PublicRoute from './components/PublicRoute/PublicRoute';
+import PublicLayout from './layouts/PublicLayout';
+import DashboardLayout from './layouts/DashboardLayout';
 import './App.css';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <ScrollToTop />
         <div className="app">
-          <Header />
-          <main className="main-content">
-            <Routes>
+          <Routes>
+            {/* Public Routes - use PublicLayout */}
+            <Route element={<PublicLayout />}>
               <Route path="/" element={<Home />} />
               <Route path="/services" element={<Services />} />
               <Route path="/projects" element={<Projects />} />
@@ -41,6 +42,16 @@ function App() {
                   </PublicRoute>
                 } 
               />
+              <Route 
+                path="/register" 
+                element={
+                    <Register />
+                } 
+              />
+            </Route>
+
+            {/* Dashboard/Private Routes - use DashboardLayout */}
+            <Route element={<DashboardLayout />}>
               <Route 
                 path="/profile" 
                 element={
@@ -81,12 +92,11 @@ function App() {
                   </PrivateRoute>
                 } 
               />
-            </Routes>
-          </main>
-          <Footer />
+            </Route>
+          </Routes>
         </div>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

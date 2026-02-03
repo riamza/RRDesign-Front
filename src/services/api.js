@@ -104,6 +104,11 @@ export const api = {
   auth: {
       login: (email, password) => request('/Auth/login', { method: 'POST', body: { email, password } }),
       getProfile: () => request('/Auth/me'),
+      changePassword: (data) => request('/Auth/change-password', { method: 'POST', body: data }),
+      // Invitation
+      inviteUser: (email) => request('/Auth/invite', { method: 'POST', body: { email } }),
+      validateInvitation: (token) => request(`/Auth/validate-invitation?token=${token}`),
+      completeRegistration: (data) => request('/Auth/complete-registration', { method: 'POST', body: data }),
   },
   // Services
   getServices: async () => {

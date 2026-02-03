@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 
 const AuthContext = createContext();
@@ -15,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const login = async (email, password) => {
     try {
@@ -25,12 +27,21 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('refresh_token', data.refreshToken);
       localStorage.setItem('user_role', data.role);
       
-      const userData = {
-        email: email, 
-        role: data.role
-      };
+      try {
+        const profile = await api.auth.getProfile();
+        setUser({
+           ...profile,
+           role: data.role
+        }); 
+      } catch (e) {
+        console.error("Failed to fetch profile on login", e);
+        const userData = {
+          email: email, 
+          role: data.role
+        };
+        setUser(userData);
+      }
       
-      setUser(userData);
       setIsAuthenticated(true);
       return { success: true, role: data.role };
     } catch (error) {
@@ -45,6 +56,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user_role');
+    navigate('/login');
   };
 
   // Check for existing session

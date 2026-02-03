@@ -114,32 +114,25 @@ const UsersManager = () => {
     setViewingUser(user);
   };
 
-  const handleSendInvitation = (e) => {
+  const handleSendInvitation = async (e) => {
     e.preventDefault();
     
-    // Generează token unic pentru invitație
-    const invitationToken = `inv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const invitationLink = `${window.location.origin}/register?token=${invitationToken}`;
-    
-    // Adaugă utilizatorul ca pending
-    const newUser = {
-      id: Date.now(),
-      name: inviteForm.name,
-      email: inviteForm.email,
-      status: 'pending',
-      invitationSentDate: new Date().toISOString(),
-      invitedBy: 'admin@rrdesign.ro',
-      invitationToken: invitationToken,
-      projectsCount: 0
-    };
-    
-    setUsers([newUser, ...users]);
-    
-    // Simulare trimitere email
-    alert(t('dashboard.usersManager.invitationSent', { email: inviteForm.email }) + `\n\nLink de înregistrare: ${invitationLink}\n\nÎn producție, acest link va fi trimis automat prin email.`);
-    
-    setInviteForm({ email: '', name: '', message: '' });
-    setShowInviteModal(false);
+    try {
+        const response = await api.auth.inviteUser(inviteForm.email);
+        
+        // Show success and the link (since we might not have real email sending yet)
+        alert(t('dashboard.usersManager.invitationSent', { email: inviteForm.email }) + 
+              `\n\nLink: ${response.invitationLink}` +
+              `\n\n(In production this would be emailed)`);
+        
+        // Refresh users list properly - for now we just close the modal
+        // ideally we should fetch Users list again from API
+        setShowInviteModal(false);
+        setInviteForm({ email: '', name: '', message: '' });
+
+    } catch (err) {
+        alert("Failed to send invitation: " + err.message);
+    }
   };
 
   const handleSuspendUser = (user) => {
@@ -220,79 +213,94 @@ const UsersManager = () => {
       </div>
 
       <div className="manager-content">
-        {/* User Cards */}
-        <div className="users-cards">
+        {/* User Cards Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
           {filteredUsers.map(user => (
             <div key={user.id} className="user-card">
               <div className="user-card-header">
-                <div className="user-card-info">
-                  <h4>{user.name}</h4>
-                  {getStatusBadge(user.status)}
-                </div>
-                <span className="projects-badge">{user.projectsCount}</span>
+                {/* Header background gradient only */}
               </div>
 
               <div className="user-card-body">
-                <div className="user-card-row">
-                  <Mail size={14} />
-                  <a href={`mailto:${user.email}`}>{user.email}</a>
+                <div className="user-card-avatar">
+                   <div className="user-card-avatar-inner">
+                      {user.name ? user.name.charAt(0).toUpperCase() : '?'}
+                   </div>
                 </div>
 
-                {user.status === 'pending' ? (
-                  <div className="user-card-row">
-                    <Clock size={14} />
-                    <span>{t('dashboard.usersManager.invited')}: {formatDate(user.invitationSentDate)}</span>
-                  </div>
-                ) : (
-                  <>
-                    <div className="user-card-row">
-                      <Calendar size={14} />
-                      <span>{formatDate(user.registeredDate)}</span>
-                    </div>
-                    {user.lastLogin && (
-                      <div className="user-card-row">
-                        <Clock size={14} />
-                        <span>{formatDate(user.lastLogin)}</span>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
+                <div className="user-card-title">{user.name || user.email}</div>
+                <div className="user-card-subtitle">{user.email}</div>
 
-              <div className="user-card-actions">
-                <button 
-                  className="btn-action btn-view"
-                  onClick={() => handleViewUser(user)}
-                >
-                  <Eye size={16} /> {t('dashboard.usersManager.viewDetails')}
-                </button>
-                
-                {user.status === 'pending' && (
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                   {getStatusBadge(user.status)}
+                   <span style={{ 
+                      fontSize: '0.75rem', 
+                      background: '#f1f5f9', 
+                      padding: '4px 10px', 
+                      borderRadius: '20px', 
+                      color: '#64748b', 
+                      fontWeight: '600'
+                   }}>
+                      {user.projectsCount || 0} PROIECTE
+                   </span>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem', fontSize: '0.9rem', color: '#64748b' }}>
+                   {user.status === 'pending' ? (
+                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <Clock size={14} />
+                          <span>Invitatie: {formatDate(user.invitationSentDate)}</span>
+                       </div>
+                   ) : (
+                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <Calendar size={14} />
+                          <span>Inregistrat: {formatDate(user.registeredDate)}</span>
+                       </div>
+                   )}
+                </div>
+
+                <div className="user-card-actions" style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
                   <button 
-                    className="btn-action btn-primary"
-                    onClick={() => handleResendInvitation(user)}
+                    onClick={() => handleViewUser(user)}
+                    className="btn-secondary"
+                    style={{ flex: 1, padding: '0.5rem', fontSize: '0.85rem' }}
                   >
-                    <Mail size={16} />
+                    <Eye size={16} style={{ marginRight: '5px' }} />Detalii
                   </button>
-                )}
-                
-                {user.status === 'active' && (
-                  <button 
-                    className="btn-action btn-warning"
-                    onClick={() => handleSuspendUser(user)}
-                  >
-                    <Ban size={16} />
-                  </button>
-                )}
-                
-                {user.status === 'suspended' && (
-                  <button 
-                    className="btn-action btn-success"
-                    onClick={() => handleActivateUser(user)}
-                  >
-                    <CheckCircle size={16} />
-                  </button>
-                )}
+                  
+                  {user.status === 'active' && (
+                    <button 
+                       onClick={() => handleSuspendUser(user)}
+                       className="btn-secondary"
+                       style={{ color: '#ef4444', borderColor: '#fee2e2', padding: '0.5rem' }}
+                       title="Suspend Account"
+                    >
+                      <Ban size={16} />
+                    </button>
+                  )}
+                  
+                  {user.status === 'suspended' && (
+                    <button 
+                       onClick={() => handleActivateUser(user)}
+                       className="btn-secondary"
+                       style={{ color: '#22c55e', borderColor: '#dcfce7', padding: '0.5rem' }}
+                       title="Activate Account"
+                    >
+                      <CheckCircle size={16} />
+                    </button>
+                  )}
+
+                  {user.status === 'pending' && (
+                    <button 
+                       onClick={() => handleResendInvitation(user)}
+                       className="btn-secondary"
+                       style={{ padding: '0.5rem' }}
+                       title="Resend Invite"
+                    >
+                      <Mail size={16} />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}

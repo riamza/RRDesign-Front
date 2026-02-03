@@ -21,7 +21,7 @@ const ServiceCard = ({ service, isAdmin = false, onEdit, onDelete }) => {
       <div className="service-section service-features">
         <h4>{t('services.whatWeOffer')}</h4>
         <ul className="card-features">
-          {service.features.map((feature, index) => (
+          {(service.features || []).map((feature, index) => (
             <li key={index}>{feature}</li>
           ))}
         </ul>
@@ -30,7 +30,7 @@ const ServiceCard = ({ service, isAdmin = false, onEdit, onDelete }) => {
       <div className="service-section service-tech">
         <h4>{t('services.technologies')}</h4>
         <div className="card-tags">
-          {service.technologies.map((tech, index) => (
+          {(service.technologies || []).map((tech, index) => (
             <span key={index} className="card-tag">{tech}</span>
           ))}
         </div>

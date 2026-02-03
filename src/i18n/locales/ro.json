@@ -171,12 +171,13 @@
       "title": "Titlu",
       "description": "Descriere",
       "icon": "Icon (emoji)",
-      "features": "Caracteristici",
+      "selectIcon": "Selectează iconița",
+      "features": "Caracteristici (Ce oferim)",
       "addFeature": "Adaugă caracteristică",
       "technologies": "Tehnologii",
       "addTechnology": "Adaugă tehnologie",
-      "featurePlaceholder": "Caracteristică",
-      "technologyPlaceholder": "Tehnologie",
+      "featurePlaceholder": "Descriere caracteristică",
+      "technologyPlaceholder": "ex: React, .NET...",
       "confirmDelete": "Sigur vrei să ștergi acest serviciu?"
     },
     "projectsManager": {
@@ -356,7 +357,9 @@
   "common": {
     "loading": "Se încarcă...",
     "error": "Eroare",
-    "success": "Succes"
+    "success": "Succes",
+    "cancel": "Anulează",
+    "update": "Actualizează"
   },
   "profile": {
     "roleAdmin": "Administrator",
@@ -373,6 +376,9 @@
     "password": "Parolă",
     "passwordDescription": "Schimbă parola pentru a-ți menține contul în siguranță",
     "changePassword": "Schimbă Parola",
+    "currentPassword": "Parola Curentă",
+    "newPassword": "Parola Nouă",
+    "confirmPassword": "Confirmă Parola",
     "accountStats": "Statistici Cont",
     "projectsCompleted": "Proiecte Finalizate",
     "activeProjects": "Proiecte Active",

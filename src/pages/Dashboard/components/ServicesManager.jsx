@@ -7,6 +7,29 @@ import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
 import ServiceCard from '../../../components/ServiceCard/ServiceCard';
 import './Manager.css';
 
+const ICON_OPTIONS = [
+  { value: 'monitor', label: '🖥️ Monitor (Web Design)' },
+  { value: 'smartphone', label: '📱 Smartphone (Mobile Apps)' },
+  { value: 'code', label: '💻 Code (Development)' },
+  { value: 'server', label: '💾 Server (Backend/Hosting)' },
+  { value: 'palette', label: '🎨 Palette (UI/UX Design)' },
+  { value: 'cloud', label: '☁️ Cloud (Cloud Services)' },
+  { value: 'users', label: '👥 Users (Consulting)' },
+  { value: 'database', label: '🗄️ Database' },
+  { value: 'globe', label: '🌍 Globe (SEO/Web)' },
+  { value: 'lock', label: '🔒 Lock (Security)' },
+  { value: 'shoppingCart', label: '🛒 Shopping Cart (E-commerce)' },
+  { value: 'briefcase', label: '💼 Briefcase (Business)' },
+  { value: 'wrench', label: '🔧 Wrench (Maintenance)' },
+  { value: 'cpu', label: '⚙️ CPU (Technical)' },
+  { value: 'zap', label: '⚡ Zap (Performance)' },
+  { value: 'shield', label: '🛡️ Shield (Cybersecurity)' },
+  { value: 'search', label: '🔍 Search (SEO)' },
+  { value: 'barChart', label: '📊 Bar Chart (Analytics)' },
+  { value: 'target', label: '🎯 Target (Marketing)' },
+  { value: 'rocket', label: '🚀 Rocket (Startups)' }
+];
+
 const ServicesManager = () => {
   const { t } = useTranslation();
   const [services, setServices] = useState([]);
@@ -18,7 +41,9 @@ const ServicesManager = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    icon: ''
+    icon: '',
+    features: [],
+    technologies: []
   });
 
   useEffect(() => {
@@ -38,11 +63,14 @@ const ServicesManager = () => {
     setFormData({
       title: service.title,
       description: service.description,
-      icon: service.icon
+      icon: service.icon,
+      features: service.features || [],
+      technologies: service.technologies || []
     });
     setEditingId(service.id);
     setShowForm(true);
   };
+
 
   const handleDelete = (service) => {
     setDeleteId(service.id);
@@ -80,10 +108,27 @@ const ServicesManager = () => {
     setFormData({
       title: '',
       description: '',
-      icon: ''
+      icon: '',
+      features: [],
+      technologies: []
     });
     setEditingId(null);
     setShowForm(false);
+  };
+
+  const handleArrayChange = (field, index, value) => {
+    const newArray = [...formData[field]];
+    newArray[index] = value;
+    setFormData({ ...formData, [field]: newArray });
+  };
+
+  const addArrayItem = (field) => {
+    setFormData({ ...formData, [field]: [...formData[field], ''] });
+  };
+
+  const removeArrayItem = (field, index) => {
+    const newArray = formData[field].filter((_, i) => i !== index);
+    setFormData({ ...formData, [field]: newArray });
   };
 
   return (
@@ -98,6 +143,7 @@ const ServicesManager = () => {
         isOpen={showForm}
         onClose={resetForm}
         title={editingId ? t('dashboard.servicesManager.edit') : t('dashboard.servicesManager.add')}
+        width="600px"
       >
         <form className="manager-form" onSubmit={handleSubmit} style={{ margin: 0, padding: 0, border: 'none', boxShadow: 'none' }}>
           <div className="form-row">
@@ -112,12 +158,26 @@ const ServicesManager = () => {
             </div>
             <div className="form-group">
               <label>{t('dashboard.servicesManager.icon')}</label>
-              <input
-                type="text"
+              <select
                 value={formData.icon}
                 onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                placeholder="monitor, smartphone, server, palette, cloud, users"
-              />
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  borderRadius: '4px',
+                  border: '1px solid #ddd',
+                  backgroundColor: 'white',
+                  fontSize: '1rem'
+                }}
+              >
+                <option value="">{t('dashboard.servicesManager.selectIcon') || 'Select Icon'}</option>
+                {ICON_OPTIONS.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -131,7 +191,55 @@ const ServicesManager = () => {
             />
           </div>
 
-          {/* Features and Technologies removed as they are not supported by the backend yet */}
+          <div className="form-group">
+            <label>{t('dashboard.servicesManager.features')}</label>
+            {formData.features.map((item, index) => (
+              <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+                <input
+                  type="text"
+                  value={item}
+                  onChange={(e) => handleArrayChange('features', index, e.target.value)}
+                  placeholder={t('dashboard.servicesManager.featurePlaceholder')}
+                />
+                <button 
+                  type="button" 
+                  onClick={() => removeArrayItem('features', index)}
+                  className="btn-icon danger"
+                  style={{ padding: '8px' }}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            ))}
+            <button type="button" className="btn-secondary" onClick={() => addArrayItem('features')}>
+              + {t('dashboard.servicesManager.addFeature')}
+            </button>
+          </div>
+
+          <div className="form-group">
+            <label>{t('dashboard.servicesManager.technologies')}</label>
+            {formData.technologies.map((item, index) => (
+              <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+                <input
+                  type="text"
+                  value={item}
+                  onChange={(e) => handleArrayChange('technologies', index, e.target.value)}
+                  placeholder={t('dashboard.servicesManager.technologyPlaceholder')}
+                />
+                <button 
+                  type="button" 
+                  onClick={() => removeArrayItem('technologies', index)}
+                  className="btn-icon danger"
+                  style={{ padding: '8px' }}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            ))}
+            <button type="button" className="btn-secondary" onClick={() => addArrayItem('technologies')}>
+              + {t('dashboard.servicesManager.addTechnology')}
+            </button>
+          </div>
 
           <div className="form-actions">
             <button type="submit" className="btn-primary">

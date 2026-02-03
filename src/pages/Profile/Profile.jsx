@@ -1,38 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
-import { User, Mail, Briefcase, Calendar, Shield, Save, Edit2, X } from 'lucide-react';
-import UserSidebar from '../../components/UserSidebar/UserSidebar';
+import { api } from '../../services/api';
+import { User, Mail, Shield, Save, Edit2, X, Camera, Lock } from 'lucide-react';
+import Modal from '../../components/Modal/Modal';
 import './Profile.css';
 
 const Profile = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordStatus, setPasswordStatus] = useState({ type: '', message: '' });
   
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     role: '',
     phone: '',
-  });
-
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    dateOfBirth: '',
+    location: ''
   });
 
   useEffect(() => {
     if (user) {
-      setFormData(prev => ({
-        ...prev,
-        name: user.userName || '',
-        email: user.email || '',
-        role: user.role || '',
-        phone: user.phoneNumber || prev.phone,
-      }));
+      // If user comes from auth context, it might be stale.
+      // We should ideally fetch fresh profile. 
+      // But for now, let's map what we have or fetch if needed.
+      // Assuming api.auth.getProfile() is called on mount usually in real apps, 
+      // but here we might rely on props or context.
+      // If user context object has these fields, we use them.
+      // If not, we might need to update AuthContext to fetch full profile.
+      
+      const loadProfile = async () => {
+         try {
+             // Force fetch fresh profile data
+             const profile = await api.auth.getProfile();
+             setFormData({
+                name: profile.fullName || profile.userName,
+                email: profile.email,
+                role: profile.role,
+                phone: profile.phoneNumber || '',
+                dateOfBirth: profile.dateOfBirth ? new Date(profile.dateOfBirth).toISOString().split('T')[0] : '', // Format for input date
+                location: profile.location || ''
+             });
+         } catch(e) {
+             console.error("Failed to load profile", e);
+             // Fallback to basic user info
+             setFormData({
+                name: user.userName,
+                email: user.email,
+                role: user.role,
+                phone: '',
+                dateOfBirth: '',
+                location: ''
+             });
+         }
+      };
+      
+      loadProfile();
     }
   }, [user]);
 
@@ -43,6 +74,12 @@ const Profile = () => {
     });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Saving profile:', formData);
+    setIsEditing(false);
+  };
+
   const handlePasswordChange = (e) => {
     setPasswordData({
       ...passwordData,
@@ -50,233 +87,246 @@ const Profile = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    // Aici va fi logica de salvare user info
-    console.log('Saving profile:', formData);
-    setIsEditing(false);
-  };
+    setPasswordStatus({ type: '', message: '' });
 
-  const handlePasswordSubmit = (e) => {
-    e.preventDefault();
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("Parolele nu coincid!"); // Sau foloseste un state de eroare
+      setPasswordStatus({ type: 'error', message: 'Passwords do not match' });
       return;
     }
-    // Aici va fi logica de schimbare parola
-    console.log('Changing password:', passwordData);
-    setIsEditingPassword(false);
-    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  };
 
-  const handleCancel = () => {
-    if (user) {
-        setFormData(prev => ({
-            ...prev,
-            name: user.userName || '',
-            email: user.email || '',
-            role: user.role || '',
-            phone: user.phoneNumber || prev.phone,
-        }));
+    if (passwordData.newPassword.length < 6) {
+        setPasswordStatus({ type: 'error', message: 'Password must be at least 6 characters' });
+        return;
     }
-    setIsEditing(false);
-  };
-  
-  const handlePasswordCancel = () => {
-    setIsEditingPassword(false);
-    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+
+    try {
+      await api.auth.changePassword({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword
+      });
+      setPasswordStatus({ type: 'success', message: 'Password changed successfully' });
+      setTimeout(() => {
+        setShowPasswordModal(false);
+        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setPasswordStatus({ type: '', message: '' });
+      }, 2000);
+    } catch (error) {
+       setPasswordStatus({ type: 'error', message: error.message || 'Failed to change password' });
+    }
   };
 
   const getInitials = (name) => {
     if (!name) return 'U';
-    const names = name.split(' ');
-    if (names.length >= 2) {
-      return (names[0][0] + names[1][0]).toUpperCase();
-    }
-    return name[0].toUpperCase();
+    return name.charAt(0).toUpperCase();
   };
 
   return (
-    <div className="page-with-sidebar">
-      <UserSidebar />
-      <div className="page-content">
-        <div className="page-layout profile-page">
-          <div className="profile-container">
-        <div className="card profile-header">
-          <div className="profile-header-content">
-            <div className="profile-avatar-large">
-              {getInitials(formData.name)}
-            </div>
-            <div className="profile-header-info">
-              <h1>{formData.name}</h1>
-              <p className="profile-role">
-                <Shield size={16} />
-                {formData.role === 'admin' ? t('profile.roleAdmin') : t('profile.roleUser')}
-              </p>
-            </div>
-          </div>
-          {!isEditing && (
-            <button className="btn-edit-profile" onClick={() => setIsEditing(true)}>
-              <Edit2 size={18} />
-              {t('profile.editProfile')}
-            </button>
-          )}
-        </div>
-
-        <div className="profile-body">
-          <div className="card profile-card">
-            <div className="card-header profile-card-header">
-              <h2>{t('profile.personalInfo')}</h2>
+        <div className='profile-page'>
+          <div className='profile-wrapper'>
+            <div className='profile-card'>
+            
+            {/* Header Banner */}
+            <div className='profile-banner'>
             </div>
 
-            <form onSubmit={handleSubmit} className="profile-form">
-              <div className="form-row">
-                <div className="form-group">
-                  <label>
-                    <User size={18} />
-                    {t('profile.fullName')}
-                  </label>
+            {/* Avatar Section */}
+            <div className='profile-avatar-wrapper'>
+              <div className='profile-avatar'>
+                <div className='profile-avatar-inner'>
+                  {getInitials(formData.name)}
+                </div>
+              </div>
+              {isEditing && (
+                <div className='avatar-edit-btn'>
+                  <Camera size={18} />
+                </div>
+              )}
+              
+              <div className={`profile-role-badge ${(formData.role || '').toLowerCase()}`}>
+                <Shield size={14} />
+                {formData.role || 'User'}
+              </div>
+
+              <div className='profile-identity'>
+                <h1 className='profile-name'>{formData.name}</h1>
+                <p className='profile-email'>{formData.email}</p>
+              </div>
+            </div>
+
+            {/* Stats Row (example stats) */}
+            <div className='profile-stats'>
+              <div className='stat-item'>
+                <span className='stat-value'>12</span>
+                <span className='stat-label'>{t('header.myProjects') || 'Projects'}</span>
+              </div>
+              <div className='stat-item'>
+                <span className='stat-value'>24</span>
+                <span className='stat-label'>{'Reviews' || 'Reviews'}</span>
+              </div>
+              <div className='stat-item'>
+                <span className='stat-value'>2024</span>
+                <span className='stat-label'>{'Member Since' || 'Joined'}</span>
+              </div>
+            </div>
+
+            {/* Main Content Form */}
+            <form onSubmit={handleSubmit} className='profile-content'>
+              <div className='info-group'>
+                <div className='section-title'>
+                  <User size={20} className='text-indigo-600' />
+                  {t('profile.personalInfo')}
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label className='info-label'>{t('profile.fullName')}</label>
                   {isEditing ? (
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
+                    <input 
+                      className='profile-input'
+                      type='text' 
+                      name='name'
+                      value={formData.name} 
+                      onChange={handleChange} 
                     />
                   ) : (
-                    <div className="form-value">{formData.name}</div>
+                    <div className='info-value'>{formData.name}</div>
+                  )}
+                </div>
+                
+                <div style={{ marginBottom: '20px' }}>
+                  <label className='info-label'>{t('profile.dob', 'Date of Birth')}</label>
+                  {isEditing ? (
+                    <input 
+                      className='profile-input'
+                      type='date' 
+                      name='dateOfBirth'
+                      value={formData.dateOfBirth} 
+                      onChange={handleChange} 
+                    />
+                  ) : (
+                    <div className='info-value'>{formData.dateOfBirth || '-'}</div>
                   )}
                 </div>
 
-                <div className="form-group">
-                  <label>
-                    <Mail size={18} />
-                    {t('profile.email')}
-                  </label>
+                <div style={{ marginBottom: '20px' }}>
+                  <label className='info-label'>{t('profile.location', 'Location')}</label>
                   {isEditing ? (
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
+                    <input 
+                      className='profile-input'
+                      type='text' 
+                      name='location'
+                      value={formData.location} 
+                      onChange={handleChange} 
                     />
                   ) : (
-                    <div className="form-value">{formData.email}</div>
+                    <div className='info-value'>{formData.location || '-'}</div>
                   )}
+                </div>
+
+                <div>
+                  <label className='info-label'>{t('profile.email')}</label>
+                  <div className='info-value'>{formData.email}</div>
                 </div>
               </div>
 
+              <div className='info-group'>
+                <div className='section-title'>
+                  <Lock size={20} className='text-indigo-600' />
+                  {t('profile.security')}
+                </div>
+                
+                <div style={{ marginBottom: '20px' }}>
+                  <label className='info-label'>Password</label>
+                  <div className='info-value'>******</div>
+                </div>
+                
+                {!isEditing && (
+                  <button 
+                    type='button' 
+                    className='btn-cancel' 
+                    style={{ padding: '8px 20px', fontSize: '0.9rem' }}
+                    onClick={() => setShowPasswordModal(true)}
+                  >
+                    {t('profile.changePassword')}
+                  </button>
+                )}
+              </div>
+
               {isEditing && (
-                <div className="form-actions">
-                  <button type="submit" className="btn btn-primary">
+                <div className='action-buttons-row'>
+                  <button type='submit' className='btn-save'>
                     <Save size={18} />
                     {t('profile.saveChanges')}
                   </button>
-                  <button type="button" className="btn btn-secondary" onClick={handleCancel}>
-                    <X size={18} />
+                  <button type='button' className='btn-cancel' onClick={() => setIsEditing(false)}>
                     {t('profile.cancel')}
                   </button>
                 </div>
               )}
             </form>
-          </div>
 
-          <div className="card profile-card">
-            <div className="card-header profile-card-header">
-              <h2>{t('profile.security')}</h2>
-              {!isEditingPassword && (
-                <button className="btn-edit-profile" onClick={() => setIsEditingPassword(true)}>
-                  <Edit2 size={18} />
-                  {t('profile.changePassword')}
-                </button>
-              )}
-            </div>
-
-            <form onSubmit={handlePasswordSubmit} className="profile-form">
-               {!isEditingPassword ? (
-                  <div className="form-row">
-                     <div className="form-group">
-                        <label>{t('profile.password')}</label>
-                        <div className="form-value">••••••••••••</div>
-                     </div>
-                  </div>
-               ) : (
-                  <>
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>{t('profile.currentPassword')}</label>
-                        <input
-                          type="password"
-                          name="currentPassword"
-                          value={passwordData.currentPassword}
-                          onChange={handlePasswordChange}
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="form-row">
-                       <div className="form-group">
-                        <label>{t('profile.newPassword')}</label>
-                        <input
-                          type="password"
-                          name="newPassword"
-                          value={passwordData.newPassword}
-                          onChange={handlePasswordChange}
-                          required
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>{t('profile.confirmPassword')}</label>
-                        <input
-                          type="password"
-                          name="confirmPassword"
-                          value={passwordData.confirmPassword}
-                          onChange={handlePasswordChange}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="form-actions">
-                      <button type="submit" className="btn btn-primary">
-                        <Save size={18} />
-                        {t('profile.saveChanges')}
-                      </button>
-                      <button type="button" className="btn btn-secondary" onClick={handlePasswordCancel}>
-                        <X size={18} />
-                        {t('profile.cancel')}
-                      </button>
-                    </div>
-                  </>
-               )}
-            </form>
-          </div>
-
-          <div className="profile-card">
-            <div className="profile-card-header">
-              <h2>{t('profile.accountStats')}</h2>
-            </div>
-            <div className="stats-grid">
-              <div className="stat-box">
-                <div className="stat-value">0</div>
-                <div className="stat-label">{t('profile.projectsCompleted')}</div>
-              </div>
-              <div className="stat-box">
-                <div className="stat-value">0</div>
-                <div className="stat-label">{t('profile.activeProjects')}</div>
-              </div>
-              <div className="stat-box">
-                <div className="stat-value">0</div>
-                <div className="stat-label">{t('profile.messagesReceived')}</div>
-              </div>
-            </div>
           </div>
         </div>
+
+      <Modal isOpen={showPasswordModal} onClose={() => setShowPasswordModal(false)} title={t('profile.changePassword') || 'Change Password'}>
+        <form onSubmit={handlePasswordSubmit} className="password-form">
+          {passwordStatus.message && (
+            <div className={`status-message ${passwordStatus.type === 'error' ? 'text-red-500' : 'text-green-500'}`} style={{marginBottom: '1rem', padding: '10px', borderRadius: '8px', backgroundColor: passwordStatus.type === 'error' ? '#fee2e2' : '#dcfce7'}}>
+              {passwordStatus.message}
+            </div>
+          )}
+          
+          <div className="form-group" style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>{t('profile.currentPassword') || 'Current Password'}</label>
+            <input 
+              type="password" 
+              name="currentPassword"
+              value={passwordData.currentPassword}
+              onChange={handlePasswordChange}
+              className="profile-input" 
+              required
+              style={{ width: '100%' }}
+            />
           </div>
-        </div>
-      </div>
+          
+          <div className="form-group" style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>{t('profile.newPassword') || 'New Password'}</label>
+            <input 
+              type="password" 
+              name="newPassword"
+              value={passwordData.newPassword}
+              onChange={handlePasswordChange}
+              className="profile-input" 
+              required
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>{t('profile.confirmPassword') || 'Confirm New Password'}</label>
+            <input 
+              type="password" 
+              name="confirmPassword"
+              value={passwordData.confirmPassword}
+              onChange={handlePasswordChange}
+              className="profile-input" 
+              required
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+            <button type="button" className="btn-cancel" onClick={() => setShowPasswordModal(false)}>
+              {t('common.cancel') || 'Cancel'}
+            </button>
+            <button type="submit" className="btn-save" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Save size={16} /> {t('common.update') || 'Update'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
     </div>
   );
 };

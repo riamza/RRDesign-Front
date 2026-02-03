@@ -171,12 +171,13 @@
       "title": "Title",
       "description": "Description",
       "icon": "Icon (emoji)",
-      "features": "Features",
+      "selectIcon": "Select Icon",
+      "features": "Features (What we offer)",
       "addFeature": "Add feature",
       "technologies": "Technologies",
       "addTechnology": "Add technology",
-      "featurePlaceholder": "Feature",
-      "technologyPlaceholder": "Technology",
+      "featurePlaceholder": "Feature description",
+      "technologyPlaceholder": "e.g. React, .NET...",
       "confirmDelete": "Are you sure you want to delete this service?"
     },
     "projectsManager": {
@@ -356,7 +357,9 @@
   "common": {
     "loading": "Loading...",
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "cancel": "Cancel",
+    "update": "Update"
   },
   "profile": {
     "roleAdmin": "Administrator",
@@ -373,6 +376,9 @@
     "password": "Password",
     "passwordDescription": "Change your password to keep your account secure",
     "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
     "accountStats": "Account Statistics",
     "projectsCompleted": "Projects Completed",
     "activeProjects": "Active Projects",

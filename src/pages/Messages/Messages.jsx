@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MessageSquare, Send, Search, Trash2, Archive, Star, Plus } from 'lucide-react';
-import UserSidebar from '../../components/UserSidebar/UserSidebar';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import './Messages.css';
 
@@ -151,9 +150,6 @@ const Messages = () => {
   );
 
   return (
-    <div className="page-with-sidebar">
-      <UserSidebar />
-      <div className="page-content">
         <div className="page-layout messages-page">
           <PageHeader
             icon={MessageSquare}
@@ -314,8 +310,6 @@ const Messages = () => {
           </div>
         )}
         </div>
-      </div>
-    </div>
   );
 };
 

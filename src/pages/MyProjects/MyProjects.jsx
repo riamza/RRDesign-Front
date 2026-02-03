@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FolderKanban, Plus, Eye, Calendar, Tag, ExternalLink } from 'lucide-react';
-import UserSidebar from '../../components/UserSidebar/UserSidebar';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import './MyProjects.css';
 
@@ -112,9 +111,6 @@ const MyProjects = () => {
   };
 
   return (
-    <div className="page-with-sidebar">
-      <UserSidebar />
-      <div className="page-content">
         <div className="page-layout my-projects-page">
           <PageHeader
             icon={FolderKanban}
@@ -364,8 +360,6 @@ const MyProjects = () => {
         )}
           </div>
         </div>
-      </div>
-    </div>
   );
 };
 
