@@ -1,15 +1,33 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Services.css';
 import ServiceCard from '../../components/ServiceCard/ServiceCard';
 import PriceCard from '../../components/PriceCard/PriceCard';
-import { services, pricingPackages } from '../../data/mockData';
+import { pricingPackages } from '../../data/mockData';
+import { api } from '../../services/api';
 
 const Services = () => {
   const { t } = useTranslation();
   const gridRef = useRef(null);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const data = await api.getServices();
+        setServices(data);
+      } catch (error) {
+        console.error('Failed to fetch services:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchServices();
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
     const alignCardSections = () => {
       if (!gridRef.current) return;
 
@@ -56,7 +74,7 @@ const Services = () => {
       <section className="services-section">
         <div className="container">
           <div className="services-grid" ref={gridRef}>
-            {services.map(service => (
+            {loading ? <p>Loading services...</p> : services.map(service => (
               <div key={service.id} className="service-card-wrapper">
                 <ServiceCard service={service} />
               </div>

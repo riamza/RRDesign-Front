@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { User, LayoutDashboard, LogOut, FolderKanban, MessageSquare } from 'lucide-react';
+import logo from '../../assets/logo.png';
 import './Header.css';
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import { useAuth } from '../../context/AuthContext';
@@ -70,8 +71,7 @@ const Header = () => {
     <header className="header">
       <div className="container">
         <NavLink to="/" className="logo" onClick={closeMenu}>
-          <span className="logo-rr">RR</span>
-          <span className="logo-design">Design</span>
+          <img src={logo} alt="RR Design" className="logo-img" />
         </NavLink>
         
         <button 

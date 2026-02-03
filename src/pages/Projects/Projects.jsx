@@ -1,14 +1,31 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Projects.css';
 import ProjectCard from '../../components/ProjectCard/ProjectCard';
-import { projects } from '../../data/mockData';
+import { api } from '../../services/api';
 
 const Projects = () => {
   const { t } = useTranslation();
   const gridRef = useRef(null);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const data = await api.getProjects();
+        setProjects(data);
+      } catch (error) {
+        console.error('Failed to fetch projects:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
     const alignCardSections = () => {
       if (!gridRef.current) return;
 
@@ -61,7 +78,7 @@ const Projects = () => {
       <section className="projects-section">
         <div className="container">
           <div className="projects-grid" ref={gridRef}>
-            {projects.map(project => (
+            {loading ? <p>Loading projects...</p> : projects.map(project => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>

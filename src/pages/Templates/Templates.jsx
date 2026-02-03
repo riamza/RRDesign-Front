@@ -1,14 +1,31 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Templates.css';
 import TemplateCard from '../../components/TemplateCard/TemplateCard';
-import { templates } from '../../data/mockData';
+import { api } from '../../services/api';
 
 const Templates = () => {
   const { t } = useTranslation();
   const gridRef = useRef(null);
+  const [templates, setTemplates] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        const data = await api.getTemplates();
+        setTemplates(data);
+      } catch (error) {
+        console.error('Failed to fetch templates:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTemplates();
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
     const alignCardSections = () => {
       if (!gridRef.current) return;
 
@@ -61,7 +78,7 @@ const Templates = () => {
       <section className="templates-section">
         <div className="container">
           <div className="templates-grid" ref={gridRef}>
-            {templates.map(template => (
+            {loading ? <p>Loading templates...</p> : templates.map(template => (
               <TemplateCard key={template.id} template={template} />
             ))}
           </div>

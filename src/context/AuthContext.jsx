@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { api } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -14,34 +15,44 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const login = (email, password) => {
-    // Mock login - în realitate va fi API call la backend
-    if (email === 'admin@rrdesign.ro' && password === 'admin123') {
+  const login = async (email, password) => {
+    try {
+      const data = await api.auth.login(email, password);
+      // data: { accessToken, refreshToken, role }
+      
+      localStorage.setItem('access_token', data.accessToken);
+      localStorage.setItem('refresh_token', data.refreshToken);
+      localStorage.setItem('user_role', data.role);
+      
       const userData = {
-        email: 'admin@rrdesign.ro',
-        name: 'Administrator',
-        role: 'admin'
+        email: email, 
+        role: data.role
       };
+      
       setUser(userData);
       setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(userData));
       return { success: true };
+    } catch (error) {
+      console.error(error);
+      return { success: false, error: 'Credențiale invalide' };
     }
-    return { success: false, error: 'Credențiale invalide' };
   };
 
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user_role');
   };
 
   // Check for existing session
-  React.useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const userData = JSON.parse(storedUser);
-      setUser(userData);
+  useEffect(() => {
+    const accessToken = localStorage.getItem('access_token');
+    const role = localStorage.getItem('user_role');
+    
+    if (accessToken && role) {
+      setUser({ role }); 
       setIsAuthenticated(true);
     }
   }, []);

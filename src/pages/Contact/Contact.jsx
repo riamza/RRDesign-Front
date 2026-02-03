@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import './Contact.css';
 import Button from '../../components/Button/Button';
-import { companyInfo } from '../../data/mockData';
+import { companyInfo } from '../../utils/constants';
 
 const Contact = () => {
   const { t } = useTranslation();

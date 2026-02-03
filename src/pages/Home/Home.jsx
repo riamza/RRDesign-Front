@@ -1,21 +1,36 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Monitor, Smartphone, Cloud } from 'lucide-react';
 import './Home.css';
 import Button from '../../components/Button/Button';
-import { companyInfo, services } from '../../data/mockData';
+import { companyInfo } from '../../utils/constants';
+import { api } from '../../services/api';
 import { getIcon } from '../../utils/iconMapper';
 
 const Home = () => {
   const { t } = useTranslation();
   const servicesGridRef = useRef(null);
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const data = await api.getServices();
+        setServices(data);
+      } catch (error) {
+        console.error('Failed to fetch services:', error);
+      }
+    };
+    fetchServices();
+  },[]);
 
   useEffect(() => {
     const alignServiceCards = () => {
       if (!servicesGridRef.current) return;
 
       const cards = servicesGridRef.current.querySelectorAll('.service-card');
+      if (cards.length === 0) return;
       
       // Reset heights
       cards.forEach(card => {
@@ -31,11 +46,14 @@ const Home = () => {
       });
     };
 
-    alignServiceCards();
-    window.addEventListener('resize', alignServiceCards);
+    if (services.length > 0) {
+      // Small timeout to allow render
+      setTimeout(alignServiceCards, 100);
+      window.addEventListener('resize', alignServiceCards);
+    }
     
     return () => window.removeEventListener('resize', alignServiceCards);
-  }, []);
+  }, [services]);
 
   return (
     <div className="home">

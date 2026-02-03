@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pencil, Trash2 } from 'lucide-react';
-import { services as initialServices } from '../../../data/mockData';
+import { api } from '../../../services/api';
 import Modal from '../../../components/Modal/Modal';
 import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
 import ServiceCard from '../../../components/ServiceCard/ServiceCard';
@@ -9,7 +9,7 @@ import './Manager.css';
 
 const ServicesManager = () => {
   const { t } = useTranslation();
-  const [services, setServices] = useState(initialServices);
+  const [services, setServices] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -18,13 +18,28 @@ const ServicesManager = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    icon: '',
-    features: [''],
-    technologies: ['']
+    icon: ''
   });
 
+  useEffect(() => {
+    loadServices();
+  }, []);
+
+  const loadServices = async () => {
+    try {
+      const data = await api.getServices();
+      setServices(data);
+    } catch (error) {
+      console.error("Failed to load services", error);
+    }
+  };
+
   const handleEdit = (service) => {
-    setFormData(service);
+    setFormData({
+      title: service.title,
+      description: service.description,
+      icon: service.icon
+    });
     setEditingId(service.id);
     setShowForm(true);
   };
@@ -35,46 +50,40 @@ const ServicesManager = () => {
     setShowConfirmDelete(true);
   };
 
-  const confirmDelete = () => {
-    setServices(services.filter(s => s.id !== deleteId));
+  const confirmDelete = async () => {
+    try {
+      await api.deleteService(deleteId);
+      await loadServices();
+    } catch (error) {
+      console.error("Failed to delete service", error);
+    }
     setDeleteId(null);
+    setShowConfirmDelete(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editingId) {
-      setServices(services.map(s => s.id === editingId ? { ...formData, id: editingId } : s));
-    } else {
-      setServices([...services, { ...formData, id: Date.now() }]);
+    try {
+      if (editingId) {
+        await api.updateService(editingId, formData);
+      } else {
+        await api.createService(formData);
+      }
+      await loadServices();
+      resetForm();
+    } catch (error) {
+      console.error("Failed to save service", error);
     }
-    resetForm();
   };
 
   const resetForm = () => {
     setFormData({
       title: '',
       description: '',
-      icon: '',
-      features: [''],
-      technologies: ['']
+      icon: ''
     });
     setEditingId(null);
     setShowForm(false);
-  };
-
-  const handleArrayChange = (field, index, value) => {
-    const newArray = [...formData[field]];
-    newArray[index] = value;
-    setFormData({ ...formData, [field]: newArray });
-  };
-
-  const addArrayItem = (field) => {
-    setFormData({ ...formData, [field]: [...formData[field], ''] });
-  };
-
-  const removeArrayItem = (field, index) => {
-    const newArray = formData[field].filter((_, i) => i !== index);
-    setFormData({ ...formData, [field]: newArray });
   };
 
   return (
@@ -122,45 +131,7 @@ const ServicesManager = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label>{t('dashboard.servicesManager.features')}</label>
-            {formData.features.map((feature, index) => (
-              <div key={index} className="array-item">
-                <input
-                  type="text"
-                  value={feature}
-                  onChange={(e) => handleArrayChange('features', index, e.target.value)}
-                  placeholder={t('dashboard.servicesManager.featurePlaceholder')}
-                />
-                <button type="button" className="btn-remove" onClick={() => removeArrayItem('features', index)}>
-                  ✕
-                </button>
-              </div>
-            ))}
-            <button type="button" className="btn-add" onClick={() => addArrayItem('features')}>
-              {'+ ' + t('dashboard.servicesManager.addFeature')}
-            </button>
-          </div>
-
-          <div className="form-group">
-            <label>{t('dashboard.servicesManager.technologies')}</label>
-            {formData.technologies.map((tech, index) => (
-              <div key={index} className="array-item">
-                <input
-                  type="text"
-                  value={tech}
-                  onChange={(e) => handleArrayChange('technologies', index, e.target.value)}
-                  placeholder={t('dashboard.servicesManager.technologyPlaceholder')}
-                />
-                <button type="button" className="btn-remove" onClick={() => removeArrayItem('technologies', index)}>
-                  ✕
-                </button>
-              </div>
-            ))}
-            <button type="button" className="btn-add" onClick={() => addArrayItem('technologies')}>
-              {'+ ' + t('dashboard.servicesManager.addTechnology')}
-            </button>
-          </div>
+          {/* Features and Technologies removed as they are not supported by the backend yet */}
 
           <div className="form-actions">
             <button type="submit" className="btn-primary">

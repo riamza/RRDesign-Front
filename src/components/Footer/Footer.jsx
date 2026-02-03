@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './Footer.css';
-import { companyInfo } from '../../data/mockData';
+import { companyInfo } from '../../utils/constants';
 
 const Footer = () => {
   const { t } = useTranslation();

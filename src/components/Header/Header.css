@@ -1,4 +1,4 @@
-.header {
+﻿.header {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -467,3 +467,12 @@
     }
   }
 }
+
+.logo-img {
+  height: 2.2rem;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+

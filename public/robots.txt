@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /my-projects
+Disallow: /messages
+
+Sitemap: https://rrdesign.ro/sitemap.xml
