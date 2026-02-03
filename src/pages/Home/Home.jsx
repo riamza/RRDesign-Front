@@ -7,6 +7,7 @@ import Button from '../../components/Button/Button';
 import { companyInfo } from '../../utils/constants';
 import { api } from '../../services/api';
 import { getIcon } from '../../utils/iconMapper';
+import SEO from '../../components/SEO/SEO';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -57,6 +58,10 @@ const Home = () => {
 
   return (
     <div className="home">
+      <SEO 
+        title={t('seo.home.title')} 
+        description={t('seo.home.description')} 
+      />
       {/* Hero Section */}
       <section className="hero">
         <div className="container">

@@ -1,4 +1,30 @@
 {
+  "seo": {
+    "defaultDescription": "RRDesign offers complete software solutions: presentation websites, online stores, web and mobile applications.",
+    "defaultKeywords": "software, web design, app development, e-commerce, presentation site, seo",
+    "home": {
+      "title": "Home",
+      "description": "RRDesign transforms ideas into digital reality through custom software solutions."
+    },
+    "services": {
+      "title": "Software Services",
+      "description": "Discover our services: Web Development, Online Stores, Custom Apps, and SEO Optimization.",
+      "keywords": "web services, create website, online store, custom apps"
+    },
+    "projects": {
+      "title": "Project Portfolio",
+      "description": "See the latest projects built by the RRDesign team: presentation websites, e-commerce platforms, and web apps."
+    },
+    "templates": {
+      "title": "Premium Templates",
+      "description": "Choose from our collection of modern and optimized web templates for your business.",
+      "keywords": "website template, wordpress theme, html template, cheap website"
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Contact the RRDesign team for a custom quote or to discuss your project."
+    }
+  },
   "header": {
     "home": "Home",
     "services": "Services",

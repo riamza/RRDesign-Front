@@ -1,4 +1,30 @@
 {
+  "seo": {
+    "defaultDescription": "RRDesign oferă soluții software complete: site-uri de prezentare, magazine online, aplicații web și mobile.",
+    "defaultKeywords": "software, web design, dezvoltare aplicatii, magazin online, site prezentare, seo",
+    "home": {
+      "title": "Acasă",
+      "description": "RRDesign transformă ideile în realitate digitală prin soluții software personalizate."
+    },
+    "services": {
+      "title": "Servicii Software",
+      "description": "Descoperă serviciile noastre: Dezvoltare Web, Magazine Online, Aplicații Custom și Optimizare SEO.",
+      "keywords": "servicii web, creare site, magazin online, aplicatii custom"
+    },
+    "projects": {
+      "title": "Portofoliu Proiecte",
+      "description": "Vezi ultimele proiecte realizate de echipa RRDesign: site-uri de prezentare, platforme e-commerce și aplicații web."
+    },
+    "templates": {
+      "title": "Template-uri Premium",
+      "description": "Alege din colecția noastră de template-uri web moderne și optimizate pentru afacerea ta.",
+      "keywords": "template site, tema wordpress, html template, site ieftin"
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Contactează echipa RRDesign pentru o ofertă personalizată sau pentru a discuta despre proiectul tău."
+    }
+  },
   "header": {
     "home": "Acasă",
     "services": "Servicii",

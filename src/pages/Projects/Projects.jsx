@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import './Projects.css';
 import ProjectCard from '../../components/ProjectCard/ProjectCard';
 import { api } from '../../services/api';
+import SEO from '../../components/SEO/SEO';
 
 const Projects = () => {
   const { t } = useTranslation();
@@ -66,6 +67,10 @@ const Projects = () => {
 
   return (
     <div className="projects-page">
+      <SEO 
+        title={t('seo.projects.title')} 
+        description={t('seo.projects.description')} 
+      />
       <section className="page-header">
         <div className="container">
           <h1 className="page-title">{t('projects.pageTitle')}</h1>

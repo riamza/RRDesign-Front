@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import './Templates.css';
 import TemplateCard from '../../components/TemplateCard/TemplateCard';
 import { api } from '../../services/api';
+import SEO from '../../components/SEO/SEO';
 
 const Templates = () => {
   const { t } = useTranslation();
@@ -66,6 +67,11 @@ const Templates = () => {
 
   return (
     <div className="templates-page">
+      <SEO 
+        title={t('seo.templates.title')} 
+        description={t('seo.templates.description')} 
+        keywords={t('seo.templates.keywords')} 
+      />
       <section className="page-header">
         <div className="container">
           <h1 className="page-title">{t('templates.pageTitle')}</h1>

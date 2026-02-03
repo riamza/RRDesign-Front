@@ -5,6 +5,7 @@ import ServiceCard from '../../components/ServiceCard/ServiceCard';
 import PriceCard from '../../components/PriceCard/PriceCard';
 import { pricingPackages } from '../../data/mockData';
 import { api } from '../../services/api';
+import SEO from '../../components/SEO/SEO';
 
 const Services = () => {
   const { t } = useTranslation();
@@ -62,6 +63,11 @@ const Services = () => {
 
   return (
     <div className="services-page">
+      <SEO 
+        title={t('seo.services.title')} 
+        description={t('seo.services.description')} 
+        keywords={t('seo.services.keywords')} 
+      />
       <section className="page-header">
         <div className="container">
           <h1 className="page-title">{t('services.pageTitle')}</h1>

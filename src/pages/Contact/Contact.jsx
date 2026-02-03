@@ -4,6 +4,7 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 import './Contact.css';
 import Button from '../../components/Button/Button';
 import { companyInfo } from '../../utils/constants';
+import SEO from '../../components/SEO/SEO';
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -31,6 +32,10 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
+      <SEO 
+        title={t('seo.contact.title')} 
+        description={t('seo.contact.description')} 
+      />
       <section className="page-header">
         <div className="container">
           <h1 className="page-title">{t('contact.pageTitle')}</h1>
