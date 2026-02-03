@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { User, LayoutDashboard, LogOut, FolderKanban, MessageSquare } from 'lucide-react';
-import logo from '../../assets/logo.png';
 import './Header.css';
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
+import Logo from '../Logo/Logo';
 import { useAuth } from '../../context/AuthContext';
 
 const Header = () => {
@@ -70,8 +70,9 @@ const Header = () => {
   return (
     <header className="header">
       <div className="container">
-        <NavLink to="/" className="logo" onClick={closeMenu}>
-          <img src={logo} alt="RR Design" className="logo-img" />
+        <NaLogo className="logo-svg" /efs>
+          </svg>
+          <span className="logo-design">Design</span>
         </NavLink>
         
         <button 
