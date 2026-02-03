@@ -106,15 +106,24 @@ export const api = {
       getProfile: () => request('/Auth/me'),
   },
   // Services
-  getServices: () => request('/services'),
+  getServices: async () => {
+    const data = await request('/services');
+    return Array.isArray(data) ? data : [];
+  },
   getService: (id) => request(`/services/${id}`),
   createService: (service) => request('/services', { method: 'POST', body: service }),
   updateService: (id, service) => request(`/services/${id}`, { method: 'PUT', body: service }),
   deleteService: (id) => request(`/services/${id}`, { method: 'DELETE' }),
 
   // Client Projects (Admin Dashboard)
-  getClientProjects: () => request('/ClientProjects'),
-  getClientProjectsByUser: (userId) => request(`/ClientProjects/user/${userId}`),
+  getClientProjects: async () => {
+    const data = await request('/ClientProjects');
+    return Array.isArray(data) ? data : [];
+  },
+  getClientProjectsByUser: async (userId) => {
+    const data = await request(`/ClientProjects/user/${userId}`);
+    return Array.isArray(data) ? data : [];
+  },
   getClientProject: (id) => request(`/ClientProjects/${id}`),
   createClientProject: (project) => request('/ClientProjects', { method: 'POST', body: project }),
   updateClientProject: (id, project) => request(`/ClientProjects/${id}`, { method: 'PUT', body: project }), // Only fields
@@ -137,6 +146,7 @@ export const api = {
   // Portfolio Projects
   getProjects: async () => {
     const data = await request('/projects');
+    if (!Array.isArray(data)) return [];
     return data.map(project => ({
       ...project,
       technologies: project.technologies ? project.technologies.split(',').map(t => t.trim()) : [],
@@ -175,6 +185,7 @@ export const api = {
   // Templates
   getTemplates: async () => {
     const data = await request('/templates');
+    if (!Array.isArray(data)) return [];
     return data.map(template => ({
       ...template,
       image: template.imageUrl,
