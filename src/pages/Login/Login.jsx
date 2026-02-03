@@ -88,9 +88,6 @@ const Login = () => {
           </form>
 
           <div className="login-footer">
-            <p className="demo-credentials">
-              <strong>{t('login.demo')}</strong> admin@rrdesign.ro / admin123
-            </p>
             <p>{t('login.noAccount')} <a href="/contact">{t('login.contactLink')}</a></p>
           </div>
         </div>

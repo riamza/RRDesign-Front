@@ -71,7 +71,7 @@ const Header = () => {
     <header className="header">
       <div className="container">
         <NavLink to="/" className="logo">
-          <Logo className="logo-svg" />
+          <span className="logo-rr">RR</span>
           <span className="logo-design">Design</span>
         </NavLink>
         
