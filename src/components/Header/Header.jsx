@@ -7,6 +7,7 @@ import './Header.css';
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import Logo from '../Logo/Logo';
 import { useAuth } from '../../context/AuthContext';
+import { getInitials } from '../../utils/stringUtils';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -59,11 +60,6 @@ const Header = () => {
     setIsDropdownOpen(false);
   };
 
-  const getInitials = (name) => {
-    if (!name) return 'U';
-    return name.charAt(0).toUpperCase();
-  };
-
   return (
     <header className="header">
       <div className="container">
@@ -98,14 +94,15 @@ const Header = () => {
                 aria-label="User menu"
               >
                 <div className="avatar-circle">
-                  {getInitials(user?.userName)}
+                  {getInitials(user?.fullName)}
+                  {console.log(user)}
                 </div>
               </button>
               {isDropdownOpen && (
                 <div className="user-dropdown">
                   <div className="dropdown-header">
                     <div className="avatar-circle-large">
-                      {getInitials(user?.userName)}
+                      {getInitials(user?.fullName)}
                     </div>
                     <div className="user-info-dropdown">
                       <p className="user-name">{user?.fullName}</p>

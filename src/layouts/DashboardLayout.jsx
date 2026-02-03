@@ -46,7 +46,10 @@ const DashboardLayout = () => {
 
   return (
     <div className="dashboard-layout-container">
-      <Sidebar items={isDashboard ? adminItems : userItems} />
+      <Sidebar 
+        items={isDashboard ? adminItems : userItems} 
+        badgeLabel={isDashboard ? t('header.dashboard', 'Admin Dashboard') : t('sidebar.userPanel')}
+      />
       <div className="dashboard-main-area">
         <Header />
         <main className="dashboard-content-wrapper">

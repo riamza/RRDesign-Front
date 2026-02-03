@@ -3,9 +3,10 @@ import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { getInitials } from '../../utils/stringUtils';
 import './Sidebar.css';
 
-const Sidebar = ({ items = [] }) => {
+const Sidebar = ({ items = [], badgeLabel }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,11 +14,6 @@ const Sidebar = ({ items = [] }) => {
 
   const handleLogout = () => {
     logout();
-  };
-
-  const getInitials = (name) => {
-    if (!name) return 'U';
-    return name.charAt(0).toUpperCase();
   };
 
   const handleNavigation = (item) => {
@@ -54,7 +50,7 @@ const Sidebar = ({ items = [] }) => {
           <span className="logo-rr">RR</span>
           <span className="logo-design">Design</span>
         </NavLink>
-        <span className="user-badge">{t('sidebar.userPanel')}</span>
+        <span className="user-badge">{badgeLabel || t('sidebar.userPanel')}</span>
       </div>
       
       <nav className="sidebar-nav">

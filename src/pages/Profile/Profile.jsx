@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 import { User, Mail, Shield, Save, Edit2, X, Camera, Lock } from 'lucide-react';
 import Modal from '../../components/Modal/Modal';
+import { getInitials } from '../../utils/stringUtils';
 import './Profile.css';
 
 const Profile = () => {
@@ -117,10 +118,6 @@ const Profile = () => {
     }
   };
 
-  const getInitials = (name) => {
-    if (!name) return 'U';
-    return name.charAt(0).toUpperCase();
-  };
 
   return (
         <div className='profile-page'>
