@@ -140,7 +140,7 @@ const Header = () => {
                       <span className="dropdown-icon"><MessageSquare size={18} /></span>
                       <span>{t('header.messages')}</span>
                     </NavLink>
-                    {user?.role === 'admin' && (
+                    {user?.role === 'Admin' && (
                       <>
                         <div className="dropdown-divider"></div>
                         <NavLink 

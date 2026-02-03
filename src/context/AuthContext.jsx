@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       
       setUser(userData);
       setIsAuthenticated(true);
-      return { success: true };
+      return { success: true, role: data.role };
     } catch (error) {
       console.error(error);
       return { success: false, error: 'Credențiale invalide' };
