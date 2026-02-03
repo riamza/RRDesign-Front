@@ -70,8 +70,8 @@ const Header = () => {
   return (
     <header className="header">
       <div className="container">
-        <NaLogo className="logo-svg" /efs>
-          </svg>
+        <NavLink to="/" className="logo">
+          <Logo className="logo-svg" />
           <span className="logo-design">Design</span>
         </NavLink>
         
