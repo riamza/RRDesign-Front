@@ -14,6 +14,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const login = async (email, password) => {
     try {
@@ -48,18 +49,36 @@ export const AuthProvider = ({ children }) => {
 
   // Check for existing session
   useEffect(() => {
-    const accessToken = localStorage.getItem('access_token');
-    const role = localStorage.getItem('user_role');
+    const initAuth = async () => {
+      const accessToken = localStorage.getItem('access_token');
+      
+      if (accessToken) {
+        try {
+          const profile = await api.auth.getProfile();
+          setUser({
+             ...profile,
+             role: profile.role // Ensure role is top level if needed, though DTO has it
+          }); 
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error("Failed to fetch profile", error);
+          // If fetch fails (even after refresh retry), maybe clear session?
+          // But api.js might have already cleared it if refresh failed.
+          if (!localStorage.getItem('access_token')) {
+             logout();
+          }
+        }
+      }
+      setLoading(false);
+    };
     
-    if (accessToken && role) {
-      setUser({ role }); 
-      setIsAuthenticated(true);
-    }
+    initAuth();
   }, []);
 
   const value = {
     user,
     isAuthenticated,
+    loading,
     login,
     logout
   };

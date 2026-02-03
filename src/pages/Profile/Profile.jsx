@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { User, Mail, Briefcase, Calendar, Shield, Save, Edit2, X } from 'lucide-react';
@@ -9,14 +9,32 @@ const Profile = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  
   const [formData, setFormData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    role: user?.role || '',
-    phone: '+40 123 456 789',
-    company: 'RRDesign',
-    joinDate: 'Ianuarie 2024'
+    name: '',
+    email: '',
+    role: '',
+    phone: '',
   });
+
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.userName || '',
+        email: user.email || '',
+        role: user.role || '',
+        phone: user.phoneNumber || prev.phone,
+      }));
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     setFormData({
@@ -25,23 +43,48 @@ const Profile = () => {
     });
   };
 
+  const handlePasswordChange = (e) => {
+    setPasswordData({
+      ...passwordData,
+      [e.target.name]: e.target.value
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aici va fi logica de salvare
+    // Aici va fi logica de salvare user info
     console.log('Saving profile:', formData);
     setIsEditing(false);
   };
 
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      alert("Parolele nu coincid!"); // Sau foloseste un state de eroare
+      return;
+    }
+    // Aici va fi logica de schimbare parola
+    console.log('Changing password:', passwordData);
+    setIsEditingPassword(false);
+    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  };
+
   const handleCancel = () => {
-    setFormData({
-      name: user?.name || '',
-      email: user?.email || '',
-      role: user?.role || '',
-      phone: '+40 123 456 789',
-      company: 'RRDesign',
-      joinDate: 'Ianuarie 2024'
-    });
+    if (user) {
+        setFormData(prev => ({
+            ...prev,
+            name: user.userName || '',
+            email: user.email || '',
+            role: user.role || '',
+            phone: user.phoneNumber || prev.phone,
+        }));
+    }
     setIsEditing(false);
+  };
+  
+  const handlePasswordCancel = () => {
+    setIsEditingPassword(false);
+    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
   };
 
   const getInitials = (name) => {
@@ -125,33 +168,6 @@ const Profile = () => {
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>
-                    <Briefcase size={18} />
-                    {t('profile.company')}
-                  </label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleChange}
-                    />
-                  ) : (
-                    <div className="form-value">{formData.company}</div>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label>
-                    <Calendar size={18} />
-                    {t('profile.joinDate')}
-                  </label>
-                  <div className="form-value">{formData.joinDate}</div>
-                </div>
-              </div>
-
               {isEditing && (
                 <div className="form-actions">
                   <button type="submit" className="btn btn-primary">
@@ -167,21 +183,75 @@ const Profile = () => {
             </form>
           </div>
 
-          <div className="profile-card">
-            <div className="profile-card-header">
+          <div className="card profile-card">
+            <div className="card-header profile-card-header">
               <h2>{t('profile.security')}</h2>
-            </div>
-            <div className="profile-form">
-              <div className="security-item">
-                <div className="security-info">
-                  <h4>{t('profile.password')}</h4>
-                  <p>{t('profile.passwordDescription')}</p>
-                </div>
-                <button className="btn btn-secondary">
+              {!isEditingPassword && (
+                <button className="btn-edit-profile" onClick={() => setIsEditingPassword(true)}>
+                  <Edit2 size={18} />
                   {t('profile.changePassword')}
                 </button>
-              </div>
+              )}
             </div>
+
+            <form onSubmit={handlePasswordSubmit} className="profile-form">
+               {!isEditingPassword ? (
+                  <div className="form-row">
+                     <div className="form-group">
+                        <label>{t('profile.password')}</label>
+                        <div className="form-value">••••••••••••</div>
+                     </div>
+                  </div>
+               ) : (
+                  <>
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>{t('profile.currentPassword')}</label>
+                        <input
+                          type="password"
+                          name="currentPassword"
+                          value={passwordData.currentPassword}
+                          onChange={handlePasswordChange}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="form-row">
+                       <div className="form-group">
+                        <label>{t('profile.newPassword')}</label>
+                        <input
+                          type="password"
+                          name="newPassword"
+                          value={passwordData.newPassword}
+                          onChange={handlePasswordChange}
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>{t('profile.confirmPassword')}</label>
+                        <input
+                          type="password"
+                          name="confirmPassword"
+                          value={passwordData.confirmPassword}
+                          onChange={handlePasswordChange}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-actions">
+                      <button type="submit" className="btn btn-primary">
+                        <Save size={18} />
+                        {t('profile.saveChanges')}
+                      </button>
+                      <button type="button" className="btn btn-secondary" onClick={handlePasswordCancel}>
+                        <X size={18} />
+                        {t('profile.cancel')}
+                      </button>
+                    </div>
+                  </>
+               )}
+            </form>
           </div>
 
           <div className="profile-card">

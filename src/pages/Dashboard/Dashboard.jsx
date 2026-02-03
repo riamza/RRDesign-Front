@@ -11,6 +11,7 @@ import PricingManager from './components/PricingManager';
 import ContactManager from './components/ContactManager';
 import UsersManager from './components/UsersManager';
 import FinanceManager from './components/FinanceManager';
+import ClientProjectsManager from './components/ClientProjectsManager';
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -25,7 +26,8 @@ const Dashboard = () => {
 
   const tabs = [
     { id: 'services', label: t('dashboard.services'), icon: <Palette size={20} /> },
-    { id: 'projects', label: t('dashboard.projects'), icon: <Briefcase size={20} /> },
+    { id: 'client-projects', label: t('dashboard.clientProjects', 'Active Projects'), icon: <Briefcase size={20} /> },
+    { id: 'projects', label: t('dashboard.projects') + ' (Portfolio)', icon: <Briefcase size={20} /> },
     { id: 'templates', label: t('dashboard.templates'), icon: <FileText size={20} /> },
     { id: 'pricing', label: t('dashboard.pricing'), icon: <DollarSign size={20} /> },
     { id: 'finance', label: t('dashboard.finance') || 'Finanțe', icon: <TrendingUp size={20} /> },
@@ -73,6 +75,7 @@ const Dashboard = () => {
         {activeTab === 'finance' && <FinanceManager />}
         {activeTab === 'contact' && <ContactManager />}
         {activeTab === 'users' && <UsersManager />}
+        {activeTab === 'client-projects' && <ClientProjectsManager />}
       </main>
     </div>
   );

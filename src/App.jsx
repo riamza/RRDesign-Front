@@ -11,10 +11,12 @@ import Services from './pages/Services/Services';
 import Contact from './pages/Contact/Contact';
 import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
+import ClientProjectDetails from './pages/Dashboard/components/ClientProjectDetails';
 import Profile from './pages/Profile/Profile';
 import MyProjects from './pages/MyProjects/MyProjects';
 import Messages from './pages/Messages/Messages';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import PublicRoute from './components/PublicRoute/PublicRoute';
 import './App.css';
 
 function App() {
@@ -31,7 +33,14 @@ function App() {
               <Route path="/projects" element={<Projects />} />
               <Route path="/templates" element={<Templates />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
+              <Route 
+                path="/login" 
+                element={
+                  <PublicRoute>
+                    <Login />
+                  </PublicRoute>
+                } 
+              />
               <Route 
                 path="/profile" 
                 element={
@@ -53,6 +62,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <Messages />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/dashboard/client-projects/:id" 
+                element={
+                  <PrivateRoute roles={['Admin']}>
+                    <ClientProjectDetails />
                   </PrivateRoute>
                 } 
               />

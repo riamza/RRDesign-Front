@@ -103,6 +103,7 @@ const request = async (endpoint, options = {}) => {
 export const api = {
   auth: {
       login: (email, password) => request('/Auth/login', { method: 'POST', body: { email, password } }),
+      getProfile: () => request('/Auth/me'),
   },
   // Services
   getServices: () => request('/services'),
@@ -111,7 +112,29 @@ export const api = {
   updateService: (id, service) => request(`/services/${id}`, { method: 'PUT', body: service }),
   deleteService: (id) => request(`/services/${id}`, { method: 'DELETE' }),
 
-  // Projects
+  // Client Projects (Admin Dashboard)
+  getClientProjects: () => request('/ClientProjects'),
+  getClientProjectsByUser: (userId) => request(`/ClientProjects/user/${userId}`),
+  getClientProject: (id) => request(`/ClientProjects/${id}`),
+  createClientProject: (project) => request('/ClientProjects', { method: 'POST', body: project }),
+  updateClientProject: (id, project) => request(`/ClientProjects/${id}`, { method: 'PUT', body: project }), // Only fields
+  deleteClientProject: (id) => request(`/ClientProjects/${id}`, { method: 'DELETE' }),
+  markClientProjectFinished: (id) => request(`/ClientProjects/${id}/finish`, { method: 'POST' }),
+  addClientProjectRequirement: (id, data) => request(`/ClientProjects/${id}/requirements`, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json'},
+      // { description: string, estimatedDurationDays: number }
+      body: JSON.stringify(data) 
+  }),
+  updateClientProjectRequirement: (reqId, updateDto) => request(`/ClientProjects/requirements/${reqId}/update`, { 
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json'},
+      // { status: number, description?:string, estimatedDurationDays?:number }
+      body: JSON.stringify(updateDto) 
+  }),
+  deleteClientProjectRequirement: (reqId) => request(`/ClientProjects/requirements/${reqId}`, { method: 'DELETE' }),
+
+  // Portfolio Projects
   getProjects: async () => {
     const data = await request('/projects');
     return data.map(project => ({

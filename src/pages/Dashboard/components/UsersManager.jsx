@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Users, Mail, Calendar, CheckCircle, XCircle, Clock, Eye, Ban } from 'lucide-react';
+import { Users, Mail, Calendar, CheckCircle, XCircle, Clock, Eye, Ban, Briefcase } from 'lucide-react';
+import { api } from '../../../services/api';
 import Modal from '../../../components/Modal/Modal';
 import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
 import './Manager.css';
 
 const UsersManager = () => {
   const { t } = useTranslation();
+  const [userProjects, setUserProjects] = useState([]);
   
   const [users, setUsers] = useState([
     {
@@ -95,6 +97,18 @@ const UsersManager = () => {
       year: 'numeric'
     }).format(date);
   };
+
+  React.useEffect(() => {
+     if (viewingUser) {
+         api.getClientProjectsByUser(viewingUser.id)
+            .then(data => setUserProjects(data))
+            .catch(e => {
+                console.error("Error fetching user projects", e);
+                setUserProjects([]);
+            });
+     }
+  }, [viewingUser]);
+
 
   const handleViewUser = (user) => {
     setViewingUser(user);
@@ -397,6 +411,26 @@ const UsersManager = () => {
                   <span>{formatDate(viewingUser.registeredDate)}</span>
                 </div>
                 
+                <div className="detail-row">
+                   <strong>Active Projects:</strong>
+                   <div className="user-projects-list-mini">
+                       {userProjects.length > 0 ? (
+                           <ul>
+                               {userProjects.map(p => (
+                                   <li key={p.id}>
+                                       <span>{p.title}</span>
+                                       <span className={p.endDate ? 'text-success' : 'text-warning'}>
+                                           {p.endDate ? '(Finished)' : '(Active)'}
+                                       </span>
+                                   </li>
+                               ))}
+                           </ul>
+                       ) : (
+                           <span>No projects found.</span>
+                       )}
+                   </div>
+                </div>
+
                 <div className="detail-row">
                   <strong>{t('dashboard.usersManager.lastLogin')}:</strong>
                   <span>{formatDate(viewingUser.lastLogin)}</span>
