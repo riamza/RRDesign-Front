@@ -1,49 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MessageSquare, Send, Search, Trash2, Archive, Star, Plus } from 'lucide-react';
 import PageHeader from '../../components/PageHeader/PageHeader';
+import { api } from '../../services/api';
 import './Messages.css';
 
 const Messages = () => {
   const { t } = useTranslation();
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      from: 'Admin RRDesign',
-      subject: 'Bun venit pe platformă!',
-      preview: 'Bună ziua! Îți mulțumim că ai ales RRDesign pentru proiectul tău. Ne bucurăm să te avem alături...',
-      date: '2026-01-22T10:30:00',
-      read: false,
-      starred: true
-    },
-    {
-      id: 2,
-      from: 'Support Team',
-      subject: 'Actualizare status proiect E-Commerce',
-      preview: 'Vă informăm că proiectul E-Commerce Platform a avansat la 65%. Următoarea etapă include...',
-      date: '2026-01-21T14:20:00',
-      read: true,
-      starred: false
-    },
-    {
-      id: 3,
-      from: 'Project Manager',
-      subject: 'Întâlnire de review - Mobile Banking App',
-      preview: 'Vă rugăm să confirmați prezența la întâlnirea de review programată pentru săptămâna viitoare...',
-      date: '2026-01-20T09:15:00',
-      read: true,
-      starred: false
-    },
-    {
-      id: 4,
-      from: 'Billing Department',
-      subject: 'Factură #2024-001',
-      preview: 'Aveți o factură nouă disponibilă în contul dumneavoastră. Vă rugăm să o verificați...',
-      date: '2026-01-19T16:45:00',
-      read: false,
-      starred: false
+  const [messages, setMessages] = useState([]);
+  
+  // Get user role from storage or context (assuming stored as 'user_role')
+  const userRole = localStorage.getItem('user_role');
+  const isAdmin = userRole === 'Admin';
+
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
+  const fetchMessages = async () => {
+    try {
+      // If admin, fetch all. If user, fetch my history.
+      const data = isAdmin ? await api.contactMessages.getAll() : await api.contactMessages.getMyHistory();
+      
+      const formattedMessages = data.map(msg => ({
+        id: msg.id,
+        from: msg.name,
+        // For admin: show Company/Name. For User: show "To Support" or similar? 
+        // Actually for user, it's their own message. 
+        subject: `Contact: ${msg.company || msg.name}`, 
+        preview: msg.message.substring(0, 100) + (msg.message.length > 100 ? '...' : ''),
+        date: msg.createdAt,
+        read: msg.isRead,
+        starred: false,
+        email: msg.email,
+        phone: msg.phone,
+        company: msg.company,
+        fullMessage: msg.message
+      }));
+      setMessages(formattedMessages);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
     }
-  ]);
+  };
+
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMessage, setSelectedMessage] = useState(null);
@@ -104,19 +103,29 @@ const Messages = () => {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (window.confirm('Sigur vrei să ștergi acest mesaj?')) {
-      setMessages(messages.filter(msg => msg.id !== selectedMessage.id));
-      setSelectedMessage(null);
+      try {
+        await api.contactMessages.delete(selectedMessage.id);
+        setMessages(messages.filter(msg => msg.id !== selectedMessage.id));
+        setSelectedMessage(null);
+      } catch (error) {
+        console.error('Error deleting message', error);
+      }
     }
   };
 
-  const handleSelectMessage = (message) => {
+  const handleSelectMessage = async (message) => {
     setSelectedMessage(message);
     if (!message.read) {
-      setMessages(messages.map(msg =>
-        msg.id === message.id ? { ...msg, read: true } : msg
-      ));
+        try {
+            await api.contactMessages.markAsRead(message.id);
+            setMessages(messages.map(msg =>
+                msg.id === message.id ? { ...msg, read: true } : msg
+            ));
+        } catch (error) {
+            console.error('Error marking as read', error);
+        }
     }
   };
 
@@ -230,14 +239,17 @@ const Messages = () => {
                     </button>
                   </div>
                 </div>
+
                 <div className="message-body">
-                  <p>{selectedMessage.preview}</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-                  <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-                  <p>Cu stimă,<br />{selectedMessage.from}</p>
+                  <div style={{ padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '5px', marginBottom: '20px' }}>
+                     <p><strong>Email:</strong> <a href={`mailto:${selectedMessage.email}`}>{selectedMessage.email}</a></p>
+                     <p><strong>Phone:</strong> {selectedMessage.phone}</p>
+                     <p><strong>Company:</strong> {selectedMessage.company}</p>
+                  </div>
+                  <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>{selectedMessage.fullMessage}</pre>
                 </div>
                 <div className="message-reply">
-                  <button className="btn-reply" onClick={handleReply}>
+                  <button className="btn-reply" onClick={() => window.location.href = `mailto:${selectedMessage.email}`}>
                     <Send size={18} />
                     {t('messages.reply')}
                   </button>

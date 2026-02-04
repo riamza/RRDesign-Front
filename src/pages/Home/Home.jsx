@@ -1,30 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchServices } from '../../store/slices/servicesSlice';
 import { Monitor, Smartphone, Cloud } from 'lucide-react';
 import './Home.css';
 import Button from '../../components/Button/Button';
 import { companyInfo } from '../../utils/constants';
-import { api } from '../../services/api';
 import { getIcon } from '../../utils/iconMapper';
 import SEO from '../../components/SEO/SEO';
 
 const Home = () => {
   const { t } = useTranslation();
   const servicesGridRef = useRef(null);
-  const [services, setServices] = useState([]);
+  
+  const dispatch = useDispatch();
+  const { items: services } = useSelector((state) => state.services);
 
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const data = await api.getServices();
-        setServices(data);
-      } catch (error) {
-        console.error('Failed to fetch services:', error);
-      }
-    };
-    fetchServices();
-  },[]);
+    dispatch(fetchServices());
+  }, [dispatch]);
 
   useEffect(() => {
     const alignServiceCards = () => {

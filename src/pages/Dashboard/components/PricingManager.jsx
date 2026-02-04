@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { pricingPackages as initialPricing } from '../../../data/mockData';
+import { useDispatch, useSelector } from 'react-redux';
+import { invalidatePricing, fetchPricing } from '../../../store/slices/pricingSlice';
+import { api } from '../../../services/api';
 import Modal from '../../../components/Modal/Modal';
 import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
 import PriceCard from '../../../components/PriceCard/PriceCard';
@@ -8,7 +10,8 @@ import './Manager.css';
 
 const PricingManager = () => {
   const { t } = useTranslation();
-  const [pricing, setPricing] = useState(initialPricing);
+  const dispatch = useDispatch();
+  const { items: pricing, status } = useSelector((state) => state.pricing);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -22,9 +25,20 @@ const PricingManager = () => {
     highlight: false
   });
 
+  const loadPricing = async () => {
+     dispatch(invalidatePricing());
+     dispatch(fetchPricing());
+  };
+
+  useEffect(() => {
+    dispatch(fetchPricing());
+  }, [dispatch]);
+
   const gridRef = useRef(null);
 
   useEffect(() => {
+    if (!pricing || pricing.length === 0) return;
+
     const alignCardSections = () => {
       if (!gridRef.current) return;
 
@@ -71,19 +85,28 @@ const PricingManager = () => {
     setShowConfirmDelete(true);
   };
 
-  const confirmDelete = () => {
-    setPricing(pricing.filter(p => p.id !== deleteId));
+  const confirmDelete = async () => {
+    try {
+      await api.deletePricing(deleteId);
+      await loadPricing();
+    } catch (e) { console.error(e); }
     setDeleteId(null);
+    setShowConfirmDelete(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editingId) {
-      setPricing(pricing.map(p => p.id === editingId ? { ...formData, id: editingId } : p));
-    } else {
-      setPricing([...pricing, { ...formData, id: Date.now() }]);
+    try {
+      if (editingId) {
+        await api.updatePricing(editingId, formData);
+      } else {
+        await api.createPricing(formData);
+      }
+      await loadPricing();
+      resetForm();
+    } catch (e) {
+      console.error(e);
     }
-    resetForm();
   };
 
   const resetForm = () => {

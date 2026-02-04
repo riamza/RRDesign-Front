@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { invalidateTemplates, fetchTemplates } from '../../../store/slices/templatesSlice';
 import { Upload, X } from 'lucide-react';
 import { api } from '../../../services/api';
 import Modal from '../../../components/Modal/Modal';
@@ -9,7 +11,8 @@ import './Manager.css';
 
 const TemplatesManager = () => {
   const { t } = useTranslation();
-  const [templates, setTemplates] = useState([]);
+  const dispatch = useDispatch();
+  const { items: templates, status } = useSelector((state) => state.templates);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -25,17 +28,13 @@ const TemplatesManager = () => {
   });
 
   const loadTemplates = async () => {
-    try {
-      const data = await api.getTemplates();
-      setTemplates(data);
-    } catch (e) {
-      console.error(e);
-    }
+     dispatch(invalidateTemplates());
+     dispatch(fetchTemplates());
   };
 
   useEffect(() => {
-    loadTemplates();
-  }, []);
+    dispatch(fetchTemplates());
+  }, [dispatch]);
 
   // grid alignment logic...
   const gridRef = useRef(null);
@@ -65,6 +64,7 @@ const TemplatesManager = () => {
   const confirmDelete = async () => {
     try {
       await api.deleteTemplate(deleteId);
+      dispatch(invalidateTemplates());
       await loadTemplates();
     } catch (e) { console.error(e); }
     setDeleteId(null);
@@ -79,6 +79,7 @@ const TemplatesManager = () => {
       } else {
         await api.createTemplate(formData);
       }
+      dispatch(invalidateTemplates());
       await loadTemplates();
       resetForm();
     } catch (e) { console.error(e); }

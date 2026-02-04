@@ -95,7 +95,6 @@ const Header = () => {
               >
                 <div className="avatar-circle">
                   {getInitials(user?.fullName)}
-                  {console.log(user)}
                 </div>
               </button>
               {isDropdownOpen && (

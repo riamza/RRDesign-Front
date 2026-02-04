@@ -5,9 +5,12 @@ import './Contact.css';
 import Button from '../../components/Button/Button';
 import { companyInfo } from '../../utils/constants';
 import SEO from '../../components/SEO/SEO';
+import { api } from '../../services/api';
+import Modal from '../../components/Modal/Modal';
 
 const Contact = () => {
   const { t } = useTranslation();
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,11 +26,22 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aici va fi logica de trimitere a formularului
-    alert(t('contact.form.successMessage'));
-    console.log('Form data:', formData);
+    try {
+      await api.contactMessages.create(formData);
+      setIsSuccessModalOpen(true);
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert('Could not send message. Please try again later.');
+    }
   };
 
   return (
@@ -156,6 +170,19 @@ const Contact = () => {
           </div>
         </div>
       </section>
+
+      <Modal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        title={t('contact.form.successTitle')}
+      >
+        <p>{t('contact.form.successMessage')}</p>
+        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+          <Button onClick={() => setIsSuccessModalOpen(false)}>
+            OK
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };

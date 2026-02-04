@@ -270,6 +270,7 @@ a {
   background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
   color: white;
   box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  display: flex;
 }
 
 .btn-primary:hover {

@@ -1,29 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTemplates } from '../../store/slices/templatesSlice';
 import './Templates.css';
 import TemplateCard from '../../components/TemplateCard/TemplateCard';
-import { api } from '../../services/api';
 import SEO from '../../components/SEO/SEO';
 
 const Templates = () => {
   const { t } = useTranslation();
   const gridRef = useRef(null);
-  const [templates, setTemplates] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { items: templates, status } = useSelector((state) => state.templates);
+  const loading = status === 'loading';
 
   useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        const data = await api.getTemplates();
-        setTemplates(data);
-      } catch (error) {
-        console.error('Failed to fetch templates:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTemplates();
-  }, []);
+    dispatch(fetchTemplates());
+  }, [dispatch]);
 
   useEffect(() => {
     if (loading) return;

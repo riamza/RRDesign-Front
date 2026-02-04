@@ -12,7 +12,8 @@ const Register = () => {
     
     const [loading, setLoading] = useState(true);
     const [email, setEmail] = useState('');
-    const [error, setError] = useState(null);
+    const [globalError, setGlobalError] = useState(null);
+    const [fieldErrors, setFieldErrors] = useState({});
     
     const [formData, setFormData] = useState({
         fullName: '',
@@ -24,7 +25,7 @@ const Register = () => {
 
     useEffect(() => {
         if (!token) {
-            setError(t('register.missingToken', "Invalid link. Please check your email."));
+            setGlobalError(t('register.missingToken', "Invalid link. Please check your email."));
             setLoading(false);
             return;
         }
@@ -36,7 +37,7 @@ const Register = () => {
                  setEmail(res.email);
                  setLoading(false);
              } catch (err) {
-                 setError(t('register.invalidToken', "This invitation link is invalid or has expired."));
+                 setGlobalError(t('register.invalidToken', "This invitation link is invalid or has expired."));
                  setLoading(false);
              }
         };
@@ -44,22 +45,75 @@ const Register = () => {
         checkToken();
     }, [token, t]);
 
+    const validateField = (name, value) => {
+        let error = null;
+        switch (name) {
+            case 'fullName':
+                if (!value.trim()) error = t('register.required', "This field is required.");
+                break;
+            case 'dateOfBirth':
+                if (!value) error = t('register.required', "This field is required.");
+                break;
+            case 'location':
+                if (!value.trim()) error = t('register.required', "This field is required.");
+                break;
+            case 'password':
+                if (value.length < 6) error = t('register.passwordTooShort', "Password must be at least 6 characters.");
+                // Add more strength checks if needed
+                break;
+            case 'confirmPassword':
+                if (value !== formData.password) error = t('register.passwordMismatch', "Passwords do not match.");
+                break;
+            default:
+                break;
+        }
+        return error;
+    };
+
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        
+        // Real-time validation for passwords
+        if (name === 'password' || name === 'confirmPassword') {
+            const error = validateField(name, value);
+            setFieldErrors(prev => ({ ...prev, [name]: error }));
+            
+            // If changing password, re-validate confirmPassword if it has value
+            if (name === 'password' && formData.confirmPassword) {
+                 const confirmError = value !== formData.confirmPassword 
+                    ? t('register.passwordMismatch', "Passwords do not match.") 
+                    : null;
+                 setFieldErrors(prev => ({ ...prev, confirmPassword: confirmError }));
+            }
+        } else {
+            // Clear error on change for other fields
+            if (fieldErrors[name]) {
+                setFieldErrors(prev => ({ ...prev, [name]: null }));
+            }
+        }
+    };
+
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+        const error = validateField(name, value);
+        setFieldErrors(prev => ({ ...prev, [name]: error }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
+        setGlobalError(null);
 
-        if (formData.password !== formData.confirmPassword) {
-            setError(t('register.passwordMismatch', "Passwords do not match."));
-            return;
-        }
+        // Validate all
+        const errors = {};
+        Object.keys(formData).forEach(key => {
+            const error = validateField(key, formData[key]);
+            if (error) errors[key] = error;
+        });
         
-        if (formData.password.length < 6) {
-           setError(t('register.passwordTooShort', "Password must be at least 6 characters."));
-           return;
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            return;
         }
 
         try {
@@ -78,23 +132,28 @@ const Register = () => {
                 localStorage.setItem('access_token', res.accessToken);
                 localStorage.setItem('refresh_token', res.refreshToken);
                 localStorage.setItem('user_role', res.role);
-                navigate('/dashboard'); // or user profile
+                
+                if (res.role === 'Admin') {
+                    navigate('/dashboard');
+                } else {
+                    navigate('/my-projects');
+                }
             } else {
                 navigate('/login');
             }
         } catch (err) {
-            setError(err.message || t('register.failed', "Registration failed."));
+            setGlobalError(err.message || t('register.failed', "Registration failed."));
         }
     };
 
     if (loading) return <div className="register-container"><div className="loader">Loading...</div></div>;
 
-    if (error) {
+    if (globalError) {
         return (
             <div className="register-container">
                 <div className="error-card">
                     <h3>Error</h3>
-                    <p>{error}</p>
+                    <p>{globalError}</p>
                     <button onClick={() => navigate('/login')}>Go to Login</button>
                 </div>
             </div>
@@ -115,9 +174,12 @@ const Register = () => {
                             name="fullName"
                             value={formData.fullName}
                             onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={fieldErrors.fullName ? 'input-error' : ''}
                             required
                             placeholder="John Doe"
                         />
+                        {fieldErrors.fullName && <span className="error-text">{fieldErrors.fullName}</span>}
                     </div>
 
                     <div className="form-group">
@@ -127,8 +189,11 @@ const Register = () => {
                             name="dateOfBirth"
                             value={formData.dateOfBirth}
                             onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={fieldErrors.dateOfBirth ? 'input-error' : ''}
                             required
                         />
+                        {fieldErrors.dateOfBirth && <span className="error-text">{fieldErrors.dateOfBirth}</span>}
                     </div>
                     
                     <div className="form-group">
@@ -138,9 +203,12 @@ const Register = () => {
                             name="location"
                             value={formData.location}
                             onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={fieldErrors.location ? 'input-error' : ''}
                             required
                             placeholder="City, Country"
                         />
+                        {fieldErrors.location && <span className="error-text">{fieldErrors.location}</span>}
                     </div>
 
                     <div className="form-group">
@@ -150,9 +218,12 @@ const Register = () => {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={fieldErrors.password ? 'input-error' : ''}
                             required
                             placeholder="******"
                         />
+                        {fieldErrors.password && <span className="error-text">{fieldErrors.password}</span>}
                     </div>
                     
                     <div className="form-group">
@@ -162,9 +233,12 @@ const Register = () => {
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={fieldErrors.confirmPassword ? 'input-error' : ''}
                             required
                             placeholder="******"
                         />
+                         {fieldErrors.confirmPassword && <span className="error-text">{fieldErrors.confirmPassword}</span>}
                     </div>
 
                     <button type="submit" className="btn-register">

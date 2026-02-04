@@ -1,481 +1,367 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Users, Mail, Calendar, CheckCircle, XCircle, Clock, Eye, Ban, Briefcase } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Users, Mail, Calendar, CheckCircle, Clock, Eye, Ban, Briefcase, Shield, AlertTriangle } from 'lucide-react';
 import { api } from '../../../services/api';
 import Modal from '../../../components/Modal/Modal';
 import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
+import { fetchUsers, toggleUserStatus as toggleUserStatusAction } from '../../../store/slices/usersSlice';
+import { getInitials } from '../../../utils/stringUtils';
 import './Manager.css';
 
 const UsersManager = () => {
-  const { t } = useTranslation();
-  const [userProjects, setUserProjects] = useState([]);
-  
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: 'Ion Popescu',
-      email: 'ion.popescu@example.com',
-      status: 'active',
-      registeredDate: '2024-01-15',
-      lastLogin: '2026-01-20',
-      projectsCount: 3,
-      invitedBy: 'admin@rrdesign.ro'
-    },
-    {
-      id: 2,
-      name: 'Maria Ionescu',
-      email: 'maria.ionescu@example.com',
-      status: 'pending',
-      invitationSentDate: '2026-01-18',
-      invitedBy: 'admin@rrdesign.ro',
-      projectsCount: 0
-    },
-    {
-      id: 3,
-      name: 'Alex Dumitrescu',
-      email: 'alex.dumitrescu@example.com',
-      status: 'active',
-      registeredDate: '2023-11-20',
-      lastLogin: '2026-01-21',
-      projectsCount: 7,
-      invitedBy: 'admin@rrdesign.ro'
-    },
-    {
-      id: 4,
-      name: 'Elena Georgescu',
-      email: 'elena.georgescu@example.com',
-      status: 'suspended',
-      registeredDate: '2024-03-10',
-      lastLogin: '2025-12-15',
-      projectsCount: 2,
-      invitedBy: 'admin@rrdesign.ro',
-      suspendedReason: 'Neplată servicii'
-    }
-  ]);
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const { items: users, status } = useSelector((state) => state.users);
 
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [viewingUser, setViewingUser] = useState(null);
-  const [showInviteModal, setShowInviteModal] = useState(false);
-  const [showConfirmAction, setShowConfirmAction] = useState(false);
-  const [actionType, setActionType] = useState(null);
-  const [actionUserId, setActionUserId] = useState(null);
-  const [actionUserName, setActionUserName] = useState('');
-  
-  const [inviteForm, setInviteForm] = useState({
-    email: '',
-    name: '',
-    message: ''
-  });
+    const [userProjects, setUserProjects] = useState([]);
+    const [filterStatus, setFilterStatus] = useState('all');
+    const [viewingUser, setViewingUser] = useState(null);
+    const [showInviteModal, setShowInviteModal] = useState(false);
+    const [showConfirmAction, setShowConfirmAction] = useState(false);
+    const [actionType, setActionType] = useState(null);
+    const [actionUserId, setActionUserId] = useState(null);
+    const [actionUserName, setActionUserName] = useState('');
 
-  const filteredUsers = users.filter(u => {
-    if (filterStatus === 'all') return true;
-    return u.status === filterStatus;
-  });
+    const [inviteForm, setInviteForm] = useState({
+        email: '',
+        name: '',
+        message: ''
+    });
 
-  const getStatusBadge = (status) => {
-    const badges = {
-      active: { class: 'status-active', text: t('dashboard.usersManager.statusActive'), icon: CheckCircle },
-      pending: { class: 'status-pending', text: t('dashboard.usersManager.statusPending'), icon: Clock },
-      suspended: { class: 'status-suspended', text: t('dashboard.usersManager.statusSuspended'), icon: Ban }
+    useEffect(() => {
+        if (status === 'idle') {
+            dispatch(fetchUsers());
+        }
+    }, [status, dispatch]);
+
+    const filteredUsers = users.filter(u => {
+        if (filterStatus === 'all') return true;
+        return u.status === filterStatus;
+    });
+
+    const getStatusInfo = (status) => {
+        const map = {
+            active: { color: '#22c55e', text: t('dashboard.usersManager.statusActive'), icon: CheckCircle },
+            pending: { color: '#f59e0b', text: t('dashboard.usersManager.statusPending'), icon: Clock },
+            suspended: { color: '#ef4444', text: t('dashboard.usersManager.statusSuspended'), icon: Ban }
+        };
+        return map[status] || map.active;
     };
-    const badge = badges[status] || badges.active;
-    const Icon = badge.icon;
+
+    const formatDate = (dateString) => {
+        if (!dateString || typeof dateString === 'number') return '-';
+        try {
+            return new Intl.DateTimeFormat('ro-RO', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            }).format(new Date(dateString));
+        } catch { return '-'; }
+    };
+
+    useEffect(() => {
+        if (viewingUser) {
+            setUserProjects([]); 
+            api.getClientProjectsByUser(viewingUser.id)
+                .then(data => setUserProjects(data))
+                .catch(e => {
+                    console.error("Error fetching user projects", e);
+                    setUserProjects([]);
+                });
+        }
+    }, [viewingUser]);
+
+
+    const handleViewUser = (user) => {
+        setViewingUser(user);
+    };
+
+    const handleSendInvitation = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await api.auth.inviteUser(inviteForm.email);
+            alert(t('dashboard.usersManager.invitationSent', { email: inviteForm.email }) +
+                `\n\nLink: ${response.invitationLink}` +
+                `\n\n(In production this would be emailed)`);
+            
+            setShowInviteModal(false);
+            setInviteForm({ email: '', name: '', message: '' });
+            dispatch(fetchUsers());
+        } catch (err) {
+            alert("Failed to send invitation: " + err.message);
+        }
+    };
+
+    const handleSuspendUser = (user) => {
+        setActionType('suspend');
+        setActionUserId(user.id);
+        setActionUserName(user.fullName);
+        setShowConfirmAction(true);
+    };
+
+    const handleActivateUser = (user) => {
+        setActionType('activate'); 
+        setActionUserId(user.id);
+        setActionUserName(user.fullName);
+        setShowConfirmAction(true);
+    };
+
+    const confirmAction = async () => {
+        if (!actionUserId) return;
+        try {
+            const newStatus = actionType === 'suspend' ? 'suspended' : 'active';
+            await dispatch(toggleUserStatusAction({ id: actionUserId, status: newStatus })).unwrap();
+        } catch (error) {
+            alert("Action failed: " + error.message);
+        } finally {
+            setActionUserId(null);
+            setActionUserName('');
+            setActionType(null);
+            setShowConfirmAction(false);
+        }
+    };
+
+    const getActionMessage = () => {
+        if (actionType === 'suspend') {
+            return t('dashboard.usersManager.confirmSuspendMessage', { name: actionUserName });
+        }
+        if (actionType === 'activate') {
+             return `Esti sigur ca vrei sa activezi contul pentru ${actionUserName}?`;
+        }
+        return '';
+    };
+
     return (
-      <span className={`status-badge ${badge.class}`}>
-        <Icon size={14} />
-        {badge.text}
-      </span>
-    );
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return '-';
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('ro-RO', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    }).format(date);
-  };
-
-  React.useEffect(() => {
-     if (viewingUser) {
-         api.getClientProjectsByUser(viewingUser.id)
-            .then(data => setUserProjects(data))
-            .catch(e => {
-                console.error("Error fetching user projects", e);
-                setUserProjects([]);
-            });
-     }
-  }, [viewingUser]);
-
-
-  const handleViewUser = (user) => {
-    setViewingUser(user);
-  };
-
-  const handleSendInvitation = async (e) => {
-    e.preventDefault();
-    
-    try {
-        const response = await api.auth.inviteUser(inviteForm.email);
-        
-        // Show success and the link (since we might not have real email sending yet)
-        alert(t('dashboard.usersManager.invitationSent', { email: inviteForm.email }) + 
-              `\n\nLink: ${response.invitationLink}` +
-              `\n\n(In production this would be emailed)`);
-        
-        // Refresh users list properly - for now we just close the modal
-        // ideally we should fetch Users list again from API
-        setShowInviteModal(false);
-        setInviteForm({ email: '', name: '', message: '' });
-
-    } catch (err) {
-        alert("Failed to send invitation: " + err.message);
-    }
-  };
-
-  const handleSuspendUser = (user) => {
-    setActionType('suspend');
-    setActionUserId(user.id);
-    setActionUserName(user.name);
-    setShowConfirmAction(true);
-  };
-
-  const handleActivateUser = (user) => {
-    setUsers(users.map(u => 
-      u.id === user.id ? { ...u, status: 'active' } : u
-    ));
-    alert(t('dashboard.usersManager.userActivated', { name: user.name }));
-  };
-
-  const handleResendInvitation = (user) => {
-    const invitationLink = `${window.location.origin}/register?token=${user.invitationToken || 'new_token'}`;
-    alert(t('dashboard.usersManager.invitationResent', { email: user.email }) + `\n\nLink: ${invitationLink}`);
-  };
-
-  const confirmAction = () => {
-    if (actionType === 'suspend') {
-      setUsers(users.map(u => 
-        u.id === actionUserId ? { ...u, status: 'suspended', suspendedReason: 'Suspendat de admin' } : u
-      ));
-    }
-    setActionUserId(null);
-    setActionUserName('');
-    setActionType(null);
-  };
-
-  const getActionMessage = () => {
-    if (actionType === 'suspend') {
-      return t('dashboard.usersManager.confirmSuspendMessage', { name: actionUserName });
-    }
-    return '';
-  };
-
-  return (
-    <div className="manager">
-      <div className="manager-header">
-        <h2>
-          <Users size={24} />
-          {t('dashboard.usersManager.title')}
-        </h2>
-        <button className="btn-primary" onClick={() => setShowInviteModal(true)}>
-          <Mail size={18} />
-          {t('dashboard.usersManager.sendInvitation')}
-        </button>
-      </div>
-
-      <div className="filter-buttons" style={{ marginBottom: '2rem' }}>
-        <button
-          className={`filter-btn ${filterStatus === 'all' ? 'active' : ''}`}
-          onClick={() => setFilterStatus('all')}
-        >
-          {t('dashboard.usersManager.all')} <span className="count">({users.length})</span>
-        </button>
-        <button
-          className={`filter-btn ${filterStatus === 'active' ? 'active' : ''}`}
-          onClick={() => setFilterStatus('active')}
-        >
-          {t('dashboard.usersManager.active')} <span className="count">({users.filter(u => u.status === 'active').length})</span>
-        </button>
-        <button
-          className={`filter-btn ${filterStatus === 'pending' ? 'active' : ''}`}
-          onClick={() => setFilterStatus('pending')}
-        >
-          {t('dashboard.usersManager.pending')} <span className="count">({users.filter(u => u.status === 'pending').length})</span>
-        </button>
-        <button
-          className={`filter-btn ${filterStatus === 'suspended' ? 'active' : ''}`}
-          onClick={() => setFilterStatus('suspended')}
-        >
-          {t('dashboard.usersManager.suspended')} <span className="count">({users.filter(u => u.status === 'suspended').length})</span>
-        </button>
-      </div>
-
-      <div className="manager-content">
-        {/* User Cards Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
-          {filteredUsers.map(user => (
-            <div key={user.id} className="user-card">
-              <div className="user-card-header">
-                {/* Header background gradient only */}
-              </div>
-
-              <div className="user-card-body">
-                <div className="user-card-avatar">
-                   <div className="user-card-avatar-inner">
-                      {user.name ? user.name.charAt(0).toUpperCase() : '?'}
-                   </div>
-                </div>
-
-                <div className="user-card-title">{user.name || user.email}</div>
-                <div className="user-card-subtitle">{user.email}</div>
-
-                <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-                   {getStatusBadge(user.status)}
-                   <span style={{ 
-                      fontSize: '0.75rem', 
-                      background: '#f1f5f9', 
-                      padding: '4px 10px', 
-                      borderRadius: '20px', 
-                      color: '#64748b', 
-                      fontWeight: '600'
-                   }}>
-                      {user.projectsCount || 0} PROIECTE
-                   </span>
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem', fontSize: '0.9rem', color: '#64748b' }}>
-                   {user.status === 'pending' ? (
-                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <Clock size={14} />
-                          <span>Invitatie: {formatDate(user.invitationSentDate)}</span>
-                       </div>
-                   ) : (
-                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <Calendar size={14} />
-                          <span>Inregistrat: {formatDate(user.registeredDate)}</span>
-                       </div>
-                   )}
-                </div>
-
-                <div className="user-card-actions" style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                  <button 
-                    onClick={() => handleViewUser(user)}
-                    className="btn-secondary"
-                    style={{ flex: 1, padding: '0.5rem', fontSize: '0.85rem' }}
-                  >
-                    <Eye size={16} style={{ marginRight: '5px' }} />Detalii
-                  </button>
-                  
-                  {user.status === 'active' && (
-                    <button 
-                       onClick={() => handleSuspendUser(user)}
-                       className="btn-secondary"
-                       style={{ color: '#ef4444', borderColor: '#fee2e2', padding: '0.5rem' }}
-                       title="Suspend Account"
-                    >
-                      <Ban size={16} />
-                    </button>
-                  )}
-                  
-                  {user.status === 'suspended' && (
-                    <button 
-                       onClick={() => handleActivateUser(user)}
-                       className="btn-secondary"
-                       style={{ color: '#22c55e', borderColor: '#dcfce7', padding: '0.5rem' }}
-                       title="Activate Account"
-                    >
-                      <CheckCircle size={16} />
-                    </button>
-                  )}
-
-                  {user.status === 'pending' && (
-                    <button 
-                       onClick={() => handleResendInvitation(user)}
-                       className="btn-secondary"
-                       style={{ padding: '0.5rem' }}
-                       title="Resend Invite"
-                    >
-                      <Mail size={16} />
-                    </button>
-                  )}
-                </div>
-              </div>
+        <div className="manager">
+            <div className="manager-header">
+                <h2>
+                    <Users size={24} />
+                    {t('dashboard.usersManager.title')}
+                </h2>
+                <button className="btn-primary" onClick={() => setShowInviteModal(true)}>
+                    <Mail size={18} />
+                    {t('dashboard.usersManager.sendInvitation')}
+                </button>
             </div>
-          ))}
+
+            {/* Filters */}
+            <div className="filter-buttons" style={{ marginBottom: '2rem', display: 'flex', gap: '10px' }}>
+                {['all', 'active', 'pending', 'suspended'].map(s => (
+                     <button
+                        key={s}
+                        className={`filter-btn ${filterStatus === s ? 'active' : ''}`}
+                        onClick={() => setFilterStatus(s)}
+                    >
+                        {t(`dashboard.usersManager.${s}`)} 
+                        <span className="count">
+                            ({s === 'all' ? users.length : users.filter(u => u.status === s).length})
+                        </span>
+                    </button>
+                ))}
+            </div>
+
+            <div className="manager-content">
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
+                    {filteredUsers.map(user => {
+                        const statusInfo = getStatusInfo(user.status);
+                        const StatusIcon = statusInfo.icon;
+                        
+                        return (
+                            <div key={user.id} className="user-card" onClick={() => handleViewUser(user)}>
+                                {/* Banner Header */}
+                                <div className="user-card-header"></div>
+
+                                <div className="user-card-body">
+                                    {/* Avatar */}
+                                    <div className="user-card-avatar">
+                                        <div className="user-card-avatar-inner">
+                                            {getInitials(user.fullName || user.email)}
+                                        </div>
+                                    </div>
+
+                                    {/* Identity */}
+                                    <h3 className="user-card-title">{user.fullName || 'User'}</h3>
+                                    <p className="user-card-subtitle">{user.email}</p>
+
+                                    {/* Stats Row */}
+                                    <div className="user-card-stats">
+                                        <div className="user-stat-item">
+                                            <span className="user-stat-value" style={{ color: statusInfo.color }}>
+                                                <StatusIcon size={16} />
+                                                {statusInfo.text}
+                                            </span>
+                                            <span className="user-stat-label">Status</span>
+                                        </div>
+                                        
+                                        <div className="user-stat-item">
+                                            <span className="user-stat-value">
+                                                {user.projectsCount || 0}
+                                            </span>
+                                            <span className="user-stat-label">Proiecte</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div className="user-card-actions" onClick={(e) => e.stopPropagation()}>
+                                        <button 
+                                            onClick={() => handleViewUser(user)}
+                                            className="btn-icon-soft"
+                                            title="View Details"
+                                        >
+                                            <Eye size={16} /> Detalii
+                                        </button>
+
+                                        {user.status === 'active' && (
+                                            <button 
+                                                onClick={() => handleSuspendUser(user)}
+                                                className="btn-icon-soft danger"
+                                                title="Block Account"
+                                            >
+                                                <Ban size={16} /> Blocheaza
+                                            </button>
+                                        )}
+                                        
+                                        {user.status === 'suspended' && (
+                                            <button 
+                                                onClick={() => handleActivateUser(user)}
+                                                className="btn-icon-soft success"
+                                                title="Activate Account"
+                                            >
+                                                <CheckCircle size={16} /> Activeaza
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {filteredUsers.length === 0 && (
+                    <div className="empty-state">
+                        <Users size={48} />
+                        <p>{t('dashboard.usersManager.noUsers')}</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Modal Invitație */}
+            <Modal
+                isOpen={showInviteModal}
+                onClose={() => setShowInviteModal(false)}
+                title={t('dashboard.usersManager.inviteModalTitle')}
+            >
+                <form onSubmit={handleSendInvitation} className="manager-form" style={{ margin: 0, padding: 0, border: 'none', boxShadow: 'none' }}>
+                    <div className="form-group">
+                        <label>{t('dashboard.usersManager.email')} *</label>
+                        <input
+                            type="email"
+                            value={inviteForm.email}
+                            onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
+                            required
+                            placeholder={t('dashboard.usersManager.emailPlaceholder')}
+                        />
+                    </div>
+                     <div className="modal-actions">
+                        <button type="button" className="btn-secondary" onClick={() => setShowInviteModal(false)}>
+                            {t('dashboard.usersManager.cancel')}
+                        </button>
+                        <button type="submit" className="btn-primary">
+                            <Mail size={18} />
+                            {t('dashboard.usersManager.sendInvite')}
+                        </button>
+                    </div>
+                </form>
+            </Modal>
+
+            {/* Modal Detalii & Proiecte */}
+            {viewingUser && (
+                <Modal
+                    isOpen={!!viewingUser}
+                    onClose={() => setViewingUser(null)}
+                    title={viewingUser.fullName || viewingUser.email}
+                >
+                    <div className="user-details">
+                        {/* Profile Header in Modal as well for consistency */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid #f1f5f9' }}>
+                             <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4338ca', fontWeight: 800, fontSize: '1.5rem' }}>
+                                {getInitials(viewingUser.fullName || viewingUser.email)}
+                             </div>
+                             <div>
+                                <h3 style={{ margin: 0, fontSize: '1.2rem' }}>{viewingUser.fullName}</h3>
+                                <p style={{ margin: 0, color: '#64748b' }}>{viewingUser.email}</p>
+                             </div>
+                        </div>
+
+                        <div className="detail-row">
+                            <strong>Status:</strong>
+                            <span style={{ 
+                                display: 'inline-flex', 
+                                alignItems: 'center', 
+                                gap: '6px', 
+                                padding: '4px 10px', 
+                                borderRadius: '20px', 
+                                background: viewingUser.status === 'active' ? '#dcfce7' : viewingUser.status === 'suspended' ? '#fee2e2' : '#fef3c7',
+                                color: viewingUser.status === 'active' ? '#166534' : viewingUser.status === 'suspended' ? '#991b1b' : '#92400e',
+                                fontWeight: 600,
+                                fontSize: '0.85rem'
+                            }}>
+                                {viewingUser.status === 'active' ? <CheckCircle size={14}/> : viewingUser.status === 'suspended' ? <Ban size={14}/> : <Clock size={14}/>}
+                                {getStatusInfo(viewingUser.status).text}
+                            </span>
+                        </div>
+
+                        <h4 style={{marginTop: '2rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                            <Briefcase size={18} className='text-indigo-600'/> 
+                            Proiecte active ({userProjects.length})
+                        </h4>
+                        
+                        <div className="user-projects-list-mini" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                            {userProjects.length > 0 ? (
+                                <ul style={{listStyle: 'none', padding: 0}}>
+                                    {userProjects.map(p => (
+                                        <li key={p.id} style={{
+                                            padding: '12px',
+                                            border: '1px solid #f1f5f9',
+                                            borderRadius: '8px',
+                                            marginBottom: '8px',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            background: '#f8fafc'
+                                        }}>
+                                            <div>
+                                                <div style={{fontWeight: 600, color: '#1e293b'}}>{p.title}</div>
+                                                <div style={{fontSize: '0.8rem', color: '#64748b'}}>{p.domain}</div>
+                                            </div>
+                                            <span className={`status-pill ${p.status === 'Active' ? 'status-active' : 'status-completed'}`}
+                                                  style={{fontSize: '0.7rem', padding: '2px 8px', borderRadius: '12px', background: p.status === 'Active' ? '#e0f2fe' : '#dcfce7', color: p.status === 'Active' ? '#0284c7' : '#166534'}}>
+                                                {p.status || 'Active'}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <div style={{padding: '2rem', textAlign: 'center', color: '#94a3b8', fontStyle: 'italic', background: '#f8fafc', borderRadius: '8px'}}>
+                                    Nu există proiecte asociate acestui utilizator.
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </Modal>
+            )}
+
+            {/* Modal Confirmare Acțiune */}
+            <ConfirmModal
+                isOpen={showConfirmAction}
+                onClose={() => setShowConfirmAction(false)}
+                onConfirm={confirmAction}
+                title={actionType === 'suspend' ? 'Blocare Cont' : 'Activare Cont'}
+                message={getActionMessage()}
+            />
         </div>
-
-        {filteredUsers.length === 0 && (
-          <div className="empty-state">
-            <Users size={48} />
-            <p>{t('dashboard.usersManager.noUsers')}</p>
-          </div>
-        )}
-      </div>
-
-      {/* Modal Invitație */}
-      <Modal
-        isOpen={showInviteModal}
-        onClose={() => setShowInviteModal(false)}
-        title={t('dashboard.usersManager.inviteModalTitle')}
-      >
-        <form onSubmit={handleSendInvitation} className="manager-form" style={{ margin: 0, padding: 0, border: 'none', boxShadow: 'none' }}>
-          <div className="form-group">
-            <label>{t('dashboard.usersManager.fullName')} *</label>
-            <input
-              type="text"
-              value={inviteForm.name}
-              onChange={(e) => setInviteForm({ ...inviteForm, name: e.target.value })}
-              required
-              placeholder={t('dashboard.usersManager.fullNamePlaceholder')}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>{t('dashboard.usersManager.email')} *</label>
-            <input
-              type="email"
-              value={inviteForm.email}
-              onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
-              required
-              placeholder={t('dashboard.usersManager.emailPlaceholder')}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>{t('dashboard.usersManager.personalizedMessage')}</label>
-            <textarea
-              value={inviteForm.message}
-              onChange={(e) => setInviteForm({ ...inviteForm, message: e.target.value })}
-              rows="4"
-              placeholder={t('dashboard.usersManager.messagePlaceholder')}
-            />
-          </div>
-
-          <div style={{ 
-            background: '#f0f9ff', 
-            border: '1px solid #0ea5e9', 
-            borderRadius: '8px', 
-            padding: '12px', 
-            marginBottom: '1.5rem',
-            fontSize: '0.9rem',
-            color: '#0c4a6e'
-          }}>
-            <strong>ℹ️ {t('dashboard.usersManager.inviteInfo')}</strong>
-            <ul style={{ margin: '8px 0 0 20px', padding: 0 }}>
-              <li>{t('dashboard.usersManager.inviteInfoEmail')}</li>
-              <li>{t('dashboard.usersManager.inviteInfoValidity')}</li>
-              <li>{t('dashboard.usersManager.inviteInfoAccess')}</li>
-            </ul>
-          </div>
-
-          <div className="modal-actions">
-            <button type="button" className="btn-secondary" onClick={() => setShowInviteModal(false)}>
-              {t('dashboard.usersManager.cancel')}
-            </button>
-            <button type="submit" className="btn-primary">
-              <Mail size={18} />
-              {t('dashboard.usersManager.sendInvite')}
-            </button>
-          </div>
-        </form>
-      </Modal>
-
-      {/* Modal Detalii Utilizator */}
-      {viewingUser && (
-        <Modal
-          isOpen={!!viewingUser}
-          onClose={() => setViewingUser(null)}
-          title={t('dashboard.usersManager.userDetailsTitle')}
-        >
-          <div className="user-details">
-            <div className="detail-row">
-              <strong>{t('dashboard.usersManager.name')}:</strong>
-              <span>{viewingUser.name}</span>
-            </div>
-            
-            <div className="detail-row">
-              <strong>{t('dashboard.usersManager.email')}:</strong>
-              <span><a href={`mailto:${viewingUser.email}`}>{viewingUser.email}</a></span>
-            </div>
-            
-            <div className="detail-row">
-              <strong>Status:</strong>
-              {getStatusBadge(viewingUser.status)}
-            </div>
-            
-            {viewingUser.status === 'pending' ? (
-              <>
-                <div className="detail-row">
-                  <strong>{t('dashboard.usersManager.invited')}:</strong>
-                  <span>{formatDate(viewingUser.invitationSentDate)}</span>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="detail-row">
-                  <strong>{t('dashboard.usersManager.registeredDate')}:</strong>
-                  <span>{formatDate(viewingUser.registeredDate)}</span>
-                </div>
-                
-                <div className="detail-row">
-                   <strong>Active Projects:</strong>
-                   <div className="user-projects-list-mini">
-                       {userProjects.length > 0 ? (
-                           <ul>
-                               {userProjects.map(p => (
-                                   <li key={p.id}>
-                                       <span>{p.title}</span>
-                                       <span className={p.endDate ? 'text-success' : 'text-warning'}>
-                                           {p.endDate ? '(Finished)' : '(Active)'}
-                                       </span>
-                                   </li>
-                               ))}
-                           </ul>
-                       ) : (
-                           <span>No projects found.</span>
-                       )}
-                   </div>
-                </div>
-
-                <div className="detail-row">
-                  <strong>{t('dashboard.usersManager.lastLogin')}:</strong>
-                  <span>{formatDate(viewingUser.lastLogin)}</span>
-                </div>
-              </>
-            )}
-            
-            <div className="detail-row">
-              <strong>{t('dashboard.usersManager.invitedBy')}:</strong>
-              <span>{viewingUser.invitedBy}</span>
-            </div>
-            
-            <div className="detail-row">
-              <strong>{t('dashboard.usersManager.projectsCount')}:</strong>
-              <span className="projects-badge">{viewingUser.projectsCount}</span>
-            </div>
-            
-            {viewingUser.status === 'suspended' && viewingUser.suspendedReason && (
-              <div className="detail-row">
-                <strong>{t('dashboard.usersManager.suspendReason')}:</strong>
-                <span style={{ color: '#dc2626' }}>{viewingUser.suspendedReason}</span>
-              </div>
-            )}
-          </div>
-        </Modal>
-      )}
-
-      {/* Modal Confirmare Acțiune */}
-      <ConfirmModal
-        isOpen={showConfirmAction}
-        onClose={() => setShowConfirmAction(false)}
-        onConfirm={confirmAction}
-        title={actionType === 'suspend' ? t('dashboard.usersManager.confirmSuspend') : t('dashboard.usersManager.cancel')}
-        message={getActionMessage()}
-      />
-    </div>
-  );
+    );
 };
 
 export default UsersManager;

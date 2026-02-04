@@ -1,37 +1,37 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import './Login.css';
-import Button from '../../components/Button/Button';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import "./Login.css";
+import Button from "../../components/Button/Button";
+import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
-    setError('');
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await login(formData.email, formData.password);
-    
+
     if (result.success) {
-      if (result.role === 'Admin') {
-        navigate('/dashboard');
+      if (result.role === "Admin") {
+        navigate("/dashboard");
       } else {
-        navigate('/profile');
+        navigate("/my-projects");
       }
     } else {
       setError(result.error);
@@ -43,15 +43,15 @@ const Login = () => {
       <div className="login-container">
         <div className="login-box">
           <div className="login-header">
-            <h1>{t('login.title')}</h1>
-            <p>{t('login.subtitle')}</p>
+            <h1>{t("login.title")}</h1>
+            <p>{t("login.subtitle")}</p>
           </div>
 
           {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">
-              <label htmlFor="email">{t('login.email')}</label>
+              <label htmlFor="email">{t("login.email")}</label>
               <input
                 type="email"
                 id="email"
@@ -59,13 +59,13 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder={t('login.emailPlaceholder')}
+                placeholder={t("login.emailPlaceholder")}
                 autoComplete="email"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">{t('login.password')}</label>
+              <label htmlFor="password">{t("login.password")}</label>
               <input
                 type="password"
                 id="password"
@@ -73,7 +73,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                placeholder={t('login.passwordPlaceholder')}
+                placeholder={t("login.passwordPlaceholder")}
                 autoComplete="current-password"
               />
             </div>
@@ -81,18 +81,23 @@ const Login = () => {
             <div className="form-options">
               <label className="checkbox-label">
                 <input type="checkbox" />
-                <span>{t('login.rememberMe')}</span>
+                <span>{t("login.rememberMe")}</span>
               </label>
-              <a href="#" className="forgot-password">{t('login.forgotPassword')}</a>
+              <a href="#" className="forgot-password">
+                {t("login.forgotPassword")}
+              </a>
             </div>
 
             <Button type="submit" variant="primary" className="login-button">
-              {t('login.loginButton')}
+              {t("login.loginButton")}
             </Button>
           </form>
 
           <div className="login-footer">
-            <p>{t('login.noAccount')} <a href="/contact">{t('login.contactLink')}</a></p>
+            <p>
+              {t("login.noAccount")}{" "}
+              <a href="/contact">{t("login.contactLink")}</a>
+            </p>
           </div>
         </div>
       </div>

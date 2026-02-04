@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Edit2, Trash2, CheckCircle, ExternalLink, Calendar, User, Mail } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { invalidateClientProjects, fetchClientProjects } from '../../../store/slices/clientProjectsSlice';
+import { fetchUsers } from '../../../store/slices/usersSlice';
+import { Edit2, Trash2, CheckCircle, ExternalLink, Calendar, User, Mail, Briefcase } from 'lucide-react';
 import { api } from '../../../services/api';
 import Modal from '../../../components/Modal/Modal';
 import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
@@ -10,9 +13,10 @@ import './Manager.css';
 const ClientProjectsManager = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [projects, setProjects] = useState([]);
-  const [availableUsers, setAvailableUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { items: projects, status } = useSelector((state) => state.clientProjects);
+  const { items: usersList } = useSelector((state) => state.users);
+  const isLoading = status === 'loading';
   
   // Modal States
   const [showForm, setShowForm] = useState(false);
@@ -34,30 +38,18 @@ const ClientProjectsManager = () => {
   });
 
   useEffect(() => {
-    fetchProjects();
-    fetchUsers();
-  }, []);
+    dispatch(fetchClientProjects());
+  }, [dispatch]);
 
-  const fetchProjects = async () => {
-    try {
-      const data = await api.getClientProjects();
-      setProjects(data);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    if (isExistingUser) {
+        dispatch(fetchUsers());
     }
-  };
+  }, [isExistingUser, dispatch]);
 
-  const fetchUsers = async () => {
-      try {
-          if (api.getUsers) {
-             const users = await api.getUsers();
-             setAvailableUsers(users);
-          }
-      } catch (e) {
-          console.warn('Failed to load users for dropdown', e);
-      }
+  const reloadProjects = async () => {
+    dispatch(invalidateClientProjects());
+    dispatch(fetchClientProjects());
   };
 
   const resetForm = () => {
@@ -105,11 +97,14 @@ const ClientProjectsManager = () => {
       if (editingId) {
         await api.updateClientProject(editingId, payload);
       } else {
-        await api.createClientProject(payload);
+        const response = await api.createClientProject(payload);
+        if (response && response.invitationLink) {
+             alert(`Invitație trimisă cu succes la ${payload.newUserEmail}!\n\nLink activare: ${response.invitationLink}\n\n(Acest link ar fi trimis pe email în producție)`);
+        }
       }
       setShowForm(false);
       resetForm();
-      fetchProjects();
+      reloadProjects();
     } catch (error) {
       console.error('Error saving project:', error);
       alert('Failed to save project. ' + error.message);
@@ -126,7 +121,7 @@ const ClientProjectsManager = () => {
     if (deleteId) {
         try {
             await api.deleteClientProject(deleteId);
-            fetchProjects();
+            reloadProjects();
         } catch (error) {
             console.error('Error deleting project:', error);
         }
@@ -139,7 +134,7 @@ const ClientProjectsManager = () => {
       e.stopPropagation();
       try {
           await api.markClientProjectFinished(id);
-          fetchProjects();
+          reloadProjects();
       } catch (error) {
            console.error('Error marking finished:', error);
       }
@@ -152,6 +147,10 @@ const ClientProjectsManager = () => {
   return (
     <div className="manager">
       <div className="manager-header">
+        <h2>
+          <User size={24} />
+          {t('dashboard.clientProjectsManager.title')}
+        </h2>
         <button 
           className="btn-primary"
           onClick={() => {
@@ -159,7 +158,7 @@ const ClientProjectsManager = () => {
             setShowForm(true);
           }}
         >
-          + {t('common.add', 'Add Project')}
+          {t('dashboard.clientProjectsManager.addProject')}
         </button>
       </div>
 
@@ -167,61 +166,60 @@ const ClientProjectsManager = () => {
         {projects.map(project => (
           <div 
             key={project.id} 
-            className={`admin-card ${project.isFinished ? 'opacity-75' : ''}`}
+            className={`project-card ${project.isFinished ? 'finished opacity-90' : ''}`}
             onClick={() => handleCardClick(project.id)}
-            style={{ cursor: 'pointer', position: 'relative' }}
+            style={{ cursor: 'pointer' }}
           >
-            <div className="card-content">
-                <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl font-bold">{project.title}</h3>
-                    {project.isFinished && (
-                         <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Finished</span>
-                    )}
+            <div className="project-card-header">
+                <div className="project-card-status">
+                    {project.isFinished ? t('dashboard.clientProjectsManager.status.finished').toUpperCase() : t('dashboard.clientProjectsManager.status.active').toUpperCase()}
+                </div>
+            </div>
+
+            <div className="project-card-content">
+                <div className="project-icon-wrapper">
+                    <Briefcase size={28} />
                 </div>
                 
-                <p className="description mb-4">{project.description}</p>
-                
-                <div className="meta-info text-sm text-gray-500 mb-4 space-y-1">
-                    <div className="flex items-center gap-2">
-                        <User size={14} />
-                        <span>Client ID: {project.userId}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Calendar size={14} />
-                        <span>Start: {new Date(project.startDate).toLocaleDateString()}</span>
-                    </div>
+                <h3 className="project-title" title={project.title}>
+                    {project.title}
+                </h3>
+
+                <div className="project-client-chip" title={`${project.clientName} (${project.clientEmail || t('dashboard.clientProjectsManager.noEmail')})`}>
+                    <User size={14} />
+                    <span className="truncate max-w-[200px] font-medium">
+                        {project.clientName || t('dashboard.clientProjectsManager.unknownClient')}
+                    </span>
                 </div>
 
-                <div className="card-actions-footer flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
-                    <div className="flex gap-2">
-                         {!project.isFinished && (
-                            <button 
-                                className="action-btn text-green-600 hover:bg-green-50 p-2 rounded" 
-                                title="Mark Finished"
-                                onClick={(e) => handleFinish(project.id, e)}
-                            >
-                                <CheckCircle size={18} />
-                            </button>
-                        )}
-                        <button className="action-btn text-blue-600 hover:bg-blue-50 p-2 rounded">
-                            <ExternalLink size={18} />
-                        </button>
-                    </div>
-                    
-                    <div className="flex gap-2">
+                <p className="project-description">
+                    {project.description}
+                </p>
+
+                <div className="project-actions" onClick={(e) => e.stopPropagation()}>
+                    {!project.isFinished && (
                         <button 
-                            className="action-btn hover:bg-gray-100 p-2 rounded"
-                            onClick={(e) => handleEdit(project, e)}
+                            className="action-icon-btn finish"
+                            title={t('dashboard.clientProjectsManager.markFinished')}
+                            onClick={(e) => handleFinish(project.id, e)}
                         >
-                            <Edit2 size={18} />
+                            <CheckCircle size={18} />
                         </button>
-                        <button 
-                            className="action-btn text-red-600 hover:bg-red-50 p-2 rounded"
-                            onClick={(e) => handleDeleteClick(project.id, e)}
-                        >
-                            <Trash2 size={18} />
-                        </button>
-                    </div>
+                    )}
+                    <button 
+                        className="action-icon-btn edit"
+                        title={t('dashboard.clientProjectsManager.viewProject')}
+                        onClick={(e) => handleEdit(project, e)}
+                    >
+                        <Edit2 size={18} />
+                    </button>
+                    <button 
+                        className="action-icon-btn delete"
+                        title={t('dashboard.clientProjectsManager.delete')}
+                        onClick={(e) => handleDeleteClick(project.id, e)}
+                    >
+                        <Trash2 size={18} />
+                    </button>
                 </div>
             </div>
           </div>
@@ -231,11 +229,11 @@ const ClientProjectsManager = () => {
       <Modal
         isOpen={showForm}
         onClose={resetForm}
-        title={editingId ? 'Edit Project' : 'New Project'}
+        title={editingId ? t('dashboard.clientProjectsManager.editProject') : t('dashboard.clientProjectsManager.newProject')}
       >
-        <form onSubmit={handleSubmit} className="p-4">
+        <form onSubmit={handleSubmit} className="manager-form" style={{ padding: 0, boxShadow: 'none' }}>
           <div className="form-group mb-4">
-            <label className="block text-sm font-medium mb-1">Title</label>
+            <label className="block text-sm font-medium mb-1 font-semibold">{t('dashboard.clientProjectsManager.form.title')}</label>
             <input
               className="w-full p-2 border rounded"
               value={formData.title}
@@ -244,54 +242,56 @@ const ClientProjectsManager = () => {
             />
           </div>
           
-          <div className="form-group mb-4 bg-gray-50 p-3 rounded border border-gray-200">
-              <div className="flex items-center justify-between mb-2">
-                  <label className="text-sm font-medium">Assigned Client</label>
-                  {!editingId && (
-                      <div className="flex items-center gap-2">
-                          <input 
-                            type="checkbox" 
-                            id="existUser"
-                            checked={isExistingUser} 
-                            onChange={(e) => setIsExistingUser(e.target.checked)} 
-                          />
-                          <label htmlFor="existUser" className="text-xs text-gray-600 cursor-pointer select-none">Existing User?</label>
-                      </div>
-                  )}
-              </div>
+          <div className="form-group mb-4">
+              <label className="block text-sm font-medium mb-1 font-semibold">
+                  {t('dashboard.clientProjectsManager.form.assignedClient')}
+              </label>
+              
+              {!editingId && (
+                  <div className="flex items-center gap-2 mb-2">
+                      <input 
+                        type="checkbox" 
+                        id="existUser"
+                        checked={isExistingUser} 
+                        onChange={(e) => setIsExistingUser(e.target.checked)} 
+                        className="cursor-pointer rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <label htmlFor="existUser" className="text-sm text-gray-600 cursor-pointer select-none">
+                          {t('dashboard.clientProjectsManager.form.existingUser')}
+                      </label>
+                  </div>
+              )}
 
-              {isExistingUser ? (
-                  <select 
-                     className="w-full p-2 border rounded bg-white"
-                     value={formData.userId}
-                     onChange={(e) => setFormData({...formData, userId: e.target.value})}
-                     required
-                  >
-                      <option value="">Select a user...</option>
-                      {availableUsers.map(u => (
-                          <option key={u.id} value={u.id}>
-                              {u.userName} ({u.email})
-                          </option>
-                      ))}
-                  </select>
-              ) : (
-                  <div className="relative">
-                      <Mail className="absolute left-3 top-2.5 text-gray-400" size={16} />
+              <div className="relative">
+                  {isExistingUser ? (
+                      <select 
+                        className="w-full p-2 border rounded bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        value={formData.userId}
+                        onChange={(e) => setFormData({...formData, userId: e.target.value})}
+                        required
+                      >
+                          <option value="">{t('dashboard.clientProjectsManager.form.selectUser')}</option>
+                          {usersList.map(u => (
+                              <option key={u.id} value={u.id}>
+                                  {u.fullName || u.userName} ({u.email})
+                              </option>
+                          ))}
+                      </select>
+                  ) : (
                       <input
                         type="email"
-                        className="w-full p-2 pl-9 border rounded"
+                        className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                         value={formData.newUserEmail}
                         onChange={(e) => setFormData({...formData, newUserEmail: e.target.value})}
                         required
-                        placeholder="new.client@email.com"
+                        placeholder={t('dashboard.clientProjectsManager.form.emailPlaceholder')}
                       />
-                      <p className="text-xs text-gray-500 mt-1">An invitation/account will be created for this email.</p>
-                  </div>
-              )}
+                  )}
+              </div>
           </div>
 
           <div className="form-group mb-4">
-            <label className="block text-sm font-medium mb-1">Description</label>
+            <label className="block text-sm font-medium mb-1 font-semibold">{t('dashboard.clientProjectsManager.form.description')}</label>
             <textarea
               className="w-full p-2 border rounded"
               rows="3"
@@ -302,21 +302,32 @@ const ClientProjectsManager = () => {
           </div>
           
           <div className="form-group mb-4">
-              <label className="block text-sm font-medium mb-1">Technologies</label>
+              <label className="block text-sm font-medium mb-1 font-semibold">{t('dashboard.clientProjectsManager.form.technologies')}</label>
               <input
                 className="w-full p-2 border rounded"
                 value={formData.technologies}
                 onChange={(e) => setFormData({...formData, technologies: e.target.value})}
-                placeholder="React, .NET, PostgreSQL..."
+                placeholder={t('dashboard.clientProjectsManager.form.technologiesPlaceholder')}
+              />
+          </div>
+
+          <div className="form-group mb-4">
+              <label className="block text-sm font-medium mb-1 font-semibold">{t('dashboard.clientProjectsManager.form.startDate')}</label>
+              <input
+                type="date"
+                className="w-full p-2 border rounded"
+                value={formData.startDate}
+                onChange={(e) => setFormData({...formData, startDate: e.target.value})}
+                required
               />
           </div>
           
-          <div className="form-actions flex justify-end gap-3 mt-6">
+          <div className="form-actions modal-actions" style={{ justifyContent: 'flex-end', marginTop: '1.5rem' }}>
             <button type="button" className="btn-secondary" onClick={resetForm}>
-              Cancel
+              {t('dashboard.clientProjectsManager.form.cancel')}
             </button>
             <button type="submit" className="btn-primary">
-              {isExistingUser ? 'Save Project' : 'Invite & Create'}
+              {isExistingUser ? t('dashboard.clientProjectsManager.form.save') : t('dashboard.clientProjectsManager.form.create')}
             </button>
           </div>
         </form>
@@ -327,7 +338,7 @@ const ClientProjectsManager = () => {
         onClose={() => setShowConfirmDelete(false)}
         onConfirm={confirmDelete}
         title={t('common.confirmDelete')}
-        message="Are you sure you want to delete this project? This will also remove all requirements and time logs."
+        message={t('dashboard.clientProjectsManager.deleteMessage')}
       />
     </div>
   );

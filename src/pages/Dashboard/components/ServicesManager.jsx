@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { invalidateServices, fetchServices } from '../../../store/slices/servicesSlice';
 import { Pencil, Trash2 } from 'lucide-react';
 import { api } from '../../../services/api';
 import Modal from '../../../components/Modal/Modal';
@@ -32,7 +34,8 @@ const ICON_OPTIONS = [
 
 const ServicesManager = () => {
   const { t } = useTranslation();
-  const [services, setServices] = useState([]);
+  const dispatch = useDispatch();
+  const { items: services, status } = useSelector((state) => state.services);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -47,16 +50,12 @@ const ServicesManager = () => {
   });
 
   useEffect(() => {
-    loadServices();
-  }, []);
+    dispatch(fetchServices());
+  }, [dispatch]);
 
   const loadServices = async () => {
-    try {
-      const data = await api.getServices();
-      setServices(data);
-    } catch (error) {
-      console.error("Failed to load services", error);
-    }
+     dispatch(invalidateServices());
+     dispatch(fetchServices());
   };
 
   const handleEdit = (service) => {
@@ -81,6 +80,7 @@ const ServicesManager = () => {
   const confirmDelete = async () => {
     try {
       await api.deleteService(deleteId);
+      dispatch(invalidateServices());
       await loadServices();
     } catch (error) {
       console.error("Failed to delete service", error);
@@ -97,6 +97,7 @@ const ServicesManager = () => {
       } else {
         await api.createService(formData);
       }
+      dispatch(invalidateServices());
       await loadServices();
       resetForm();
     } catch (error) {

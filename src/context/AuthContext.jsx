@@ -1,5 +1,7 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserData, clearUserData, fetchUserProfile } from '../store/slices/authSlice';
 import { api } from '../services/api';
 
 const AuthContext = createContext();
@@ -13,10 +15,15 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { user, status } = useSelector(state => state.auth);
   const navigate = useNavigate();
+
+  // Derived state
+  const isAuthenticated = !!user;
+  // If we have a token but status is idle, we are initializing (fetching profile)
+  const hasToken = !!localStorage.getItem('access_token');
+  const loading = status === 'loading' || (status === 'idle' && hasToken);
 
   const login = async (email, password) => {
     try {
@@ -28,21 +35,16 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user_role', data.role);
       
       try {
-        const profile = await api.auth.getProfile();
-        setUser({
-           ...profile,
-           role: data.role
-        }); 
+        await dispatch(fetchUserProfile()).unwrap();
       } catch (e) {
         console.error("Failed to fetch profile on login", e);
         const userData = {
           email: email, 
           role: data.role
         };
-        setUser(userData);
+        dispatch(setUserData(userData));
       }
       
-      setIsAuthenticated(true);
       return { success: true, role: data.role };
     } catch (error) {
       console.error(error);
@@ -51,8 +53,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
+    dispatch(clearUserData());
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user_role');
@@ -61,31 +62,21 @@ export const AuthProvider = ({ children }) => {
 
   // Check for existing session
   useEffect(() => {
-    const initAuth = async () => {
-      const accessToken = localStorage.getItem('access_token');
-      
-      if (accessToken) {
-        try {
-          const profile = await api.auth.getProfile();
-          setUser({
-             ...profile,
-             role: profile.role // Ensure role is top level if needed, though DTO has it
-          }); 
-          setIsAuthenticated(true);
-        } catch (error) {
-          console.error("Failed to fetch profile", error);
-          // If fetch fails (even after refresh retry), maybe clear session?
-          // But api.js might have already cleared it if refresh failed.
-          if (!localStorage.getItem('access_token')) {
-             logout();
-          }
-        }
-      }
-      setLoading(false);
-    };
+    const accessToken = localStorage.getItem('access_token');
     
-    initAuth();
-  }, []);
+    if (accessToken && !user && status === 'idle') {
+       dispatch(fetchUserProfile())
+         .unwrap()
+         .catch(error => {
+            console.error("Failed to fetch profile", error);
+            // If fetch fails (e.g. 401), execute logout
+            // But verify if api interceptor handled it (it might have removed token)
+            if (!localStorage.getItem('access_token')) {
+               logout();
+            }
+         });
+    }
+  }, [dispatch, user, status]);
 
   const value = {
     user,

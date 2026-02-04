@@ -30,41 +30,14 @@ const Profile = () => {
 
   useEffect(() => {
     if (user) {
-      // If user comes from auth context, it might be stale.
-      // We should ideally fetch fresh profile. 
-      // But for now, let's map what we have or fetch if needed.
-      // Assuming api.auth.getProfile() is called on mount usually in real apps, 
-      // but here we might rely on props or context.
-      // If user context object has these fields, we use them.
-      // If not, we might need to update AuthContext to fetch full profile.
-      
-      const loadProfile = async () => {
-         try {
-             // Force fetch fresh profile data
-             const profile = await api.auth.getProfile();
-             setFormData({
-                name: profile.fullName || profile.userName,
-                email: profile.email,
-                role: profile.role,
-                phone: profile.phoneNumber || '',
-                dateOfBirth: profile.dateOfBirth ? new Date(profile.dateOfBirth).toISOString().split('T')[0] : '', // Format for input date
-                location: profile.location || ''
-             });
-         } catch(e) {
-             console.error("Failed to load profile", e);
-             // Fallback to basic user info
-             setFormData({
-                name: user.userName,
-                email: user.email,
-                role: user.role,
-                phone: '',
-                dateOfBirth: '',
-                location: ''
-             });
-         }
-      };
-      
-      loadProfile();
+      setFormData({
+        name: user.fullName || user.userName || '',
+        email: user.email || '',
+        role: user.role || '',
+        phone: user.phoneNumber || '',
+        dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : '', // Format for input date
+        location: user.location || ''
+      });
     }
   }, [user]);
 
@@ -77,7 +50,6 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Saving profile:', formData);
     setIsEditing(false);
   };
 

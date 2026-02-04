@@ -66,6 +66,8 @@ const request = async (endpoint, options = {}) => {
 
     // Handle 401 Unauthorized
     if (response.status === 401) {
+        console.warn("Access token expired. Attempting refresh...");
+        
         // If we are already calling login or refresh, don't retry loop
         if (endpoint.includes('/Auth/login') || endpoint.includes('/Auth/refresh-token')) {
             const errorText = await response.text();
@@ -120,6 +122,17 @@ export const api = {
   updateService: (id, service) => request(`/services/${id}`, { method: 'PUT', body: service }),
   deleteService: (id) => request(`/services/${id}`, { method: 'DELETE' }),
 
+  // Pricing
+  getPricing: async () => {
+    try {
+      const data = await request('/Pricing');
+      return Array.isArray(data) ? data : [];
+    } catch { return []; }
+  },
+  createPricing: (pkg) => request('/Pricing', { method: 'POST', body: pkg }),
+  updatePricing: (id, pkg) => request(`/Pricing/${id}`, { method: 'PUT', body: pkg }),
+  deletePricing: (id) => request(`/Pricing/${id}`, { method: 'DELETE' }),
+
   // Client Projects (Admin Dashboard)
   getClientProjects: async () => {
     const data = await request('/ClientProjects');
@@ -140,11 +153,15 @@ export const api = {
       // { description: string, estimatedDurationDays: number }
       body: JSON.stringify(data) 
   }),
+  proposeClientProjectRequirement: (id, data) => request(`/ClientProjects/${id}/requirements/propose`, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify(data) 
+  }),
   updateClientProjectRequirement: (reqId, updateDto) => request(`/ClientProjects/requirements/${reqId}/update`, { 
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json'},
-      // { status: number, description?:string, estimatedDurationDays?:number }
-      body: JSON.stringify(updateDto) 
+      // Body will be auto-stringified by request function
+      body: updateDto 
   }),
   deleteClientProjectRequirement: (reqId) => request(`/ClientProjects/requirements/${reqId}`, { method: 'DELETE' }),
 
@@ -230,4 +247,31 @@ export const api = {
     return request(`/templates/${id}`, { method: 'PUT', body: dto });
   },
   deleteTemplate: (id) => request(`/templates/${id}`, { method: 'DELETE' }),
+  
+  contactMessages: {
+    create: (data) => request('/ContactMessages', { method: 'POST', body: data }),
+    getAll: async () => {
+        const data = await request('/ContactMessages');
+        return Array.isArray(data) ? data : [];
+    },
+    getMyHistory: async () => {
+        const data = await request('/ContactMessages/my');
+        return Array.isArray(data) ? data : [];
+    },
+    getById: (id) => request(`/ContactMessages/${id}`),
+    markAsRead: (id) => request(`/ContactMessages/${id}/read`, { method: 'PUT' }),
+    delete: (id) => request(`/ContactMessages/${id}`, { method: 'DELETE' }),
+  },
+  
+  users: {
+    getAll: async () => {
+        const data = await request('/Users');
+        return Array.isArray(data) ? data : [];
+    },
+    toggleStatus: (id, status) => request(`/Users/${id}/toggle-status`, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }) 
+    }),
+  }
 };

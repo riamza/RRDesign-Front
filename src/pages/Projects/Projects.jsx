@@ -1,29 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProjects } from '../../store/slices/projectsSlice';
 import './Projects.css';
 import ProjectCard from '../../components/ProjectCard/ProjectCard';
-import { api } from '../../services/api';
 import SEO from '../../components/SEO/SEO';
 
 const Projects = () => {
   const { t } = useTranslation();
   const gridRef = useRef(null);
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { items: projects, status } = useSelector((state) => state.projects);
+  const loading = status === 'loading';
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const data = await api.getProjects();
-        setProjects(data);
-      } catch (error) {
-        console.error('Failed to fetch projects:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
+    dispatch(fetchProjects());
+  }, [dispatch]);
 
   useEffect(() => {
     if (loading) return;

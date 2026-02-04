@@ -1,31 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchServices } from '../../store/slices/servicesSlice';
+import { fetchPricing } from '../../store/slices/pricingSlice';
 import './Services.css';
 import ServiceCard from '../../components/ServiceCard/ServiceCard';
 import PriceCard from '../../components/PriceCard/PriceCard';
-import { pricingPackages } from '../../data/mockData';
-import { api } from '../../services/api';
 import SEO from '../../components/SEO/SEO';
 
 const Services = () => {
   const { t } = useTranslation();
   const gridRef = useRef(null);
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { items: services, status: servicesStatus } = useSelector((state) => state.services);
+  const { items: pricingPackages, status: pricingStatus } = useSelector((state) => state.pricing);
+  const loading = servicesStatus === 'loading' || pricingStatus === 'loading';
 
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const data = await api.getServices();
-        setServices(data);
-      } catch (error) {
-        console.error('Failed to fetch services:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchServices();
-  }, []);
+    dispatch(fetchServices());
+    dispatch(fetchPricing());
+  }, [dispatch]);
 
   useEffect(() => {
     if (loading) return;

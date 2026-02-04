@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { invalidateProjects, fetchProjects } from '../../../store/slices/projectsSlice';
 import { Upload, X } from 'lucide-react';
 import { api } from '../../../services/api';
 import Modal from '../../../components/Modal/Modal';
@@ -9,7 +11,8 @@ import './Manager.css';
 
 const ProjectsManager = () => {
   const { t } = useTranslation();
-  const [projects, setProjects] = useState([]);
+  const dispatch = useDispatch();
+  const { items: projects, status } = useSelector((state) => state.projects);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -24,17 +27,13 @@ const ProjectsManager = () => {
   });
 
   const loadProjects = async () => {
-    try {
-      const data = await api.getProjects();
-      setProjects(data);
-    } catch (e) {
-      console.error("Failed to load projects", e);
-    }
+     dispatch(invalidateProjects());
+     dispatch(fetchProjects());
   };
 
   useEffect(() => {
-    loadProjects();
-  }, []);
+    dispatch(fetchProjects());
+  }, [dispatch]);
 
   // Grid alignment effect omitted for brevity, logic remains same if projects updates
 
@@ -59,6 +58,7 @@ const ProjectsManager = () => {
   const confirmDelete = async () => {
     try {
       await api.deleteProject(deleteId);
+      dispatch(invalidateProjects());
       await loadProjects();
     } catch (error) {
        console.error(error);
@@ -75,6 +75,7 @@ const ProjectsManager = () => {
       } else {
         await api.createProject(formData);
       }
+      dispatch(invalidateProjects());
       await loadProjects();
       resetForm();
     } catch (error) {

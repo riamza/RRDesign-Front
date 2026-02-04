@@ -1,55 +1,145 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Mail, Clock, User, Building2, Phone, Send, Archive, Trash2, MailOpen, X, UserPlus } from 'lucide-react';
-import { contactSubmissions as initialSubmissions } from '../../../data/mockData';
+import { api } from '../../../services/api';
 import ConfirmModal from '../../../components/ConfirmModal/ConfirmModal';
 import Modal from '../../../components/Modal/Modal';
 import './ContactInbox.css';
 
 const ContactManager = () => {
   const { t } = useTranslation();
-  const [submissions, setSubmissions] = useState(initialSubmissions);
-  const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [submissions, setSubmissions] = useState([]);
+  const [selectedConversation, setSelectedConversation] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
   const [replyText, setReplyText] = useState('');
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
+  const [deleteThreadEmail, setDeleteThreadEmail] = useState(null);
   const [deleteItemName, setDeleteItemName] = useState('');
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteData, setInviteData] = useState({ email: '', name: '', message: '' });
 
-  const handleSelectMessage = (submission) => {
-    setSelectedSubmission(submission);
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
+  const fetchMessages = async () => {
+    try {
+      const data = await api.contactMessages.getAll();
+      // Only keep necessary fields. Grouping happens in render or memoized.
+      const formatted = data.map(msg => ({
+        id: msg.id,
+        name: msg.name,
+        email: msg.email,
+        phone: msg.phone,
+        company: msg.company,
+        message: msg.message,
+        date: msg.createdAt,
+        status: msg.isRead ? 'read' : 'new'
+      }));
+      setSubmissions(formatted);
+    } catch (error) {
+      console.error("Failed to fetch contact messages", error);
+    }
+  };
+
+  // Group submissions by email
+  const conversations = React.useMemo(() => {
+    const groups = {};
+    submissions.forEach(msg => {
+      if (!groups[msg.email]) {
+        groups[msg.email] = {
+            email: msg.email,
+            name: msg.name,
+            company: msg.company,
+            phone: msg.phone,
+            messages: [],
+            lastMessageDate: msg.date,
+            status: 'read' // will be 'new' if any msg is new
+        };
+      }
+      groups[msg.email].messages.push(msg);
+      
+      // Update metadata if this message is newer
+      if (new Date(msg.date) > new Date(groups[msg.email].lastMessageDate)) {
+        groups[msg.email].lastMessageDate = msg.date;
+        groups[msg.email].name = msg.name;
+        groups[msg.email].company = msg.company;
+        groups[msg.email].phone = msg.phone;
+      }
+      
+      if (msg.status === 'new') {
+        groups[msg.email].status = 'new';
+      }
+    });
+
+    // Sort conversations by last message date descending
+    return Object.values(groups).sort((a, b) => new Date(b.lastMessageDate) - new Date(a.lastMessageDate));
+  }, [submissions]);
+
+  const handleSelectConversation = async (conversation) => {
+    setSelectedConversation(conversation);
     setReplyText('');
     
-    if (submission.status === 'new') {
-      setSubmissions(submissions.map(s => 
-        s.id === submission.id ? { ...s, status: 'read' } : s
-      ));
+    // Mark all new messages in this thread as read
+    const newMessages = conversation.messages.filter(m => m.status === 'new');
+    if (newMessages.length > 0) {
+      try {
+        await Promise.all(newMessages.map(msg => api.contactMessages.markAsRead(msg.id)));
+        
+        // Update local state
+        const updatedSubmissions = submissions.map(s => {
+            if (s.email === conversation.email && s.status === 'new') {
+                return { ...s, status: 'read' };
+            }
+            return s;
+        });
+        setSubmissions(updatedSubmissions);
+      } catch (error) {
+          console.error("Error marking thread as read", error);
+      }
     }
   };
 
-  const handleArchive = (id) => {
+  const handleArchive = (email) => {
+    // For now, archive just marks them in local state or we need backend support
+    // Assuming archive marks them as 'archived' locally for filter.
+    // In real app, we might need a field 'isArchived' on backend.
+    // Reusing 'status' field for now, but backend only has 'isRead'.
+    // Let's just update local state to simulate archival if backend doesn't support it directly
+    // or we'd interpret 'archived' as 'read' + hidden?
+    // User requested grouping, didn't specify archive logic change. 
+    // I'll keep local toggle.
     setSubmissions(submissions.map(s => 
-      s.id === id ? { ...s, status: 'archived' } : s
+      s.email === email ? { ...s, status: 'archived' } : s
     ));
-    if (selectedSubmission?.id === id) {
-      setSelectedSubmission({ ...selectedSubmission, status: 'archived' });
+    if (selectedConversation?.email === email) {
+      setSelectedConversation(prev => ({ ...prev, status: 'archived' }));
     }
   };
 
-  const handleDelete = (submission) => {
-    setDeleteId(submission.id);
-    setDeleteItemName(submission.name);
+  const handleDeleteThread = (conversation) => {
+    setDeleteThreadEmail(conversation.email);
+    setDeleteItemName(conversation.name);
     setShowConfirmDelete(true);
   };
 
-  const confirmDelete = () => {
-    setSubmissions(submissions.filter(s => s.id !== deleteId));
-    if (selectedSubmission?.id === deleteId) {
-      setSelectedSubmission(null);
+  const confirmDelete = async () => {
+    try {
+        // Find all messages in this thread
+        const threadMessages = submissions.filter(s => s.email === deleteThreadEmail);
+        // Delete all
+        await Promise.all(threadMessages.map(msg => api.contactMessages.delete(msg.id)));
+        
+        setSubmissions(submissions.filter(s => s.email !== deleteThreadEmail));
+        
+        if (selectedConversation?.email === deleteThreadEmail) {
+            setSelectedConversation(null);
+        }
+        setDeleteThreadEmail(null);
+        setShowConfirmDelete(false);
+    } catch (error) {
+        console.error("Error deleting thread", error);
     }
-    setDeleteId(null);
   };
 
   const handleSendReply = () => {
@@ -57,35 +147,43 @@ const ContactManager = () => {
       alert('Te rog scrie un mesaj înainte de a trimite.');
       return;
     }
-    alert(`Răspuns trimis către ${selectedSubmission.email}`);
+    window.location.href = `mailto:${selectedConversation.email}?subject=RE: Contact RRDesign&body=${encodeURIComponent(replyText)}`;
     setReplyText('');
-    setSelectedSubmission(null);
   };
 
-  const handleSendInvitation = (submission) => {
+  const handleSendInvitation = (conversation) => {
     setInviteData({
-      email: submission.email,
-      name: submission.name,
+      email: conversation.email,
+      name: conversation.name,
       message: `Bună ziua,\n\nÎn urma discuțiilor noastre, vă transmit cu plăcere invitația de a vă alătura platformei noastre.\n\nCu stimă,\nEchipa RRDesign`
     });
     setShowInviteModal(true);
   };
 
-  const confirmSendInvitation = (e) => {
-    e.preventDefault();
-    
-    const invitationToken = `inv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const invitationLink = `${window.location.origin}/register?token=${invitationToken}`;
-    
-    alert(`Invitație trimisă către ${inviteData.email}!\n\nLink de înregistrare: ${invitationLink}\n\nUtilizatorul a fost adăugat în secțiunea "Utilizatori" cu statusul "În așteptare".\n\nÎn producție, acest link va fi trimis automat prin email.`);
-    
-    setShowInviteModal(false);
-    setInviteData({ email: '', name: '', message: '' });
+  const handleInviteUser = async () => {
+      if (!inviteData.email) return;
+      try {
+          await api.auth.inviteUser(inviteData.email);
+          alert(`Invitație trimisă către ${inviteData.email}!`);
+          setShowInviteModal(false);
+          setInviteData({ email: '', name: '', message: '' });
+      } catch (error) {
+          console.error("Invitation failed", error);
+          alert("A apărut o eroare la trimiterea invitației.");
+      }
   };
 
-  const filteredSubmissions = submissions.filter(s => {
+  const confirmSendInvitation = (e) => {
+    e.preventDefault();
+    handleInviteUser();
+  };
+
+  const filteredConversations = conversations.filter(c => {
     if (filterStatus === 'all') return true;
-    return s.status === filterStatus;
+    if (filterStatus === 'new') return c.status === 'new';
+    if (filterStatus === 'read') return c.status !== 'new' && c.status !== 'archived';
+    if (filterStatus === 'archived') return c.status === 'archived';
+    return true;
   });
 
   const formatDate = (dateString) => {
@@ -122,7 +220,7 @@ const ContactManager = () => {
     }).format(date);
   };
 
-  const unreadCount = submissions.filter(s => s.status === 'new').length;
+  const unreadCount = conversations.filter(c => c.status === 'new').length;
 
   return (
     <div className="contact-inbox">
@@ -141,60 +239,54 @@ const ContactManager = () => {
           className={`filter-chip ${filterStatus === 'all' ? 'active' : ''}`}
           onClick={() => setFilterStatus('all')}
         >
-          Toate <span className="chip-count">{submissions.length}</span>
+          All <span className="chip-count">{conversations.length}</span>
         </button>
         <button
           className={`filter-chip ${filterStatus === 'new' ? 'active' : ''}`}
           onClick={() => setFilterStatus('new')}
         >
-          Noi <span className="chip-count">{submissions.filter(s => s.status === 'new').length}</span>
+          New <span className="chip-count">{conversations.filter(s => s.status === 'new').length}</span>
         </button>
         <button
           className={`filter-chip ${filterStatus === 'read' ? 'active' : ''}`}
           onClick={() => setFilterStatus('read')}
         >
-          Citite <span className="chip-count">{submissions.filter(s => s.status === 'read').length}</span>
-        </button>
-        <button
-          className={`filter-chip ${filterStatus === 'archived' ? 'active' : ''}`}
-          onClick={() => setFilterStatus('archived')}
-        >
-          Arhivate <span className="chip-count">{submissions.filter(s => s.status === 'archived').length}</span>
+          Read <span className="chip-count">{conversations.filter(s => s.status !== 'new' && s.status !== 'archived').length}</span>
         </button>
       </div>
 
       <div className="inbox-content">
         <div className="messages-sidebar">
-          {filteredSubmissions.length === 0 ? (
+          {filteredConversations.length === 0 ? (
             <div className="empty-messages">
               <Mail size={48} />
-              <p>Nu există mesaje</p>
+              <p>Nu există conversații</p>
             </div>
           ) : (
             <div className="messages-list">
-              {filteredSubmissions.map(submission => (
+              {filteredConversations.map(conv => (
                 <div
-                  key={submission.id}
-                  className={`message-item ${submission.status === 'new' ? 'unread' : ''} ${selectedSubmission?.id === submission.id ? 'active' : ''}`}
-                  onClick={() => handleSelectMessage(submission)}
+                  key={conv.email}
+                  className={`message-item ${conv.status === 'new' ? 'unread' : ''} ${selectedConversation?.email === conv.email ? 'active' : ''}`}
+                  onClick={() => handleSelectConversation(conv)}
                 >
                   <div className="message-item-header">
                     <div className="message-sender">
                       <User size={16} />
-                      <span className="sender-name">{submission.name}</span>
+                      <span className="sender-name">{conv.name}</span>
                     </div>
-                    <span className="message-time">{formatDate(submission.date)}</span>
+                    <span className="message-time">{formatDate(conv.lastMessageDate)}</span>
                   </div>
-                  {submission.company && (
+                  {conv.company && (
                     <div className="message-company">
                       <Building2 size={14} />
-                      {submission.company}
+                      {conv.company}
                     </div>
                   )}
                   <div className="message-preview">
-                    {submission.message.substring(0, 80)}...
+                    {conv.messages[conv.messages.length - 1].message.substring(0, 80)}...
                   </div>
-                  {submission.status === 'new' && (
+                  {conv.status === 'new' && (
                     <div className="unread-indicator"></div>
                   )}
                 </div>
@@ -204,61 +296,48 @@ const ContactManager = () => {
         </div>
 
         <div className="message-viewer">
-          {selectedSubmission ? (
+          {selectedConversation ? (
             <>
               <div className="viewer-header">
                 <div className="viewer-info">
-                  <h3>{selectedSubmission.name}</h3>
+                  <h3>{selectedConversation.name}</h3>
                   <div className="viewer-meta">
                     <span className="meta-item">
                       <Mail size={14} />
-                      <a href={`mailto:${selectedSubmission.email}`}>{selectedSubmission.email}</a>
+                      <a href={`mailto:${selectedConversation.email}`}>{selectedConversation.email}</a>
                     </span>
-                    {selectedSubmission.phone && (
+                    {selectedConversation.phone && (
                       <span className="meta-item">
                         <Phone size={14} />
-                        <a href={`tel:${selectedSubmission.phone}`}>{selectedSubmission.phone}</a>
+                        <a href={`tel:${selectedConversation.phone}`}>{selectedConversation.phone}</a>
                       </span>
                     )}
-                    {selectedSubmission.company && (
+                    {selectedConversation.company && (
                       <span className="meta-item">
                         <Building2 size={14} />
-                        {selectedSubmission.company}
+                        {selectedConversation.company}
                       </span>
                     )}
-                    <span className="meta-item">
-                      <Clock size={14} />
-                      {formatFullDate(selectedSubmission.date)}
-                    </span>
                   </div>
                 </div>
                 <div className="viewer-actions">
                   <button 
                     className="action-btn primary"
-                    onClick={() => handleSendInvitation(selectedSubmission)}
+                    onClick={() => handleSendInvitation(selectedConversation)}
                     title="Trimite invitație de înregistrare"
                   >
                     <UserPlus size={18} />
                   </button>
-                  {selectedSubmission.status !== 'archived' && (
-                    <button 
-                      className="action-btn"
-                      onClick={() => handleArchive(selectedSubmission.id)}
-                      title="Arhivează"
-                    >
-                      <Archive size={18} />
-                    </button>
-                  )}
                   <button 
                     className="action-btn danger"
-                    onClick={() => handleDelete(selectedSubmission)}
-                    title="Șterge"
+                    onClick={() => handleDeleteThread(selectedConversation)}
+                    title="Șterge Conversația"
                   >
                     <Trash2 size={18} />
                   </button>
                   <button 
                     className="action-btn"
-                    onClick={() => setSelectedSubmission(null)}
+                    onClick={() => setSelectedConversation(null)}
                     title="Închide"
                   >
                     <X size={18} />
@@ -266,35 +345,45 @@ const ContactManager = () => {
                 </div>
               </div>
 
-              <div className="viewer-body">
-                <div className="message-content">
-                  <h4>Mesaj:</h4>
-                  <p>{selectedSubmission.message}</p>
-                </div>
+              <div className="viewer-body" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
+                {selectedConversation.messages.sort((a,b) => new Date(a.date) - new Date(b.date)).map(msg => (
+                    <div key={msg.id} style={{ 
+                        background: '#f3f4f6', 
+                        padding: '1rem', 
+                        borderRadius: '0.5rem',
+                        alignSelf: 'flex-start',
+                        maxWidth: '80%'
+                    }}>
+                        <div style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '0.5rem' }}>
+                            {formatFullDate(msg.date)}
+                        </div>
+                        <p style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{msg.message}</p>
+                    </div>
+                ))}
+              </div>
 
-                <div className="reply-box">
-                  <h4>Răspunde:</h4>
-                  <textarea
-                    value={replyText}
-                    onChange={(e) => setReplyText(e.target.value)}
-                    placeholder={`Răspunde lui ${selectedSubmission.name}...`}
-                    rows="6"
-                  />
-                  <button 
-                    className="btn-send-reply"
-                    onClick={handleSendReply}
-                  >
-                    <Send size={18} />
-                    Trimite Răspuns
-                  </button>
-                </div>
+              <div className="reply-box" style={{ marginTop: 'auto', borderTop: '1px solid #e5e7eb', paddingTop: '1rem' }}>
+                <h4>Răspunde:</h4>
+                <textarea
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder={`Răspunde lui ${selectedConversation.name}...`}
+                  rows="3"
+                />
+                <button 
+                  className="btn-send-reply"
+                  onClick={handleSendReply}
+                >
+                  <Send size={18} />
+                  Trimite Răspuns
+                </button>
               </div>
             </>
           ) : (
             <div className="no-selection">
               <MailOpen size={64} />
-              <h3>Selectează un mesaj</h3>
-              <p>Alege un mesaj din lista din stânga pentru a-l vizualiza</p>
+              <h3>Selectează o conversație</h3>
+              <p>Alege o conversație din lista din stânga pentru a vizualiza istoricul</p>
             </div>
           )}
         </div>
@@ -304,8 +393,8 @@ const ContactManager = () => {
         isOpen={showConfirmDelete}
         onClose={() => setShowConfirmDelete(false)}
         onConfirm={confirmDelete}
-        title={t('dashboard.contactManager.confirmDelete')}
-        message={`Ești sigur că vrei să ștergi mesajul de la "${deleteItemName}"? Această acțiune nu poate fi anulată.`}
+        title="Șterge Conversație"
+        message={`Ești sigur că vrei să ștergi TOATE mesajele de la "${deleteItemName}"?`}
       />
 
       {/* Modal Invitație Utilizator */}

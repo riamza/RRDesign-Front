@@ -22,7 +22,7 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <ScrollToTop />
         <div className="app">
@@ -65,6 +65,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <MyProjects />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/my-projects/:id" 
+                element={
+                  <PrivateRoute roles={['Client', 'Admin']}>
+                    <ClientProjectDetails />
                   </PrivateRoute>
                 } 
               />

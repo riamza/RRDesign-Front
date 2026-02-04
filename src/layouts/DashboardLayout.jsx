@@ -35,7 +35,7 @@ const DashboardLayout = () => {
 
   const adminItems = useMemo(() => [
     { id: 'services', label: t('dashboard.services'), icon: <Palette size={20} />, path: '/dashboard?tab=services', isDefault: true },
-    { id: 'client-projects', label: t('dashboard.clientProjects', 'Active Projects'), icon: <Briefcase size={20} />, path: '/dashboard?tab=client-projects' },
+    { id: 'client-projects', label: t('dashboard.clientProjects'), icon: <Briefcase size={20} />, path: '/dashboard?tab=client-projects' },
     { id: 'projects', label: t('dashboard.projects') + ' (Portfolio)', icon: <Briefcase size={20} />, path: '/dashboard?tab=projects' },
     { id: 'templates', label: t('dashboard.templates'), icon: <FileText size={20} />, path: '/dashboard?tab=templates' },
     { id: 'pricing', label: t('dashboard.pricing'), icon: <DollarSign size={20} />, path: '/dashboard?tab=pricing' },
