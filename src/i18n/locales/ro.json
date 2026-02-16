@@ -72,7 +72,8 @@
     "pageTitle": "Serviciile noastre",
     "pageDescription": "Oferim soluții complete de dezvoltare software adaptate nevoilor business-ului tău",
     "whatWeOffer": "Ce oferim:",
-    "technologies": "Tehnologii:",
+    "recommendedFor": "Recomandat pentru:",
+    "price": "Preț:",
     "pricing": {
       "title": "Planuri de prețuri",
       "description": "Alege pachetul care se potrivește cel mai bine nevoilor tale",
@@ -172,14 +173,16 @@
       "update": "Actualizează",
       "title": "Titlu",
       "description": "Descriere",
+      "price": "Preț",
+      "displayOrder": "Ordine afișare",
       "icon": "Icon (emoji)",
       "selectIcon": "Selectează iconița",
       "features": "Caracteristici (Ce oferim)",
       "addFeature": "Adaugă caracteristică",
-      "technologies": "Tehnologii",
-      "addTechnology": "Adaugă tehnologie",
+      "recommendedFor": "Recomandat pentru",
+      "addRecommendation": "Adaugă recomandare",
       "featurePlaceholder": "Descriere caracteristică",
-      "technologyPlaceholder": "ex: React, .NET...",
+      "recommendationPlaceholder": "ex: Startup-uri, IMM-uri...",
       "confirmDelete": "Sigur vrei să ștergi acest serviciu?"
     },
     "projectsManager": {
@@ -446,6 +449,7 @@
     }
   },
   "common": {
+    "free": "Gratis",
     "loading": "Se încarcă...",
     "error": "Eroare",
     "success": "Succes",

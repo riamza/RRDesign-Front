@@ -3,6 +3,27 @@
   flex-direction: column;
   width: 100%;
   gap: 0;
+  position: relative;
+  overflow: hidden; /* Ensure the ribbon doesn't overflow the card */
+}
+
+/* Service Price Ribbon - Diagonal Style */
+.service-price-ribbon {
+  position: absolute;
+  top: 25px;
+  right: -45px;
+  background-color: var(--secondary-color);
+  color: #fff;
+  padding: 0.5rem 0; /* Vertical padding only, let width handle horizontal */
+  width: 165px; /* Fixed width to ensure it spans the corner */
+  transform: rotate(45deg);
+  font-weight: 800;
+  font-size: 1.1rem; /* Increased font size */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  text-align: center;
+  /* Ensure clean text rendering */
+  -webkit-font-smoothing: antialiased;
 }
 
 .service-section {
@@ -14,10 +35,13 @@
 
 .service-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
-  margin-bottom: 0;
+  margin-bottom: 0.5rem;
   padding-bottom: 0;
+  text-align: center;
 }
 
 .service-icon-large {
@@ -36,19 +60,38 @@
 
 .service-features h4,
 .service-tech h4 {
-  color: #2C3E50;
+  color: #2c3e50;
   font-size: 1rem;
   margin-bottom: 0.25rem;
   margin-top: 0;
   font-weight: 600;
+  text-align: center;
 }
 
 .service-tech {
   padding-top: 0;
 }
 
-.service-tech .card-tags {
-  margin-top: 1rem;
+/* Tech List Styling - Matching card-features structure */
+.service-tech .tech-list {
+  margin-top: 0.5rem;
+  /* Ensure the list takes full width like features */
+  width: 100%;
+}
+
+.service-tech .tech-list li {
+  /* Ensure text alignment matches the features section */
+  text-align: left;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.service-tech .tech-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--secondary-color);
+  font-weight: bold;
 }
 
 /* Admin Actions */
