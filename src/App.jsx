@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import CookieBanner from './components/CookieBanner/CookieBanner';
 import Home from './pages/Home/Home';
 import Projects from './pages/Projects/Projects';
 import Templates from './pages/Templates/Templates';
@@ -25,6 +26,7 @@ function App() {
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <ScrollToTop />
+        <CookieBanner />
         <div className="app">
           <Routes>
             {/* Public Routes - use PublicLayout */}

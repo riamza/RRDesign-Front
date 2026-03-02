@@ -75,8 +75,10 @@
     "recommendedFor": "Recomandat pentru:",
     "price": "Preț:",
     "pricing": {
-      "title": "Planuri de prețuri",
+      "title": "Planuri de mentenanță",
       "description": "Alege pachetul care se potrivește cel mai bine nevoilor tale",
+      "benefits": "Beneficii",
+      "disclaimer": "Atenție: Prețurile afișate sunt de plecare. Costul final poate varia în funcție de complexitatea cerințelor.",
       "button": "Cere ofertă"
     },
     "cta": {
@@ -239,11 +241,16 @@
       "update": "Actualizează",
       "title": "Titlu",
       "price": "Preț",
+      "isMonthly": "Lunar",
       "description": "Descriere",
       "highlight": "Evidențiat (Popular)",
       "features": "Beneficii",
       "addFeature": "Adaugă beneficiu",
       "featurePlaceholder": "Beneficiu",
+      "addFeature": "Adaugă beneficiu",
+      "recommendedFor": "Recomandat pentru",
+      "addRecommendation": "Adaugă recomandare",
+      "recommendedForPlaceholder": "Mici afaceri, startup-uri...",
       "confirmDelete": "Sigur vrei să ștergi acest pachet?"
     },
     "contactManager": {
@@ -457,7 +464,14 @@
     "error": "Eroare",
     "success": "Succes",
     "cancel": "Anulează",
-    "update": "Actualizează"
+    "update": "Actualizează",
+    "periodMonthly": "/lună"
+  },
+  "cookies": {
+    "title": "Confidențialitatea ta contează",
+    "description": "Folosim cookie-uri pentru a îmbunătăți experiența de navigare, a oferi conținut personalizat și a analiza traficul.",
+    "accept": "Acceptă tot",
+    "decline": "Doar esențiale"
   },
   "profile": {
     "roleAdmin": "Administrator",

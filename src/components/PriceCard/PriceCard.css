@@ -55,29 +55,10 @@
 }
 
 .pricing-features {
-  flex: 1;
+  padding-bottom: 0;
 }
 
-.pricing-features ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.pricing-features li {
-  color: #4a4a4a;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.pricing-features .check-icon {
-  color: #27ae60;
-  font-weight: bold;
-}
+/* features-list styles defined below with recommended-list */
 
 .pricing-action {
   margin-top: auto;
@@ -175,4 +156,59 @@
   .pricing-card.highlight:hover {
     transform: translateY(-5px);
   }
+}
+
+.price-period { font-size: 1rem; color: #636e72; font-weight: 500; margin-left: 0.25rem; vertical-align: baseline; }
+
+.pricing-recommended {
+  margin: 1rem 0;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+  width: 100%;
+}
+
+.pricing-features h4,
+.pricing-recommended h4 {
+  color: #2c3e50;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  margin-top: 0;
+  font-weight: 600;
+  text-align: center;
+}
+
+.features-list, 
+.recommended-list {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.features-list {
+  margin-bottom: 2rem;
+}
+
+.recommended-list {
+  margin-top: 0.5rem;
+}
+
+.features-list li,
+.recommended-list li {
+  text-align: left;
+  padding-left: 1.5rem;
+  position: relative;
+  color: #4a4a4a;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.features-list li::before,
+.recommended-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--secondary-color, #ffb84d);
+  font-weight: bold;
 }
