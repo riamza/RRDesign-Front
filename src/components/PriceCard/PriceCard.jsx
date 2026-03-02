@@ -15,7 +15,9 @@ const PriceCard = ({ pkg, isAdmin = false, onEdit, onDelete }) => {
         <div className="price">
           {pkg.price}
           <span className="currency"> RON</span>
-          {pkg.isMonthly && <span className="price-period">{t("common.periodMonthly")}</span>}
+          {pkg.isMonthly && (
+            <span className="price-period">{t("common.periodMonthly")}</span>
+          )}
         </div>
         <p className="description">{pkg.description}</p>
       </div>
@@ -28,13 +30,13 @@ const PriceCard = ({ pkg, isAdmin = false, onEdit, onDelete }) => {
         </ul>
       </div>
 
-       {pkg.recommendedFor && pkg.recommendedFor.length > 0 && (
+      {pkg.recommendedFor && pkg.recommendedFor.length > 0 && (
         <div className="pricing-recommended">
           <h4>{t("dashboard.pricingManager.recommendedFor")}</h4>
           <ul className="recommended-list">
-             {pkg.recommendedFor.map((item, index) => (
-               <li key={index}>{item}</li>
-             ))}
+            {pkg.recommendedFor.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
           </ul>
         </div>
       )}

@@ -1,5 +1,5 @@
 .services-page {
-  background: #F8F9FA;
+  background: #f8f9fa;
 }
 
 .services-section,
@@ -17,7 +17,7 @@
 .section-title {
   text-align: center;
   font-size: 2.5rem;
-  color: #2D3436;
+  color: #2d3436;
   margin-bottom: 1rem;
 }
 
@@ -91,7 +91,9 @@
   border-radius: 12px;
   padding: 2.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -99,7 +101,7 @@
 }
 
 .pricing-card.highlight {
-  border: 2px solid #FF6B6B;
+  border: 2px solid #ff6b6b;
   transform: scale(1.05);
   z-index: 1;
   box-shadow: 0 10px 20px rgba(255, 107, 107, 0.15);
@@ -122,7 +124,7 @@
 }
 
 .pricing-header h3 {
-  color: #2D3436;
+  color: #2d3436;
   font-size: 1.4rem;
   margin-bottom: 1rem;
   font-weight: 600;
@@ -130,7 +132,7 @@
 
 .pricing-header .price {
   font-size: 2.5rem;
-  color: #FF6B6B;
+  color: #ff6b6b;
   font-weight: 800;
   margin-bottom: 1rem;
 }
@@ -177,13 +179,13 @@
 
 .button-secondary {
   background: transparent;
-  color: #2D3436;
+  color: #2d3436;
   border: 2px solid #dfe6e9;
 }
 
 .button-secondary:hover {
-  border-color: #2D3436;
-  background: #2D3436;
+  border-color: #2d3436;
+  background: #2d3436;
   color: white;
 }
 
@@ -192,12 +194,11 @@
   .pricing-card.highlight {
     transform: scale(1);
   }
-  
+
   .pricing-card.highlight:hover {
     transform: translateY(-5px);
   }
 }
-
 
 .service-description {
   padding-bottom: 0;
@@ -210,7 +211,7 @@
 
 .service-features h4,
 .service-tech h4 {
-  color: #2C3E50;
+  color: #2c3e50;
   font-size: 1rem;
   margin-bottom: 0.25rem;
   margin-top: 0;
@@ -220,8 +221,6 @@
 .service-tech {
   padding-top: 0;
 }
-
-
 
 .service-tech .card-tags {
   margin-top: 1rem;
@@ -245,7 +244,7 @@
 .cta-box h2 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #2D3436;
+  color: #2d3436;
 }
 
 .cta-box p {
@@ -254,30 +253,31 @@
   color: #636e72;
 }
 
-
 .pricing-disclaimer-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1.5rem;
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 100px;
-    color: #555;
-    font-size: 0.95rem;
-    font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 100px;
+  color: #555;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .pricing-disclaimer-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .pricing-disclaimer-badge svg {
-   color: #e67e22;
-   flex-shrink: 0;
+  color: #e67e22;
+  flex-shrink: 0;
 }
 
 .pricing-disclaimer-wrapper {

@@ -107,23 +107,23 @@
   .cookie-banner-container {
     padding: 1rem;
   }
-  
+
   .cookie-banner-content {
     flex-direction: column;
     text-align: center;
     gap: 1rem;
     padding: 1.5rem;
   }
-  
+
   .cookie-text p {
     font-size: 0.85rem;
   }
-  
+
   .cookie-actions {
     width: 100%;
     justify-content: center;
   }
-  
+
   .cookie-btn {
     flex: 1;
   }

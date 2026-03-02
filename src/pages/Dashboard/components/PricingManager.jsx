@@ -49,10 +49,14 @@ const PricingManager = () => {
 
       const headers = gridRef.current.querySelectorAll(".pricing-header");
       const features = gridRef.current.querySelectorAll(".pricing-features");
-      const recommended = gridRef.current.querySelectorAll(".pricing-recommended");
+      const recommended = gridRef.current.querySelectorAll(
+        ".pricing-recommended",
+      );
 
       // Reset
-      [...headers, ...features, ...recommended].forEach((el) => (el.style.height = "auto"));
+      [...headers, ...features, ...recommended].forEach(
+        (el) => (el.style.height = "auto"),
+      );
 
       // Calc max
       const maxHeaderHeight = Math.max(
@@ -71,7 +75,9 @@ const PricingManager = () => {
       if (features.length)
         features.forEach((el) => (el.style.height = `${maxFeaturesHeight}px`));
       if (recommended.length)
-        recommended.forEach((el) => (el.style.height = `${maxRecommendedHeight}px`));
+        recommended.forEach(
+          (el) => (el.style.height = `${maxRecommendedHeight}px`),
+        );
     };
 
     alignCardSections();
@@ -92,7 +98,9 @@ const PricingManager = () => {
       features: [...pkg.features],
       highlight: pkg.highlight,
       isMonthly: pkg.isMonthly ?? false,
-      recommendedFor: Array.isArray(pkg.recommendedFor) ? [...pkg.recommendedFor] : [""],
+      recommendedFor: Array.isArray(pkg.recommendedFor)
+        ? [...pkg.recommendedFor]
+        : [""],
     });
     setEditingId(pkg.id);
     setShowForm(true);
@@ -225,7 +233,6 @@ const PricingManager = () => {
             />
           </div>
 
-
           <div className="form-group">
             <label>{t("dashboard.pricingManager.recommendedFor")}</label>
             {formData.recommendedFor.map((rec, index) => (
@@ -236,7 +243,9 @@ const PricingManager = () => {
                   onChange={(e) =>
                     handleArrayChange("recommendedFor", index, e.target.value)
                   }
-                  placeholder={t("dashboard.pricingManager.recommendedForPlaceholder")}
+                  placeholder={t(
+                    "dashboard.pricingManager.recommendedForPlaceholder",
+                  )}
                 />
                 <button
                   type="button"
@@ -249,7 +258,7 @@ const PricingManager = () => {
             ))}
             <button
               type="button"
-              className="btn-add-feature"
+              className="btn-add"
               onClick={() => addArrayItem("recommendedFor")}
             >
               {"+ " + t("dashboard.pricingManager.addRecommendation")}
@@ -266,9 +275,11 @@ const PricingManager = () => {
                   setFormData({ ...formData, highlight: e.target.checked })
                 }
               />
-              <label htmlFor="check-highlight">{t("dashboard.pricingManager.highlight")}</label>
+              <label htmlFor="check-highlight">
+                {t("dashboard.pricingManager.highlight")}
+              </label>
             </div>
-            
+
             <div className="checkbox-wrapper">
               <input
                 type="checkbox"
@@ -278,7 +289,9 @@ const PricingManager = () => {
                   setFormData({ ...formData, isMonthly: e.target.checked })
                 }
               />
-              <label htmlFor="check-monthly">{t("dashboard.pricingManager.isMonthly")}</label>
+              <label htmlFor="check-monthly">
+                {t("dashboard.pricingManager.isMonthly")}
+              </label>
             </div>
           </div>
 

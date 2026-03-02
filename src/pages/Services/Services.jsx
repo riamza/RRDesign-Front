@@ -69,46 +69,55 @@ const Services = () => {
             (el) => (el.style.height = `${maxDescHeight}px`),
           );
         if (maxFeaturesHeight > 0)
-          features.forEach((el) => (el.style.height = `${maxFeaturesHeight}px`));
+          features.forEach(
+            (el) => (el.style.height = `${maxFeaturesHeight}px`),
+          );
         if (maxTechHeight > 0)
           techs.forEach((el) => (el.style.height = `${maxTechHeight}px`));
       }, 50);
     };
 
-
     const alignPricingCards = () => {
       if (!pricingRef.current) return;
-       // Use a timeout to ensure rendering is complete
-       setTimeout(() => {
-          const headers = pricingRef.current.querySelectorAll(".pricing-header");
-          const features = pricingRef.current.querySelectorAll(".pricing-features");
-          const recommended = pricingRef.current.querySelectorAll(".pricing-recommended");
-    
-          if (headers.length === 0) return;
-    
-          const getMaxHeight = (elements) => {
-            if (!elements || elements.length === 0) return 0;
-            return Math.max(...Array.from(elements).map((el) => el.offsetHeight));
-          };
+      // Use a timeout to ensure rendering is complete
+      setTimeout(() => {
+        const headers = pricingRef.current.querySelectorAll(".pricing-header");
+        const features =
+          pricingRef.current.querySelectorAll(".pricing-features");
+        const recommended = pricingRef.current.querySelectorAll(
+          ".pricing-recommended",
+        );
 
-          // Reset
-          [...headers, ...features, ...recommended].forEach((el) => (el.style.height = "auto"));
-    
-           // Calc max
-          const maxHeaderHeight = getMaxHeight(headers);
-          const maxFeaturesHeight = getMaxHeight(features);
-          const maxRecommendedHeight = getMaxHeight(recommended);
-    
-           // Apply
-          if (maxHeaderHeight > 0)
-            headers.forEach((el) => (el.style.height = `${maxHeaderHeight}px`));
-          if (maxFeaturesHeight > 0)
-            features.forEach((el) => (el.style.height = `${maxFeaturesHeight}px`));
-          if (maxRecommendedHeight > 0)
-            recommended.forEach((el) => (el.style.height = `${maxRecommendedHeight}px`));
+        if (headers.length === 0) return;
 
-       }, 50);
-    } 
+        const getMaxHeight = (elements) => {
+          if (!elements || elements.length === 0) return 0;
+          return Math.max(...Array.from(elements).map((el) => el.offsetHeight));
+        };
+
+        // Reset
+        [...headers, ...features, ...recommended].forEach(
+          (el) => (el.style.height = "auto"),
+        );
+
+        // Calc max
+        const maxHeaderHeight = getMaxHeight(headers);
+        const maxFeaturesHeight = getMaxHeight(features);
+        const maxRecommendedHeight = getMaxHeight(recommended);
+
+        // Apply
+        if (maxHeaderHeight > 0)
+          headers.forEach((el) => (el.style.height = `${maxHeaderHeight}px`));
+        if (maxFeaturesHeight > 0)
+          features.forEach(
+            (el) => (el.style.height = `${maxFeaturesHeight}px`),
+          );
+        if (maxRecommendedHeight > 0)
+          recommended.forEach(
+            (el) => (el.style.height = `${maxRecommendedHeight}px`),
+          );
+      }, 50);
+    };
 
     alignCardSections();
     alignPricingCards();
@@ -118,7 +127,7 @@ const Services = () => {
     return () => {
       window.removeEventListener("resize", alignCardSections);
       window.removeEventListener("resize", alignPricingCards);
-    }
+    };
   }, [services, pricingPackages]);
 
   return (
@@ -138,10 +147,10 @@ const Services = () => {
       <section className="services-section">
         <div className="container">
           <div className="pricing-disclaimer-wrapper">
-             <div className="pricing-disclaimer-badge">
-                <Info size={18} strokeWidth={2} />
-                <span>{t("services.pricing.disclaimer")}</span>
-              </div>
+            <div className="pricing-disclaimer-badge">
+              <Info size={18} strokeWidth={2} />
+              <span>{t("services.pricing.disclaimer")}</span>
+            </div>
           </div>
           <div className="services-grid" ref={gridRef}>
             {loading ? (
