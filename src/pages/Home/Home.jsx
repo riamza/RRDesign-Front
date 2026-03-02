@@ -1,19 +1,20 @@
-import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchServices } from '../../store/slices/servicesSlice';
-import { Monitor, Smartphone, Cloud } from 'lucide-react';
-import './Home.css';
-import Button from '../../components/Button/Button';
-import { companyInfo } from '../../utils/constants';
-import { getIcon } from '../../utils/iconMapper';
-import SEO from '../../components/SEO/SEO';
+import React, { useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchServices } from "../../store/slices/servicesSlice";
+import { Monitor, Smartphone, Cloud } from "lucide-react";
+import "./Home.css";
+import Button from "../../components/Button/Button";
+import { companyInfo } from "../../utils/constants";
+import { getIcon } from "../../utils/iconMapper";
+import SEO from "../../components/SEO/SEO";
 
 const Home = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const servicesGridRef = useRef(null);
-  
+
   const dispatch = useDispatch();
   const { items: services } = useSelector((state) => state.services);
 
@@ -25,19 +26,21 @@ const Home = () => {
     const alignServiceCards = () => {
       if (!servicesGridRef.current) return;
 
-      const cards = servicesGridRef.current.querySelectorAll('.service-card');
+      const cards = servicesGridRef.current.querySelectorAll(".service-card");
       if (cards.length === 0) return;
-      
+
       // Reset heights
-      cards.forEach(card => {
-        card.style.minHeight = 'auto';
+      cards.forEach((card) => {
+        card.style.minHeight = "auto";
       });
 
       // Get max height
-      const maxHeight = Math.max(...Array.from(cards).map(card => card.offsetHeight));
+      const maxHeight = Math.max(
+        ...Array.from(cards).map((card) => card.offsetHeight),
+      );
 
       // Apply max height
-      cards.forEach(card => {
+      cards.forEach((card) => {
         card.style.minHeight = `${maxHeight}px`;
       });
     };
@@ -45,50 +48,57 @@ const Home = () => {
     if (services.length > 0) {
       // Small timeout to allow render
       setTimeout(alignServiceCards, 100);
-      window.addEventListener('resize', alignServiceCards);
+      window.addEventListener("resize", alignServiceCards);
     }
-    
-    return () => window.removeEventListener('resize', alignServiceCards);
+
+    return () => window.removeEventListener("resize", alignServiceCards);
   }, [services]);
 
   return (
     <div className="home">
-      <SEO 
-        title={t('seo.home.title')} 
-        description={t('seo.home.description')} 
+      <SEO
+        title={t("seo.home.title")}
+        description={t("seo.home.description")}
       />
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-title">
-              {t('home.hero.title')}
-              <span className="gradient-text"> {t('home.hero.titleHighlight')} </span>
-              {t('home.hero.titleEnd')}
+              {t("home.hero.title")}
+              <span className="gradient-text">
+                {" "}
+                {t("home.hero.titleHighlight")}{" "}
+              </span>
+              {t("home.hero.titleEnd")}
             </h1>
-            <p className="hero-description">
-              {companyInfo.description}
-            </p>
+            <p className="hero-description">{companyInfo.description}</p>
             <div className="hero-buttons">
-              <Link to="/contact">
-                <Button variant="primary">{t('home.cta.button')}</Button>
-              </Link>
-              <Link to="/projects">
-                <Button variant="secondary">{t('home.hero.viewProjects')}</Button>
-              </Link>
+              <Button variant="primary" onClick={() => navigate("/contact")}>
+                {t("home.cta.button")}
+              </Button>
+              <Button variant="secondary" onClick={() => navigate("/projects")}>
+                {t("home.hero.viewProjects")}
+              </Button>
             </div>
           </div>
           <div className="hero-image">
             <div className="floating-card card-1">
-              <div className="card-icon"><Monitor size={40} /></div>
+              <div className="card-icon">
+                <Monitor size={40} />
+              </div>
               <div className="card-text">Web Development</div>
             </div>
             <div className="floating-card card-2">
-              <div className="card-icon"><Smartphone size={40} /></div>
+              <div className="card-icon">
+                <Smartphone size={40} />
+              </div>
               <div className="card-text">Mobile Apps</div>
             </div>
             <div className="floating-card card-3">
-              <div className="card-icon"><Cloud size={40} /></div>
+              <div className="card-icon">
+                <Cloud size={40} />
+              </div>
               <div className="card-text">Cloud Solutions</div>
             </div>
           </div>
@@ -98,15 +108,15 @@ const Home = () => {
       {/* Services Preview */}
       <section className="services-preview">
         <div className="container">
-          <h2 className="section-title">{t('home.services.title')}</h2>
-          <p className="section-subtitle">
-            {t('home.services.description')}
-          </p>
+          <h2 className="section-title">{t("home.services.title")}</h2>
+          <p className="section-subtitle">{t("home.services.description")}</p>
           <div className="services-grid" ref={servicesGridRef}>
-            {services.slice(0, 3).map(service => (
+            {services.slice(0, 3).map((service) => (
               <div key={service.id} className="service-card">
                 <div className="service-icon-wrapper">
-                  <div className="service-icon">{getIcon(service.icon, 48)}</div>
+                  <div className="service-icon">
+                    {getIcon(service.icon, 48)}
+                  </div>
                 </div>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
@@ -114,23 +124,21 @@ const Home = () => {
             ))}
           </div>
           <div className="services-cta">
-            <Link to="/services">
-              <Button variant="primary">Vezi toate serviciile</Button>
-            </Link>
+            <Button variant="primary" onClick={() => navigate("/services")}>
+              Vezi toate serviciile
+            </Button>
           </div>
         </div>
       </section>
 
-
-
       {/* CTA Section */}
       <section className="cta">
         <div className="container">
-          <h2>{t('home.cta.title')}</h2>
-          <p>{t('home.cta.description')}</p>
-          <Link to="/contact">
-            <Button variant="primary">{t('home.hero.contactUs')}</Button>
-          </Link>
+          <h2>{t("home.cta.title")}</h2>
+          <p>{t("home.cta.description")}</p>
+          <Button variant="primary" onClick={() => navigate("/contact")}>
+            {t("home.hero.contactUs")}
+          </Button>
         </div>
       </section>
     </div>

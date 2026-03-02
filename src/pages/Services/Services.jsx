@@ -1,20 +1,26 @@
-import React, { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchServices } from '../../store/slices/servicesSlice';
-import { fetchPricing } from '../../store/slices/pricingSlice';
-import './Services.css';
-import ServiceCard from '../../components/ServiceCard/ServiceCard';
-import PriceCard from '../../components/PriceCard/PriceCard';
-import SEO from '../../components/SEO/SEO';
+import React, { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchServices } from "../../store/slices/servicesSlice";
+import { fetchPricing } from "../../store/slices/pricingSlice";
+import "./Services.css";
+import ServiceCard from "../../components/ServiceCard/ServiceCard";
+import PriceCard from "../../components/PriceCard/PriceCard";
+import SEO from "../../components/SEO/SEO";
 
 const Services = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const gridRef = useRef(null);
   const dispatch = useDispatch();
-  const { items: services, status: servicesStatus } = useSelector((state) => state.services);
-  const { items: pricingPackages, status: pricingStatus } = useSelector((state) => state.pricing);
-  const loading = servicesStatus === 'loading' || pricingStatus === 'loading';
+  const { items: services, status: servicesStatus } = useSelector(
+    (state) => state.services,
+  );
+  const { items: pricingPackages, status: pricingStatus } = useSelector(
+    (state) => state.pricing,
+  );
+  const loading = servicesStatus === "loading" || pricingStatus === "loading";
 
   useEffect(() => {
     dispatch(fetchServices());
@@ -26,84 +32,103 @@ const Services = () => {
     const alignCardSections = () => {
       if (!gridRef.current) return;
 
-      const headers = gridRef.current.querySelectorAll('.service-header');
-      const descriptions = gridRef.current.querySelectorAll('.service-description');
-      const features = gridRef.current.querySelectorAll('.service-features');
-      const techs = gridRef.current.querySelectorAll('.service-tech');
+      const headers = gridRef.current.querySelectorAll(".service-header");
+      const descriptions = gridRef.current.querySelectorAll(
+        ".service-description",
+      );
+      const features = gridRef.current.querySelectorAll(".service-features");
+      const techs = gridRef.current.querySelectorAll(".service-tech");
 
       // Reset heights
-      [...headers, ...descriptions, ...features, ...techs].forEach(el => {
-        el.style.height = 'auto';
+      [...headers, ...descriptions, ...features, ...techs].forEach((el) => {
+        el.style.height = "auto";
       });
 
       // Calculate max heights
-      const maxHeaderHeight = Math.max(...Array.from(headers).map(el => el.offsetHeight));
-      const maxDescHeight = Math.max(...Array.from(descriptions).map(el => el.offsetHeight));
-      const maxFeaturesHeight = Math.max(...Array.from(features).map(el => el.offsetHeight));
-      const maxTechHeight = Math.max(...Array.from(techs).map(el => el.offsetHeight));
+      const maxHeaderHeight = Math.max(
+        ...Array.from(headers).map((el) => el.offsetHeight),
+      );
+      const maxDescHeight = Math.max(
+        ...Array.from(descriptions).map((el) => el.offsetHeight),
+      );
+      const maxFeaturesHeight = Math.max(
+        ...Array.from(features).map((el) => el.offsetHeight),
+      );
+      const maxTechHeight = Math.max(
+        ...Array.from(techs).map((el) => el.offsetHeight),
+      );
 
       // Apply max heights
-      headers.forEach(el => el.style.height = `${maxHeaderHeight}px`);
-      descriptions.forEach(el => el.style.height = `${maxDescHeight}px`);
-      features.forEach(el => el.style.height = `${maxFeaturesHeight}px`);
-      techs.forEach(el => el.style.height = `${maxTechHeight}px`);
+      headers.forEach((el) => (el.style.height = `${maxHeaderHeight}px`));
+      descriptions.forEach((el) => (el.style.height = `${maxDescHeight}px`));
+      features.forEach((el) => (el.style.height = `${maxFeaturesHeight}px`));
+      techs.forEach((el) => (el.style.height = `${maxTechHeight}px`));
     };
 
     alignCardSections();
-    window.addEventListener('resize', alignCardSections);
-    
-    return () => window.removeEventListener('resize', alignCardSections);
+    window.addEventListener("resize", alignCardSections);
+
+    return () => window.removeEventListener("resize", alignCardSections);
   }, []);
 
   return (
     <div className="services-page">
-      <SEO 
-        title={t('seo.services.title')} 
-        description={t('seo.services.description')} 
-        keywords={t('seo.services.keywords')} 
+      <SEO
+        title={t("seo.services.title")}
+        description={t("seo.services.description")}
+        keywords={t("seo.services.keywords")}
       />
       <section className="page-header">
         <div className="container">
-          <h1 className="page-title">{t('services.pageTitle')}</h1>
-          <p className="page-description">
-            {t('services.pageDescription')}
-          </p>
+          <h1 className="page-title">{t("services.pageTitle")}</h1>
+          <p className="page-description">{t("services.pageDescription")}</p>
         </div>
       </section>
 
       <section className="services-section">
         <div className="container">
           <div className="services-grid" ref={gridRef}>
-            {loading ? <p>Loading services...</p> : services.map(service => (
-              <div key={service.id} className="service-card-wrapper">
-                <ServiceCard service={service} />
-              </div>
-            ))}
+            {loading ? (
+              <p>Loading services...</p>
+            ) : (
+              services.map((service) => (
+                <div key={service.id} className="service-card-wrapper">
+                  <ServiceCard service={service} />
+                </div>
+              ))
+            )}
           </div>
         </div>
       </section>
 
-      <section className="pricing-section">
-        <div className="container">
-          <h2 className="section-title">{t('services.pricing.title')}</h2>
-          <p className="section-description">{t('services.pricing.description')}</p>
-          
-          <div className="pricing-grid">
-            {pricingPackages.map((pkg) => (
-              <PriceCard key={pkg.id} pkg={pkg} />
-            ))}
+      {pricingPackages && pricingPackages.length > 0 && (
+        <section className="pricing-section">
+          <div className="container">
+            <h2 className="section-title">{t("services.pricing.title")}</h2>
+            <p className="section-description">
+              {t("services.pricing.description")}
+            </p>
+
+            <div className="pricing-grid">
+              {pricingPackages.map((pkg) => (
+                <PriceCard key={pkg.id} pkg={pkg} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="services-cta">
         <div className="container">
           <div className="cta-box">
-            <h2>{t('services.cta.title')}</h2>
-            <p>{t('services.cta.description')}</p>
-            <a href="/contact" className="button button-primary">
-              {t('services.cta.button')}
-            </a>
+            <h2>{t("services.cta.title")}</h2>
+            <p>{t("services.cta.description")}</p>
+            <button
+              onClick={() => navigate("/contact")}
+              className="button button-primary"
+            >
+              {t("services.cta.button")}
+            </button>
           </div>
         </div>
       </section>

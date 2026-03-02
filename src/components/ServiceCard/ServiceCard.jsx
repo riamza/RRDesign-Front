@@ -1,12 +1,23 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Pencil, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Pencil, Trash2, MessageSquare } from "lucide-react";
 import Card from "../Card/Card";
+import Button from "../Button/Button";
 import { getIcon } from "../../utils/iconMapper";
 import "./ServiceCard.css";
 
 const ServiceCard = ({ service, isAdmin = false, onEdit, onDelete }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleRequestDetails = () => {
+    navigate("/contact", {
+      state: {
+        message: `Salut! As dori mai multe detalii despre serviciul "${service.title}".`,
+      },
+    });
+  };
 
   return (
     <Card className="service-card-full">
@@ -43,6 +54,25 @@ const ServiceCard = ({ service, isAdmin = false, onEdit, onDelete }) => {
           ))}
         </ul>
       </div>
+
+      {!isAdmin && (
+        <div style={{ marginTop: "auto", width: "100%", paddingTop: "1rem" }}>
+          <Button
+            variant="primary"
+            onClick={handleRequestDetails}
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <MessageSquare size={18} />
+            Cere detalii
+          </Button>
+        </div>
+      )}
 
       {isAdmin && (
         <div className="service-actions">

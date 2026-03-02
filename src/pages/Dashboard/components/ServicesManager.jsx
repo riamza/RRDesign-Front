@@ -52,7 +52,7 @@ const ServicesManager = () => {
     icon: "",
     features: [],
     recommendedFor: [],
-    isActive: true
+    isActive: true,
   });
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const ServicesManager = () => {
       icon: service.icon,
       features: service.features || [],
       recommendedFor: service.recommendedFor || [],
-      isActive: service.isActive !== undefined ? service.isActive : true
+      isActive: service.isActive !== undefined ? service.isActive : true,
     });
     setEditingId(service.id);
     setShowForm(true);
@@ -152,7 +152,7 @@ const ServicesManager = () => {
     <div className="manager">
       <div className="manager-header">
         <button
-          className="btn-primary"
+          className="button button-primary"
           onClick={() => {
             resetForm();
             setShowForm(true);
@@ -257,13 +257,22 @@ const ServicesManager = () => {
           </div>
 
           <div className="form-check" style={{ marginBottom: "16px" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                cursor: "pointer",
+              }}
+            >
               <input
                 type="checkbox"
                 checked={formData.isActive}
-                onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                onChange={(e) =>
+                  setFormData({ ...formData, isActive: e.target.checked })
+                }
               />
-              <span>{t('dashboard.servicesManager.isActive') || 'Shown'}</span>
+              <span>{t("dashboard.servicesManager.isActive") || "Shown"}</span>
             </label>
           </div>
 

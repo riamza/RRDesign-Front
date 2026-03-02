@@ -1,15 +1,15 @@
-import React from 'react';
-import './PageHeader.css';
+import React from "react";
+import "./PageHeader.css";
 
-const PageHeader = ({ 
-  icon: Icon, 
-  title, 
-  description, 
-  buttonText, 
+const PageHeader = ({
+  icon: Icon,
+  title,
+  description,
+  buttonText,
   onButtonClick,
   buttonIcon: ButtonIcon,
-  buttonClassName = 'btn-primary',
-  wrapperClassName = ''
+  buttonClassName = "button button-primary",
+  wrapperClassName = "",
 }) => {
   return (
     <div className={`page-header-wrapper ${wrapperClassName}`}>

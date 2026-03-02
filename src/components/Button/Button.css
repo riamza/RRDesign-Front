@@ -12,7 +12,7 @@
 }
 
 .button-primary {
-  background: linear-gradient(135deg, #FF6B6B 0%, #FFB84D 100%);
+  background: linear-gradient(135deg, #ff6b6b 0%, #ffb84d 100%);
   color: white;
   box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
 }
@@ -24,25 +24,25 @@
 
 .button-secondary {
   background: transparent;
-  color: #FF6B6B;
-  border: 2px solid #FF6B6B;
+  color: #ff6b6b;
+  border: 2px solid #ff6b6b;
 }
 
 .button-secondary:hover {
-  background: #FF6B6B;
+  background: #ff6b6b;
   color: white;
   transform: translateY(-2px);
 }
 
 .button-outline {
   background: transparent;
-  color: #2C3E50;
-  border: 2px solid #E0E0E0;
+  color: #2c3e50;
+  border: 2px solid #e0e0e0;
 }
 
 .button-outline:hover {
-  border-color: #FF6B6B;
-  color: #FF6B6B;
+  border-color: #ff6b6b;
+  color: #ff6b6b;
   transform: translateY(-2px);
 }
 

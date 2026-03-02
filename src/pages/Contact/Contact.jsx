@@ -1,28 +1,39 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Mail, Phone, MapPin } from 'lucide-react';
-import './Contact.css';
-import Button from '../../components/Button/Button';
-import { companyInfo } from '../../utils/constants';
-import SEO from '../../components/SEO/SEO';
-import { api } from '../../services/api';
-import Modal from '../../components/Modal/Modal';
+import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
+import { Mail, Phone, MapPin } from "lucide-react";
+import "./Contact.css";
+import Button from "../../components/Button/Button";
+import { companyInfo } from "../../utils/constants";
+import SEO from "../../components/SEO/SEO";
+import { api } from "../../services/api";
+import Modal from "../../components/Modal/Modal";
 
 const Contact = () => {
   const { t } = useTranslation();
+  const location = useLocation();
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    message: ''
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    message: "",
   });
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setFormData((prev) => ({
+        ...prev,
+        message: location.state.message,
+      }));
+    }
+  }, [location.state]);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -32,30 +43,28 @@ const Contact = () => {
       await api.contactMessages.create(formData);
       setIsSuccessModalOpen(true);
       setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        company: '',
-        message: ''
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        message: "",
       });
     } catch (error) {
-      console.error('Error sending message:', error);
-      alert('Could not send message. Please try again later.');
+      console.error("Error sending message:", error);
+      alert("Could not send message. Please try again later.");
     }
   };
 
   return (
     <div className="contact-page">
-      <SEO 
-        title={t('seo.contact.title')} 
-        description={t('seo.contact.description')} 
+      <SEO
+        title={t("seo.contact.title")}
+        description={t("seo.contact.description")}
       />
       <section className="page-header">
         <div className="container">
-          <h1 className="page-title">{t('contact.pageTitle')}</h1>
-          <p className="page-description">
-            {t('contact.pageDescription')}
-          </p>
+          <h1 className="page-title">{t("contact.pageTitle")}</h1>
+          <p className="page-description">{t("contact.pageDescription")}</p>
         </div>
       </section>
 
@@ -63,32 +72,40 @@ const Contact = () => {
         <div className="container">
           <div className="contact-grid">
             <div className="contact-info">
-              <h2>{t('contact.info.title')}</h2>
-              <p className="contact-intro">
-                {t('contact.info.description')}
-              </p>
+              <h2>{t("contact.info.title")}</h2>
+              <p className="contact-intro">{t("contact.info.description")}</p>
 
               <div className="contact-details">
                 <div className="contact-item">
-                  <div className="contact-icon"><Mail size={24} /></div>
+                  <div className="contact-icon">
+                    <Mail size={24} />
+                  </div>
                   <div>
-                    <h4>{t('contact.info.email')}</h4>
-                    <a href={`mailto:${companyInfo.email}`}>{companyInfo.email}</a>
+                    <h4>{t("contact.info.email")}</h4>
+                    <a href={`mailto:${companyInfo.email}`}>
+                      {companyInfo.email}
+                    </a>
                   </div>
                 </div>
 
                 <div className="contact-item">
-                  <div className="contact-icon"><Phone size={24} /></div>
+                  <div className="contact-icon">
+                    <Phone size={24} />
+                  </div>
                   <div>
-                    <h4>{t('contact.info.phone')}</h4>
-                    <a href={`tel:${companyInfo.phone.replace(/\s/g, '')}`}>{companyInfo.phone}</a>
+                    <h4>{t("contact.info.phone")}</h4>
+                    <a href={`tel:${companyInfo.phone.replace(/\s/g, "")}`}>
+                      {companyInfo.phone}
+                    </a>
                   </div>
                 </div>
 
                 <div className="contact-item">
-                  <div className="contact-icon"><MapPin size={24} /></div>
+                  <div className="contact-icon">
+                    <MapPin size={24} />
+                  </div>
                   <div>
-                    <h4>{t('contact.info.address')}</h4>
+                    <h4>{t("contact.info.address")}</h4>
                     <p>{companyInfo.address}</p>
                   </div>
                 </div>
@@ -97,10 +114,12 @@ const Contact = () => {
 
             <div className="contact-form-wrapper">
               <form onSubmit={handleSubmit} className="contact-form">
-                <h2>{t('contact.form.title')}</h2>
+                <h2>{t("contact.form.title")}</h2>
 
                 <div className="form-group">
-                  <label htmlFor="name">{t('contact.form.fullName')} {t('contact.form.required')}</label>
+                  <label htmlFor="name">
+                    {t("contact.form.fullName")} {t("contact.form.required")}
+                  </label>
                   <input
                     type="text"
                     id="name"
@@ -108,12 +127,14 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    placeholder={t('contact.form.namePlaceholder')}
+                    placeholder={t("contact.form.namePlaceholder")}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="email">{t('contact.form.email')} {t('contact.form.required')}</label>
+                  <label htmlFor="email">
+                    {t("contact.form.email")} {t("contact.form.required")}
+                  </label>
                   <input
                     type="email"
                     id="email"
@@ -121,36 +142,38 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    placeholder={t('contact.form.emailPlaceholder')}
+                    placeholder={t("contact.form.emailPlaceholder")}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="phone">{t('contact.form.phone')}</label>
+                  <label htmlFor="phone">{t("contact.form.phone")}</label>
                   <input
                     type="tel"
                     id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder={t('contact.form.phonePlaceholder')}
+                    placeholder={t("contact.form.phonePlaceholder")}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="company">{t('contact.form.company')}</label>
+                  <label htmlFor="company">{t("contact.form.company")}</label>
                   <input
                     type="text"
                     id="company"
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
-                    placeholder={t('contact.form.companyPlaceholder')}
+                    placeholder={t("contact.form.companyPlaceholder")}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="message">{t('contact.form.message')} {t('contact.form.required')}</label>
+                  <label htmlFor="message">
+                    {t("contact.form.message")} {t("contact.form.required")}
+                  </label>
                   <textarea
                     id="message"
                     name="message"
@@ -158,12 +181,12 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     rows="6"
-                    placeholder={t('contact.form.messagePlaceholder')}
+                    placeholder={t("contact.form.messagePlaceholder")}
                   />
                 </div>
 
                 <Button type="submit" variant="primary">
-                  {t('contact.form.submit')}
+                  {t("contact.form.submit")}
                 </Button>
               </form>
             </div>
@@ -174,13 +197,17 @@ const Contact = () => {
       <Modal
         isOpen={isSuccessModalOpen}
         onClose={() => setIsSuccessModalOpen(false)}
-        title={t('contact.form.successTitle')}
+        title={t("contact.form.successTitle")}
       >
-        <p>{t('contact.form.successMessage')}</p>
-        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={() => setIsSuccessModalOpen(false)}>
-            OK
-          </Button>
+        <p>{t("contact.form.successMessage")}</p>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button onClick={() => setIsSuccessModalOpen(false)}>OK</Button>
         </div>
       </Modal>
     </div>
