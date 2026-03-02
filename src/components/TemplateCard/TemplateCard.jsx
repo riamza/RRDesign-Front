@@ -7,12 +7,21 @@ import './TemplateCard.css';
 
 const TemplateCard = ({ template, isAdmin = false, onEdit, onDelete }) => {
   const { t } = useTranslation();
+  const imageDisplay = template.image || template.imageUrl;
+  const demoLink = template.demoLink || template.previewLink;
 
   return (
-    <Card className="template-card">
-      <div className="template-image">
-        <img src={template.image} alt={template.title} className="card-image" />
-      </div>
+    <Card className={`template-card ${!template.isVisible ? 'is-hidden' : ''}`} style={!template.isVisible ? { opacity: 0.7, border: '1px dashed #ccc' } : {}}>
+      {!template.isVisible && (
+        <div style={{ position: 'absolute', top: 10, right: 10, background: '#999', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', zIndex: 10 }}>
+          HIDDEN
+        </div>
+      )}
+      {imageDisplay && (
+        <div className="template-image">
+          <img src={imageDisplay} alt={template.title} className="card-image" />
+        </div>
+      )}
       <div className="template-category">{template.category}</div>
       <div className="template-title">
         <h3 className="card-title">{template.title}</h3>
@@ -24,22 +33,14 @@ const TemplateCard = ({ template, isAdmin = false, onEdit, onDelete }) => {
       <div className="template-features">
         <h4>{t('templates.features')}</h4>
         <ul className="card-features">
-          {template.features.map((feature, index) => (
+          {(template.features || []).map((feature, index) => (
             <li key={index}>{feature}</li>
           ))}
         </ul>
       </div>
 
-      <div className="template-tags">
-        <div className="card-tags">
-          {template.technologies.map((tech, index) => (
-            <span key={index} className="card-tag">{tech}</span>
-          ))}
-        </div>
-      </div>
-
-      {!isAdmin && (
-        <Button variant="primary" href={template.demoLink}>
+      {!isAdmin && demoLink && (
+        <Button variant="primary" href={demoLink} target="_blank" rel="noopener noreferrer">
           {t('templates.viewDemo')} →
         </Button>
       )}

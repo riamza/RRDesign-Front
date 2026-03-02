@@ -5,15 +5,19 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export const fetchTemplates = createAsyncThunk(
   'templates/fetchTemplates',
-  async () => {
-    const data = await api.getTemplates();
+  async (args) => {
+    const includeHidden = args?.includeHidden || false;
+    const data = await api.getTemplates(includeHidden);
     return data;
   },
   {
-    condition: (_, { getState }) => {
+    condition: (args, { getState }) => {
+      const includeHidden = args?.includeHidden || false;
       const { templates } = getState();
       if (templates.status === 'loading') return false;
       
+      if (includeHidden) return true;
+
       const now = Date.now();
       if (templates.lastFetched && (now - templates.lastFetched < CACHE_DURATION)) {
         return false;

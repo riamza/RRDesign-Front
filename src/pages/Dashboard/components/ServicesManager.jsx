@@ -52,15 +52,16 @@ const ServicesManager = () => {
     icon: "",
     features: [],
     recommendedFor: [],
+    isActive: true
   });
 
   useEffect(() => {
-    dispatch(fetchServices());
+    dispatch(fetchServices({ includeHidden: true }));
   }, [dispatch]);
 
   const loadServices = async () => {
     dispatch(invalidateServices());
-    dispatch(fetchServices());
+    dispatch(fetchServices({ includeHidden: true }));
   };
 
   const handleEdit = (service) => {
@@ -72,6 +73,7 @@ const ServicesManager = () => {
       icon: service.icon,
       features: service.features || [],
       recommendedFor: service.recommendedFor || [],
+      isActive: service.isActive !== undefined ? service.isActive : true
     });
     setEditingId(service.id);
     setShowForm(true);
@@ -252,6 +254,17 @@ const ServicesManager = () => {
                 required
               />
             </div>
+          </div>
+
+          <div className="form-check" style={{ marginBottom: "16px" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                checked={formData.isActive}
+                onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+              />
+              <span>{t('dashboard.servicesManager.isActive') || 'Shown'}</span>
+            </label>
           </div>
 
           <div className="form-group">

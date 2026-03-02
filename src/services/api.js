@@ -113,8 +113,8 @@ export const api = {
       completeRegistration: (data) => request('/Auth/complete-registration', { method: 'POST', body: data }),
   },
   // Services
-  getServices: async () => {
-    const data = await request('/services');
+  getServices: async (includeHidden = false) => {
+    const data = await request(`/services?includeHidden=${includeHidden}`);
     return Array.isArray(data) ? data : [];
   },
   getService: (id) => request(`/services/${id}`),
@@ -166,12 +166,15 @@ export const api = {
   deleteClientProjectRequirement: (reqId) => request(`/ClientProjects/requirements/${reqId}`, { method: 'DELETE' }),
 
   // Portfolio Projects
-  getProjects: async () => {
-    const data = await request('/projects');
+  getProjects: async (includeHidden = false) => {
+    const data = await request(`/projects?includeHidden=${includeHidden}`);
     if (!Array.isArray(data)) return [];
     return data.map(project => ({
       ...project,
-      technologies: project.technologies ? project.technologies.split(',').map(t => t.trim()) : [],
+      // Handle both string (legacy) and array (new) from backend
+      technologies: Array.isArray(project.technologies) 
+        ? project.technologies 
+        : (project.technologies ? project.technologies.split(',').map(t => t.trim()) : []),
       image: project.imageUrl,
       link: project.link
     }));
@@ -202,15 +205,14 @@ export const api = {
     };
     return request(`/projects/${id}`, { method: 'PUT', body: dto });
   },
-  deleteProject: (id) => request(`/projects/${id}`, { method: 'DELETE' }),
-
-  // Templates
-  getTemplates: async () => {
-    const data = await request('/templates');
+  deleteProject: (id) =includeHidden = false) => {
+    const data = await request(`/templates?includeHidden=${includeHidden}`);
     if (!Array.isArray(data)) return [];
     return data.map(template => ({
       ...template,
       image: template.imageUrl,
+      demoLink: template.previewLink,
+      features: template.features ||mplate.imageUrl,
       demoLink: template.previewLink,
       technologies: [], 
       features: []

@@ -23,17 +23,18 @@ const TemplatesManager = () => {
     description: '',
     image: '',
     demoLink: '',
-    price: '',
-    isFree: false
+    category: '',
+    features: [],
+    isVisible: true
   });
 
   const loadTemplates = async () => {
      dispatch(invalidateTemplates());
-     dispatch(fetchTemplates());
+     dispatch(fetchTemplates({ includeHidden: true }));
   };
 
   useEffect(() => {
-    dispatch(fetchTemplates());
+    dispatch(fetchTemplates({ includeHidden: true }));
   }, [dispatch]);
 
   // grid alignment logic...
@@ -46,10 +47,11 @@ const TemplatesManager = () => {
     setFormData({
       title: template.title,
       description: template.description,
-      image: template.image,
-      demoLink: template.demoLink,
-      price: template.price,
-      isFree: template.isFree
+      image: template.image || template.imageUrl || '',
+      demoLink: template.demoLink || template.previewLink || '',
+      category: template.category || '',
+      features: template.features || [],
+      isVisible: template.isVisible !== undefined ? template.isVisible : true
     });
     setEditingId(template.id);
     setShowForm(true);
@@ -74,10 +76,21 @@ const TemplatesManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+        const payload = {
+            ...formData,
+            // Ensure fields match DTO expectations if needed, 
+            // currently DTO matches this structure mostly.
+            // Backend expects ImageUrl, PreviewLink but let's assume API client handles mapping 
+            // OR we should map it here.
+            // TemplateDtos.cs has ImageUrl, PreviewLink.
+            imageUrl: formData.image,
+            previewLink: formData.demoLink
+        };
+
       if (editingId) {
-        await api.updateTemplate(editingId, formData);
+        await api.updateTemplate(editingId, payload);
       } else {
-        await api.createTemplate(formData);
+        await api.createTemplate(payload);
       }
       dispatch(invalidateTemplates());
       await loadTemplates();
@@ -91,11 +104,27 @@ const TemplatesManager = () => {
       description: '',
       image: '',
       demoLink: '',
-      price: '',
-      isFree: false
+      category: '',
+      features: [],
+      isVisible: true
     });
     setEditingId(null);
     setShowForm(false);
+  };
+
+  const handleArrayChange = (field, index, value) => {
+    const newArray = [...formData[field]];
+    newArray[index] = value;
+    setFormData({ ...formData, [field]: newArray });
+  };
+
+  const addArrayItem = (field) => {
+    setFormData({ ...formData, [field]: [...formData[field], ''] });
+  };
+
+  const removeArrayItem = (field, index) => {
+    const newArray = formData[field].filter((_, i) => i !== index);
+    setFormData({ ...formData, [field]: newArray });
   };
   
   return (
@@ -135,6 +164,17 @@ const TemplatesManager = () => {
             </div>
           </div>
 
+          <div className="form-check" style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={formData.isVisible}
+                onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
+              />
+              <span>{t('dashboard.templatesManager.isVisible') || 'Visible'}</span>
+            </label>
+          </div>
+          
           <div className="form-group">
             <label>{t('dashboard.templatesManager.description')}</label>
             <textarea
@@ -196,15 +236,37 @@ const TemplatesManager = () => {
               type="url"
               value={formData.demoLink}
               onChange={(e) => setFormData({ ...formData, demoLink: e.target.value })}
-              required
             />
           </div>
 
-          {/* Technologies and Features disabled as backend doesn't support them yet */}
+          <div className="form-group">
+            <label>{t('dashboard.templatesManager.features')}</label>
+            {formData.features.map((item, index) => (
+              <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+                <input
+                  type="text"
+                  value={item}
+                  onChange={(e) => handleArrayChange('features', index, e.target.value)}
+                  placeholder={t('dashboard.templatesManager.featurePlaceholder')}
+                />
+                <button 
+                  type="button" 
+                  onClick={() => removeArrayItem('features', index)}
+                  className="btn-icon danger"
+                  style={{ padding: '8px' }}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ))}
+            <button type="button" className="btn-secondary" onClick={() => addArrayItem('features')}>
+              + {t('dashboard.templatesManager.addFeature')}
+            </button>
+          </div>
 
-          <div className="form-actions">
-            <button type="submit" className="btn-primary">
-              {editingId ? t('dashboard.templatesManager.update') : t('dashboard.templatesManager.save')}
+          <div className="form-group">
+            <label>{t('dashboard.templatesManager.technologies')}</label>
+            {formData.technologashboard.templatesManager.update') : t('dashboard.templatesManager.save')}
             </button>
             <button type="button" className="btn-secondary" onClick={resetForm}>
               {t('dashboard.templatesManager.cancel')}

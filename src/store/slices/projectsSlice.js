@@ -5,15 +5,19 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export const fetchProjects = createAsyncThunk(
   'projects/fetchProjects',
-  async () => {
-    const data = await api.getProjects();
+  async (args) => {
+    const includeHidden = args?.includeHidden || false;
+    const data = await api.getProjects(includeHidden);
     return data;
   },
   {
-    condition: (_, { getState }) => {
+    condition: (args, { getState }) => {
+      const includeHidden = args?.includeHidden || false;
       const { projects } = getState();
       if (projects.status === 'loading') return false;
       
+      if (includeHidden) return true;
+
       const now = Date.now();
       if (projects.lastFetched && (now - projects.lastFetched < CACHE_DURATION)) {
         return false;

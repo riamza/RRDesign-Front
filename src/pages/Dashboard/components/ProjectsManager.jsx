@@ -23,16 +23,17 @@ const ProjectsManager = () => {
     description: '',
     image: '',
     technologies: [''],
-    link: ''
+    link: '',
+    isVisible: true
   });
 
   const loadProjects = async () => {
      dispatch(invalidateProjects());
-     dispatch(fetchProjects());
+     dispatch(fetchProjects({ includeHidden: true }));
   };
 
   useEffect(() => {
-    dispatch(fetchProjects());
+    dispatch(fetchProjects({ includeHidden: true }));
   }, [dispatch]);
 
   // Grid alignment effect omitted for brevity, logic remains same if projects updates
@@ -42,7 +43,8 @@ const ProjectsManager = () => {
       title: project.title,
       description: project.description,
       image: project.image,
-      technologies: project.technologies || [''],
+      technologies: proj,
+      isVisible: project.isVisible !== undefined ? project.isVisible : trueect.technologies || [''],
       link: project.link
     });
     setEditingId(project.id);
@@ -88,7 +90,8 @@ const ProjectsManager = () => {
       title: '',
       description: '',
       image: '',
-      technologies: [''],
+      technolo,
+      isVisible: truegies: [''],
       link: ''
     });
     setEditingId(null);
