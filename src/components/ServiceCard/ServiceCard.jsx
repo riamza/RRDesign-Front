@@ -14,7 +14,7 @@ const ServiceCard = ({ service, isAdmin = false, onEdit, onDelete }) => {
   const handleRequestDetails = () => {
     navigate("/contact", {
       state: {
-        message: `Salut! As dori mai multe detalii despre serviciul "${service.title}".`,
+        message: t("contact.prefill.service", { title: service.title }),
       },
     });
   };

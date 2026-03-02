@@ -138,6 +138,10 @@
       "submit": "Trimite mesajul",
       "successTitle": "Mesaj Trimis",
       "successMessage": "Mesajul a fost trimis cu succes. Un reprezentant vă va răspunde în cel mai scurt timp posibil."
+    },
+    "prefill": {
+      "service": "Salut! Aș dori mai multe detalii despre serviciul \"{{title}}\".",
+      "package": "Salut! Aș dori mai multe detalii despre pachetul \"{{title}}\"."
     }
   },
   "login": {

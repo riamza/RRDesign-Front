@@ -138,6 +138,10 @@
       "submit": "Send message",
       "successTitle": "Message Sent",
       "successMessage": "Your message has been sent successfully. A representative will reply to you as soon as possible."
+    },
+    "prefill": {
+      "service": "Hi! I would like more details about the service \"{{title}}\".",
+      "package": "Hi! I would like more details about the package \"{{title}}\"."
     }
   },
   "login": {

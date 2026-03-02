@@ -8,6 +8,14 @@ const PriceCard = ({ pkg, isAdmin = false, onEdit, onDelete }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const handleRequestOffer = () => {
+    navigate("/contact", {
+      state: {
+        message: t("contact.prefill.package", { title: pkg.title }),
+      },
+    });
+  };
+
   return (
     <div className={`pricing-card ${pkg.highlight ? "highlight" : ""}`}>
       <div className="pricing-header">
@@ -44,7 +52,7 @@ const PriceCard = ({ pkg, isAdmin = false, onEdit, onDelete }) => {
       {!isAdmin && (
         <div className="pricing-action">
           <button
-            onClick={() => navigate("/contact")}
+            onClick={handleRequestOffer}
             className="button button-primary"
           >
             {t("services.pricing.button")}
