@@ -264,9 +264,9 @@ const TemplatesManager = () => {
             </button>
           </div>
 
-          <div className="form-group">
-            <label>{t('dashboard.templatesManager.technologies')}</label>
-            {formData.technologashboard.templatesManager.update') : t('dashboard.templatesManager.save')}
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">
+              {editingId ? t('dashboard.templatesManager.update') : t('dashboard.templatesManager.save')}
             </button>
             <button type="button" className="btn-secondary" onClick={resetForm}>
               {t('dashboard.templatesManager.cancel')}

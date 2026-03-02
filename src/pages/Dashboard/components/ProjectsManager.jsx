@@ -90,8 +90,8 @@ const ProjectsManager = () => {
       title: '',
       description: '',
       image: '',
-      technolo,
-      isVisible: truegies: [''],
+      technologies: [''],
+      isVisible: true,
       link: ''
     });
     setEditingId(null);

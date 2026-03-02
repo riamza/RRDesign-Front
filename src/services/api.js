@@ -205,17 +205,17 @@ export const api = {
     };
     return request(`/projects/${id}`, { method: 'PUT', body: dto });
   },
-  deleteProject: (id) =includeHidden = false) => {
+  deleteProject: (id) => request(`/projects/${id}`, { method: 'DELETE' }),
+
+  // Templates
+  getTemplates: async (includeHidden = false) => {
     const data = await request(`/templates?includeHidden=${includeHidden}`);
     if (!Array.isArray(data)) return [];
     return data.map(template => ({
       ...template,
       image: template.imageUrl,
       demoLink: template.previewLink,
-      features: template.features ||mplate.imageUrl,
-      demoLink: template.previewLink,
-      technologies: [], 
-      features: []
+      features: template.features || []
     }));
   },
   getTemplate: async (id) => {
