@@ -239,6 +239,17 @@ const ProjectsManager = () => {
             </div>
           </div>
 
+          <div className="form-check" style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={formData.isVisible}
+                onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
+              />
+              <span>{t('dashboard.projectsManager.isVisible') || 'Visible'}</span>
+            </label>
+          </div>
+
           <div className="form-group">
             <label>{t('dashboard.projectsManager.technologies')}</label>
             {formData.technologies.map((tech, index) => (

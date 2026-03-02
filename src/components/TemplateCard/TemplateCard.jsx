@@ -40,7 +40,7 @@ const TemplateCard = ({ template, isAdmin = false, onEdit, onDelete }) => {
       </div>
 
       {!isAdmin && demoLink && (
-        <Button variant="primary" href={demoLink} target="_blank" rel="noopener noreferrer">
+        <Button variant="secondary" href={demoLink} target="_blank" rel="noopener noreferrer">
           {t('templates.viewDemo')} →
         </Button>
       )}

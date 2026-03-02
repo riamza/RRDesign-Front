@@ -183,7 +183,8 @@
       "addRecommendation": "Adaugă recomandare",
       "featurePlaceholder": "Descriere caracteristică",
       "recommendationPlaceholder": "ex: Startup-uri, IMM-uri...",
-      "confirmDelete": "Sigur vrei să ștergi acest serviciu?"
+      "confirmDelete": "Sigur vrei să ștergi acest serviciu?",
+      "isActive": "Activ (Vizibil)"
     },
     "projectsManager": {
       "add": "Adaugă proiect",
@@ -204,7 +205,8 @@
       "technologies": "Tehnologii",
       "addTechnology": "Adaugă tehnologie",
       "technologyPlaceholder": "Tehnologie",
-      "confirmDelete": "Sigur vrei să ștergi acest proiect?"
+      "confirmDelete": "Sigur vrei să ștergi acest proiect?",
+      "isVisible": "Vizibil"
     },
     "templatesManager": {
       "add": "Adaugă template",
@@ -225,6 +227,7 @@
       "addTechnology": "Adaugă tehnologie",
       "featurePlaceholder": "Caracteristică",
       "technologyPlaceholder": "Tehnologie",
+      "isVisible": "Vizibil",
       "confirmDelete": "Sigur vrei să ștergi acest template?"
     },
     "pricingManager": {

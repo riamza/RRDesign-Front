@@ -183,7 +183,8 @@
       "addRecommendation": "Add recommendation",
       "featurePlaceholder": "Feature description",
       "recommendationPlaceholder": "e.g. Startups, SMEs...",
-      "confirmDelete": "Are you sure you want to delete this service?"
+      "confirmDelete": "Are you sure you want to delete this service?",
+      "isActive": "Active (Visible)"
     },
     "projectsManager": {
       "add": "Add project",
@@ -204,7 +205,8 @@
       "technologies": "Technologies",
       "addTechnology": "Add technology",
       "technologyPlaceholder": "Technology",
-      "confirmDelete": "Are you sure you want to delete this project?"
+      "confirmDelete": "Are you sure you want to delete this project?",
+      "isVisible": "Visible"
     },
     "templatesManager": {
       "add": "Add template",
@@ -225,6 +227,7 @@
       "addTechnology": "Add technology",
       "featurePlaceholder": "Feature",
       "technologyPlaceholder": "Technology",
+      "isVisible": "Visible",
       "confirmDelete": "Are you sure you want to delete this template?"
     },
     "pricingManager": {
