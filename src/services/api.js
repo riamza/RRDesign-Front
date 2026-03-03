@@ -195,13 +195,16 @@ export const api = {
     if (!Array.isArray(data)) return [];
     return data.map((project) => ({
       ...project,
-      // Handle both string (legacy) and array (new) from backend
+      category: project.category,
+      completionDate: project.completionDate,
       technologies: Array.isArray(project.technologies)
         ? project.technologies
         : project.technologies
           ? project.technologies.split(",").map((t) => t.trim())
           : [],
-      image: project.imageUrl,
+      image: project.imageUrl?.startsWith("http") || project.imageUrl?.startsWith("/") 
+            ? `${API_URL.replace('/api', '')}${project.imageUrl}` 
+            : project.imageUrl,
       link: project.link,
     }));
   },
@@ -209,15 +212,21 @@ export const api = {
     const data = await request(`/projects/${id}`);
     return {
       ...data,
+      category: data.category,
+      completionDate: data.completionDate,
       technologies: data.technologies
         ? data.technologies.split(",").map((t) => t.trim())
         : [],
-      image: data.imageUrl,
+      image: data.imageUrl?.startsWith("http") || data.imageUrl?.startsWith("/") 
+            ? `${API_URL.replace('/api', '')}${data.imageUrl}` 
+            : data.imageUrl,
     };
   },
   createProject: (project) => {
     const dto = {
       ...project,
+      category: project.category,
+      completionDate: project.completionDate,
       technologies: Array.isArray(project.technologies)
         ? project.technologies
         : typeof project.technologies === "string"
@@ -231,6 +240,8 @@ export const api = {
   updateProject: (id, project) => {
     const dto = {
       ...project,
+      category: project.category,
+      completionDate: project.completionDate,
       technologies: Array.isArray(project.technologies)
         ? project.technologies
         : typeof project.technologies === "string"
