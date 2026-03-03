@@ -46,12 +46,11 @@ const ProjectsManager = () => {
       title: project.title,
       description: project.description,
       image: project.image,
-      technologies: proj,
-      isVisible:
-        project.isVisible !== undefined
-          ? project.isVisible
-          : trueect.technologies || [""],
+      technologies: project.technologies || [""],
+      isVisible: project.isVisible !== undefined ? project.isVisible : true,
       link: project.link,
+      category: project.category || "",
+      completionDate: project.completionDate || "",
     });
     setEditingId(project.id);
     setShowForm(true);

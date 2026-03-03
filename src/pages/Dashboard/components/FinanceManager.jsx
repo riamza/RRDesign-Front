@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { api } from "../../../services/api";
 import {
   Pencil,
   Trash2,
@@ -29,88 +30,8 @@ const FinanceManager = () => {
   const { t } = useTranslation();
   const fm = (key) => t(`dashboard.financeManager.${key}`);
 
-  // Initial mock data for expenses
-  const initialExpenses = [
-    {
-      id: 1,
-      description: "Abonament Adobe Creative Cloud",
-      amount: 600,
-      category: "Software",
-      date: "2026-01-15",
-      validUntil: "2027-01-15",
-      status: "active",
-    },
-    {
-      id: 2,
-      description: "Hosting Server Anual",
-      amount: 1200,
-      category: "Infrastructure",
-      date: "2025-12-01",
-      validUntil: "2026-12-01",
-      status: "active",
-    },
-    {
-      id: 3,
-      description: "Licență Windows Server",
-      amount: 850,
-      category: "Software",
-      date: "2025-11-10",
-      validUntil: "2026-11-10",
-      status: "active",
-    },
-    {
-      id: 4,
-      description: "Marketing Google Ads",
-      amount: 500,
-      category: "Marketing",
-      date: "2026-01-01",
-      validUntil: "2026-01-31",
-      status: "expired",
-    },
-  ];
-
-  // Initial mock data for income
-  const initialIncome = [
-    {
-      id: 1,
-      description: "Proiect Website Corporate - ABC Company",
-      amount: 5000,
-      category: "Web Design",
-      date: "2026-01-20",
-      client: "ABC Company",
-      status: "paid",
-    },
-    {
-      id: 2,
-      description: "Logo Design - XYZ Startup",
-      amount: 800,
-      category: "Branding",
-      date: "2026-01-15",
-      client: "XYZ Startup",
-      status: "paid",
-    },
-    {
-      id: 3,
-      description: "E-commerce Platform - Online Store",
-      amount: 12000,
-      category: "Web Development",
-      date: "2026-01-10",
-      client: "Online Store",
-      status: "paid",
-    },
-    {
-      id: 4,
-      description: "Maintenance Contract - Tech Corp",
-      amount: 2000,
-      category: "Maintenance",
-      date: "2026-01-25",
-      client: "Tech Corp",
-      status: "pending",
-    },
-  ];
-
-  const [expenses, setExpenses] = useState(initialExpenses);
-  const [income, setIncome] = useState(initialIncome);
+  const [expenses, setExpenses] = useState([]);
+  const [income, setIncome] = useState([]);
   const [activeView, setActiveView] = useState("expenses"); // 'expenses', 'income', 'charts'
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -148,6 +69,22 @@ const FinanceManager = () => {
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   const totalIncome = income.reduce((sum, inc) => sum + inc.amount, 0);
   const netProfit = totalIncome - totalExpenses;
+
+  const loadData = async () => {
+    try {
+      const data = await api.financeTransactions.getAll();
+      const exp = data.filter((t) => t.type === "Expense");
+      const inc = data.filter((t) => t.type === "Income");
+      setExpenses(exp);
+      setIncome(inc);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   // Sorted and filtered expenses
   const sortedFilteredExpenses = useMemo(() => {
@@ -299,56 +236,38 @@ const FinanceManager = () => {
     setShowConfirmDelete(true);
   };
 
-  const confirmDelete = () => {
-    if (activeView === "expenses") {
-      setExpenses(expenses.filter((e) => e.id !== deleteId));
-    } else if (activeView === "income") {
-      setIncome(income.filter((i) => i.id !== deleteId));
+  const confirmDelete = async () => {
+    try {
+      await api.financeTransactions.delete(deleteId);
+      await loadData();
+    } catch (err) {
+      console.error("Delete failed", err);
     }
     setDeleteId(null);
     setShowConfirmDelete(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (activeView === "expenses") {
-      if (editingId) {
-        setExpenses(
-          expenses.map((exp) =>
-            exp.id === editingId
-              ? { ...exp, ...formData, amount: parseFloat(formData.amount) }
-              : exp,
-          ),
-        );
-      } else {
-        const newExpense = {
-          id: Math.max(...expenses.map((e) => e.id), 0) + 1,
-          ...formData,
-          amount: parseFloat(formData.amount),
-        };
-        setExpenses([...expenses, newExpense]);
-      }
-    } else if (activeView === "income") {
-      if (editingId) {
-        setIncome(
-          income.map((inc) =>
-            inc.id === editingId
-              ? { ...inc, ...formData, amount: parseFloat(formData.amount) }
-              : inc,
-          ),
-        );
-      } else {
-        const newIncome = {
-          id: Math.max(...income.map((i) => i.id), 0) + 1,
-          ...formData,
-          amount: parseFloat(formData.amount),
-        };
-        setIncome([...income, newIncome]);
-      }
-    }
+    const type = activeView === "expenses" ? "Expense" : "Income";
+    const payload = {
+      ...formData,
+      amount: parseFloat(formData.amount),
+      type,
+    };
 
-    resetForm();
+    try {
+      if (editingId) {
+        await api.financeTransactions.update(editingId, payload);
+      } else {
+        await api.financeTransactions.create(payload);
+      }
+      await loadData();
+      resetForm();
+    } catch (err) {
+      console.error("Submit failed", err);
+    }
   };
 
   const resetForm = () => {
@@ -574,7 +493,11 @@ const FinanceManager = () => {
       {activeView === "income" && (
         <>
           <div className="manager-actions">
-            <button onClick={openAddForm} className="button button-primary">
+            <button
+              onClick={openAddForm}
+              className="button button-primary btn-success"
+              style={{ backgroundColor: "var(--success-color)", borderColor: "var(--success-color)", color: "white" }}
+            >
               + {fm("addIncome")}
             </button>
 

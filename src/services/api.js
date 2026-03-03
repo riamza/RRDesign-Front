@@ -311,4 +311,15 @@ export const api = {
         body: JSON.stringify({ status }),
       }),
   },
+
+  financeTransactions: {
+    getAll: async () => {
+      const data = await request("/FinanceTransactions");
+      return Array.isArray(data) ? data : [];
+    },
+    getById: (id) => request(`/FinanceTransactions/${id}`),
+    create: (data) => request("/FinanceTransactions", { method: "POST", body: data }),
+    update: (id, data) => request(`/FinanceTransactions/${id}`, { method: "PUT", body: data }),
+    delete: (id) => request(`/FinanceTransactions/${id}`, { method: "DELETE" }),
+  },
 };
