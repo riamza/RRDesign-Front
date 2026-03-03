@@ -202,9 +202,11 @@ export const api = {
         : project.technologies
           ? project.technologies.split(",").map((t) => t.trim())
           : [],
-      image: project.imageUrl?.startsWith("http") || project.imageUrl?.startsWith("/") 
-            ? `${API_URL.replace('/api', '')}${project.imageUrl}` 
-            : project.imageUrl,
+      image:
+        project.imageUrl?.startsWith("http") ||
+        project.imageUrl?.startsWith("/")
+          ? `${API_URL.replace("/api", "")}${project.imageUrl}`
+          : project.imageUrl,
       link: project.link,
     }));
   },
@@ -217,9 +219,10 @@ export const api = {
       technologies: data.technologies
         ? data.technologies.split(",").map((t) => t.trim())
         : [],
-      image: data.imageUrl?.startsWith("http") || data.imageUrl?.startsWith("/") 
-            ? `${API_URL.replace('/api', '')}${data.imageUrl}` 
-            : data.imageUrl,
+      image:
+        data.imageUrl?.startsWith("http") || data.imageUrl?.startsWith("/")
+          ? `${API_URL.replace("/api", "")}${data.imageUrl}`
+          : data.imageUrl,
     };
   },
   createProject: (project) => {
@@ -230,8 +233,11 @@ export const api = {
       technologies: Array.isArray(project.technologies)
         ? project.technologies
         : typeof project.technologies === "string"
-        ? project.technologies.split(",").map((t) => t.trim()).filter((t) => t !== "")
-        : [],
+          ? project.technologies
+              .split(",")
+              .map((t) => t.trim())
+              .filter((t) => t !== "")
+          : [],
       imageUrl: project.image,
       link: project.link,
     };
@@ -245,8 +251,11 @@ export const api = {
       technologies: Array.isArray(project.technologies)
         ? project.technologies
         : typeof project.technologies === "string"
-        ? project.technologies.split(",").map((t) => t.trim()).filter((t) => t !== "")
-        : [],
+          ? project.technologies
+              .split(",")
+              .map((t) => t.trim())
+              .filter((t) => t !== "")
+          : [],
       imageUrl: project.image,
       link: project.link,
     };
@@ -260,7 +269,7 @@ export const api = {
     if (!Array.isArray(data)) return [];
     return data.map((template) => ({
       ...template,
-      image: template.imageUrl,
+      image: template.imageUrl?.startsWith("http") || template.imageUrl?.startsWith("/") ? `${API_URL.replace("/api", "")}${template.imageUrl}` : template.imageUrl,
       demoLink: template.previewLink,
       features: template.features || [],
     }));
@@ -269,6 +278,7 @@ export const api = {
     const data = await request(`/templates/${id}`);
     return {
       ...data,
+      image: data.imageUrl?.startsWith("http") || data.imageUrl?.startsWith("/") ? `${API_URL.replace("/api", "")}${data.imageUrl}` : data.imageUrl,
       image: data.imageUrl,
       demoLink: data.previewLink,
       technologies: [],
@@ -333,8 +343,10 @@ export const api = {
       return Array.isArray(data) ? data : [];
     },
     getById: (id) => request(`/FinanceTransactions/${id}`),
-    create: (data) => request("/FinanceTransactions", { method: "POST", body: data }),
-    update: (id, data) => request(`/FinanceTransactions/${id}`, { method: "PUT", body: data }),
+    create: (data) =>
+      request("/FinanceTransactions", { method: "POST", body: data }),
+    update: (id, data) =>
+      request(`/FinanceTransactions/${id}`, { method: "PUT", body: data }),
     delete: (id) => request(`/FinanceTransactions/${id}`, { method: "DELETE" }),
   },
 };

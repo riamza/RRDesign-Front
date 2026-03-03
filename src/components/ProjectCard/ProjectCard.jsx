@@ -10,9 +10,11 @@ const ProjectCard = ({ project, isAdmin = false, onEdit, onDelete }) => {
 
   return (
     <Card className="project-card">
-      <div className="project-image">
-        <img src={project.image} alt={project.title} className="card-image" />
-      </div>
+      {project.image && (
+        <div className="project-image">
+          <img src={project.image} alt={project.title} className="card-image" />  
+        </div>
+      )}
       <div className="project-category">{project.category}</div>
       <div className="project-title">
         <h3 className="card-title">{project.title}</h3>
