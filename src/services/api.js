@@ -219,8 +219,10 @@ export const api = {
     const dto = {
       ...project,
       technologies: Array.isArray(project.technologies)
-        ? project.technologies.join(",")
-        : project.technologies,
+        ? project.technologies
+        : typeof project.technologies === "string"
+        ? project.technologies.split(",").map((t) => t.trim()).filter((t) => t !== "")
+        : [],
       imageUrl: project.image,
       link: project.link,
     };
@@ -230,8 +232,10 @@ export const api = {
     const dto = {
       ...project,
       technologies: Array.isArray(project.technologies)
-        ? project.technologies.join(",")
-        : project.technologies,
+        ? project.technologies
+        : typeof project.technologies === "string"
+        ? project.technologies.split(",").map((t) => t.trim()).filter((t) => t !== "")
+        : [],
       imageUrl: project.image,
       link: project.link,
     };
