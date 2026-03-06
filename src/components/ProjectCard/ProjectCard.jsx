@@ -19,7 +19,7 @@ const ProjectCard = ({ project, isAdmin = false, onEdit, onDelete }) => {
           <img src={project.image} alt={project.title} className="card-image" />
         </div>
       )}
-      <div className="project-category">{project.category}</div>
+      <div className="project-category">{project.category?.toUpperCase()}</div>
       <div className="project-title">
         <h3 className="card-title">{project.title}</h3>
       </div>

@@ -39,7 +39,7 @@ const TemplateCard = ({ template, isAdmin = false, onEdit, onDelete }) => {
           <img src={imageDisplay} alt={template.title} className="card-image" />
         </div>
       )}
-      <div className="template-category">{template.category}</div>
+      <div className="template-category">{template.category?.toUpperCase()}</div>
       <div className="template-title">
         <h3 className="card-title">{template.title}</h3>
       </div>
