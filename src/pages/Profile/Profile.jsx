@@ -144,20 +144,14 @@ const Profile = () => {
           {/* Stats Row (example stats) */}
           <div className="profile-stats">
             <div className="stat-item">
-              <span className="stat-value">12</span>
+              <span className="stat-value">{user?.projects?.length || 0}</span>
               <span className="stat-label">
                 {t("header.myProjects") || "Projects"}
               </span>
             </div>
             <div className="stat-item">
-              <span className="stat-value">24</span>
-              <span className="stat-label">{"Reviews" || "Reviews"}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-value">2024</span>
-              <span className="stat-label">{"Member Since" || "Joined"}</span>
-            </div>
-          </div>
+              <span className="stat-value">{user?.role || "User"}</span>
+              <span className="stat-label">{"Role" || "Role"}</span>
 
           {/* Main Content Form */}
           <form onSubmit={handleSubmit} className="profile-content">

@@ -8,13 +8,15 @@ import "./ProjectCard.css";
 const ProjectCard = ({ project, isAdmin = false, onEdit, onDelete }) => {
   const { t } = useTranslation();
 
-  const hasValidDate = project.completionDate && !isNaN(new Date(project.completionDate).getTime());
+  const hasValidDate =
+    project.completionDate &&
+    !isNaN(new Date(project.completionDate).getTime());
 
   return (
     <Card className="project-card">
       {project.image && (
         <div className="project-image">
-          <img src={project.image} alt={project.title} className="card-image" />  
+          <img src={project.image} alt={project.title} className="card-image" />
         </div>
       )}
       <div className="project-category">{project.category}</div>

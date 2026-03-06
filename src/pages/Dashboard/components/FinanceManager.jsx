@@ -496,7 +496,11 @@ const FinanceManager = () => {
             <button
               onClick={openAddForm}
               className="button button-primary btn-success"
-              style={{ backgroundColor: "var(--success-color)", borderColor: "var(--success-color)", color: "white" }}
+              style={{
+                backgroundColor: "var(--success-color)",
+                borderColor: "var(--success-color)",
+                color: "white",
+              }}
             >
               + {fm("addIncome")}
             </button>

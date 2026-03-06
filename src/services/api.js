@@ -37,11 +37,11 @@ const refreshTokenFlow = async () => {
     } catch (error) {
       console.warn(`Refresh token attempt ${attempt + 1} failed:`, error);
     }
-    
+
     attempt++;
     if (attempt < 3) {
       // Așteptăm 1 secundă între reîncercări
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
   }
 
@@ -91,7 +91,7 @@ const request = async (endpoint, options = {}) => {
         response = await fetch(url, config);
       } else {
         // Refresh failed - force disconnect and redirect
-        window.location.href = '/login';
+        window.location.href = "/login";
         throw new Error("Session expired");
       }
     }
@@ -276,7 +276,11 @@ export const api = {
     if (!Array.isArray(data)) return [];
     return data.map((template) => ({
       ...template,
-      image: template.imageUrl?.startsWith("http") || template.imageUrl?.startsWith("/") ? `${API_URL.replace("/api", "")}${template.imageUrl}` : template.imageUrl,
+      image:
+        template.imageUrl?.startsWith("http") ||
+        template.imageUrl?.startsWith("/")
+          ? `${API_URL.replace("/api", "")}${template.imageUrl}`
+          : template.imageUrl,
       demoLink: template.previewLink,
       features: template.features || [],
     }));
@@ -285,7 +289,10 @@ export const api = {
     const data = await request(`/templates/${id}`);
     return {
       ...data,
-      image: data.imageUrl?.startsWith("http") || data.imageUrl?.startsWith("/") ? `${API_URL.replace("/api", "")}${data.imageUrl}` : data.imageUrl,
+      image:
+        data.imageUrl?.startsWith("http") || data.imageUrl?.startsWith("/")
+          ? `${API_URL.replace("/api", "")}${data.imageUrl}`
+          : data.imageUrl,
       image: data.imageUrl,
       demoLink: data.previewLink,
       technologies: [],

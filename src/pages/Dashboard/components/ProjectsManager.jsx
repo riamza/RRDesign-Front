@@ -343,21 +343,27 @@ const ProjectsManager = () => {
       </Modal>
 
       <div className="services-manager-grid" ref={gridRef}>
-        {[...projects].sort((a, b) => {
-          const dateA = a.completionDate ? new Date(a.completionDate).getTime() : 0;
-          const dateB = b.completionDate ? new Date(b.completionDate).getTime() : 0;
-          if (isNaN(dateA)) return 1;
-          if (isNaN(dateB)) return -1;
-          return dateA - dateB;
-        }).map((project) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            isAdmin={true}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        ))}
+        {[...projects]
+          .sort((a, b) => {
+            const dateA = a.completionDate
+              ? new Date(a.completionDate).getTime()
+              : 0;
+            const dateB = b.completionDate
+              ? new Date(b.completionDate).getTime()
+              : 0;
+            if (isNaN(dateA)) return 1;
+            if (isNaN(dateB)) return -1;
+            return dateA - dateB;
+          })
+          .map((project) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              isAdmin={true}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
       </div>
 
       <ConfirmModal
