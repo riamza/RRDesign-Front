@@ -493,14 +493,10 @@ const FinanceManager = () => {
       {activeView === "income" && (
         <>
           <div className="manager-actions">
-            <button
-              onClick={openAddForm}
-              className="button button-primary btn-success"
-              style={{
-                backgroundColor: "var(--success-color)",
-                borderColor: "var(--success-color)",
-                color: "white",
-              }}
+            <button 
+              onClick={openAddForm} 
+              className="button button-primary"
+              style={{ backgroundColor: "#10b981", borderColor: "#10b981" }}
             >
               + {fm("addIncome")}
             </button>
