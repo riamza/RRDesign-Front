@@ -18,31 +18,38 @@ const refreshTokenFlow = async () => {
 
   if (!accessToken || !refreshToken) return null;
 
-  try {
-    const response = await fetch(`${API_URL}/Auth/refresh-token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ accessToken, refreshToken }),
-    });
+  let attempt = 0;
+  while (attempt < 3) {
+    try {
+      const response = await fetch(`${API_URL}/Auth/refresh-token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accessToken, refreshToken }),
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      localStorage.setItem("access_token", data.accessToken);
-      localStorage.setItem("refresh_token", data.refreshToken);
-      localStorage.setItem("user_role", data.role);
-      return data.accessToken;
-    } else {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("user_role");
-      return null;
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("access_token", data.accessToken);
+        localStorage.setItem("refresh_token", data.refreshToken);
+        localStorage.setItem("user_role", data.role);
+        return data.accessToken;
+      }
+    } catch (error) {
+      console.warn(`Refresh token attempt ${attempt + 1} failed:`, error);
     }
-  } catch (error) {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user_role");
-    return null;
+    
+    attempt++;
+    if (attempt < 3) {
+      // Așteptăm 1 secundă între reîncercări
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
   }
+
+  // Dacă au eșuat toate cele 3 încercări, abia atunci curățăm sesiunea
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("user_role");
+  return null;
 };
 
 const request = async (endpoint, options = {}) => {
@@ -83,8 +90,8 @@ const request = async (endpoint, options = {}) => {
         config.headers["Authorization"] = `Bearer ${newToken}`;
         response = await fetch(url, config);
       } else {
-        // Refresh failed - let the caller handle it or redirect
-        // window.location.href = '/login'; // Optional: Redirect here
+        // Refresh failed - force disconnect and redirect
+        window.location.href = '/login';
         throw new Error("Session expired");
       }
     }

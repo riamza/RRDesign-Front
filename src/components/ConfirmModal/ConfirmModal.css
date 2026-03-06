@@ -136,7 +136,9 @@
 @media (max-width: 768px) {
   .confirm-modal-content {
     padding: 24px;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 20px));
     max-width: 90%;
+    margin-bottom: env(safe-area-inset-bottom, 20px);
   }
 
   .confirm-modal-icon {
