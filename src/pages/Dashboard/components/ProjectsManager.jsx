@@ -262,12 +262,11 @@ const ProjectsManager = () => {
             <div className="form-group">
               <label>{t("dashboard.projectsManager.completionDate")}</label>
               <input
-                type="text"
+                type="date"
                 value={formData.completionDate}
                 onChange={(e) =>
                   setFormData({ ...formData, completionDate: e.target.value })
                 }
-                placeholder={t("dashboard.projectsManager.datePlaceholder")}
                 required
               />
             </div>
@@ -344,7 +343,13 @@ const ProjectsManager = () => {
       </Modal>
 
       <div className="services-manager-grid" ref={gridRef}>
-        {projects.map((project) => (
+        {[...projects].sort((a, b) => {
+          const dateA = a.completionDate ? new Date(a.completionDate).getTime() : 0;
+          const dateB = b.completionDate ? new Date(b.completionDate).getTime() : 0;
+          if (isNaN(dateA)) return 1;
+          if (isNaN(dateB)) return -1;
+          return dateA - dateB;
+        }).map((project) => (
           <ProjectCard
             key={project.id}
             project={project}

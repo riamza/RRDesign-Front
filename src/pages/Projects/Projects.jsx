@@ -57,6 +57,16 @@ const Projects = () => {
     return () => window.removeEventListener('resize', alignCardSections);
   }, []);
 
+  const sortedProjects = [...projects].sort((a, b) => {
+    const dateA = a.completionDate ? new Date(a.completionDate).getTime() : 0;
+    const dateB = b.completionDate ? new Date(b.completionDate).getTime() : 0;
+    
+    if (isNaN(dateA)) return 1;
+    if (isNaN(dateB)) return -1;
+    
+    return dateA - dateB;
+  });
+
   return (
     <div className="projects-page">
       <SEO 
@@ -75,7 +85,7 @@ const Projects = () => {
       <section className="projects-section">
         <div className="container">
           <div className="projects-grid" ref={gridRef}>
-            {loading ? <p>Loading projects...</p> : projects.map(project => (
+            {loading ? <p>Loading projects...</p> : sortedProjects.map(project => (   
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>

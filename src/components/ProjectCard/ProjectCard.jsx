@@ -8,6 +8,8 @@ import "./ProjectCard.css";
 const ProjectCard = ({ project, isAdmin = false, onEdit, onDelete }) => {
   const { t } = useTranslation();
 
+  const hasValidDate = project.completionDate && !isNaN(new Date(project.completionDate).getTime());
+
   return (
     <Card className="project-card">
       {project.image && (
@@ -35,13 +37,15 @@ const ProjectCard = ({ project, isAdmin = false, onEdit, onDelete }) => {
       {!isAdmin && (
         <>
           <div className="project-meta">
-            <span className="completion-date">
-              Finalizat:{" "}
-              {new Date(project.completionDate).toLocaleDateString("ro-RO", {
-                year: "numeric",
-                month: "long",
-              })}
-            </span>
+            {hasValidDate && (
+              <span className="completion-date">
+                Finalizat:{" "}
+                {new Date(project.completionDate).toLocaleDateString("ro-RO", {
+                  year: "numeric",
+                  month: "long",
+                })}
+              </span>
+            )}
           </div>
           {project.link && (
             <Button
@@ -69,9 +73,11 @@ const ProjectCard = ({ project, isAdmin = false, onEdit, onDelete }) => {
               textAlign: "center",
             }}
           >
-            <span className="completion-date">
-              Finalizat: {project.completionDate}
-            </span>
+            {hasValidDate && (
+              <span className="completion-date">
+                Finalizat: {project.completionDate}
+              </span>
+            )}
           </div>
           <div className="project-actions">
             <button className="btn-card-edit" onClick={() => onEdit(project)}>
