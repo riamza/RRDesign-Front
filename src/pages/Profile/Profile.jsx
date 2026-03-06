@@ -151,8 +151,8 @@ const Profile = () => {
             </div>
             <div className="stat-item">
               <span className="stat-value">{user?.role || "User"}</span>
-              <span className="stat-label">{"Role" || "Role"}</span>
-
+              <span className="stat-label">{"Role" || "Role"}</span>            </div>
+          </div>
           {/* Main Content Form */}
           <form onSubmit={handleSubmit} className="profile-content">
             <div className="info-group">
