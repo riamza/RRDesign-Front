@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { useScrollLock } from '../../hooks/useScrollLock';
 import './Modal.css';
 
 const Modal = ({ isOpen, onClose, title, children }) => {
+  useScrollLock(isOpen);
+
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(

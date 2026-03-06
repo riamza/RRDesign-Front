@@ -1,8 +1,11 @@
 import React from 'react';
 import { AlertTriangle, X } from 'lucide-react';
+import { useScrollLock } from '../../hooks/useScrollLock';
 import './ConfirmModal.css';
 
 const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
+  useScrollLock(isOpen);
+
   if (!isOpen) return null;
 
   const handleConfirm = () => {
