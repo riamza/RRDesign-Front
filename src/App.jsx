@@ -10,6 +10,12 @@ import Services from "./pages/Services/Services";
 import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+
+// Legal Pages
+import Terms from "./pages/Legal/Terms";
+import Privacy from "./pages/Legal/Privacy";
+import GDPR from "./pages/Legal/GDPR";
+
 import Dashboard from "./pages/Dashboard/Dashboard";
 import ClientProjectDetails from "./pages/Dashboard/components/ClientProjectDetails";
 import Profile from "./pages/Profile/Profile";
@@ -36,6 +42,9 @@ function App() {
               <Route path="/projects" element={<Projects />} />
               <Route path="/templates" element={<Templates />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/termeni-si-conditii" element={<Terms />} />
+              <Route path="/politica-de-confidentialitate" element={<Privacy />} />
+              <Route path="/politica-cookies-gdpr" element={<GDPR />} />
               <Route
                 path="/login"
                 element={

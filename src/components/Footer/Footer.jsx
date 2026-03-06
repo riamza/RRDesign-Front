@@ -5,7 +5,7 @@ import { companyInfo } from '../../utils/constants';
 
 const Footer = () => {
   const { t } = useTranslation();
-  
+
   return (
     <footer className="footer">
       <div className="container">
@@ -26,13 +26,11 @@ const Footer = () => {
           </div>
 
           <div className="footer-section">
-            <h4>{t('footer.links')}</h4>
+            <h4>{t('footer.legalPolicy')}</h4>
             <div className="footer-links">
-              <a href="/">{t('header.home')}</a>
-              <a href="/services">{t('header.services')}</a>
-              <a href="/projects">{t('header.projects')}</a>
-              <a href="/templates">{t('header.templates')}</a>
-              <a href="/contact">{t('header.contact')}</a>
+              <a href="/termeni-si-conditii">{t('footer.terms')}</a>
+              <a href="/politica-de-confidentialitate">{t('footer.privacy')}</a>
+              <a href="/politica-cookies-gdpr">{t('footer.gdpr')}</a>
             </div>
           </div>
         </div>
