@@ -104,6 +104,8 @@ const ClientProjectDetails = () => {
 
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   // New requirement state
   const [isAddingReq, setIsAddingReq] = useState(false);
@@ -198,9 +200,9 @@ const ClientProjectDetails = () => {
 
         if (user?.role === "Client") {
           await api.proposeClientProjectRequirement(id, reqData);
-          alert(
+          setSuccessMessage(
             t("dashboard.clientProjectDetails.proposalSent") ||
-              "Proposal sent!",
+              "Propunerea a fost trimisă cu succes!"
           );
         } else {
           await api.addClientProjectRequirement(id, reqData);
@@ -750,6 +752,28 @@ const ClientProjectDetails = () => {
           )}
         </div>
       </div>
+
+      <Modal
+        isOpen={!!successMessage}
+        onClose={() => setSuccessMessage("")}
+        title={t("common.success", "Succes")}
+      >
+        <p style={{ color: "#16a34a" }}>{successMessage}</p>
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+          <button className="button button-primary" onClick={() => setSuccessMessage("")}>OK</button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={!!errorMessage}
+        onClose={() => setErrorMessage("")}
+        title={t("common.error", "Eroare")}
+      >
+        <p style={{ color: "#ef4444" }}>{errorMessage}</p>
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+          <button className="button button-primary" onClick={() => setErrorMessage("")}>OK</button>
+        </div>
+      </Modal>
     </div>
   );
 };

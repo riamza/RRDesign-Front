@@ -16,6 +16,7 @@ import {
 import { api } from "../../../services/api";
 import ConfirmModal from "../../../components/ConfirmModal/ConfirmModal";
 import Modal from "../../../components/Modal/Modal";
+import InvitationSuccessModal from "../../../components/InvitationSuccessModal/InvitationSuccessModal";
 import "./ContactInbox.css";
 
 const ContactManager = () => {
@@ -28,6 +29,8 @@ const ContactManager = () => {
   const [deleteThreadEmail, setDeleteThreadEmail] = useState(null);
   const [deleteItemName, setDeleteItemName] = useState("");
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [invitationSuccessData, setInvitationSuccessData] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const [inviteData, setInviteData] = useState({
     email: "",
     name: "",
@@ -170,7 +173,7 @@ const ContactManager = () => {
 
   const handleSendReply = () => {
     if (!replyText.trim()) {
-      alert("Te rog scrie un mesaj înainte de a trimite.");
+      setErrorMessage("Te rog scrie un mesaj inainte de a trimite.");
       return;
     }
     window.location.href = `mailto:${selectedConversation.email}?subject=RE: Contact RRDesign&body=${encodeURIComponent(replyText)}`;
@@ -189,13 +192,16 @@ const ContactManager = () => {
   const handleInviteUser = async () => {
     if (!inviteData.email) return;
     try {
-      await api.auth.inviteUser(inviteData.email);
-      alert(`Invitație trimisă către ${inviteData.email}!`);
+      const response = await api.auth.inviteUser(inviteData.email);
+      setInvitationSuccessData({
+        email: inviteData.email,
+        link: response.invitationLink
+      });
       setShowInviteModal(false);
       setInviteData({ email: "", name: "", message: "" });
     } catch (error) {
       console.error("Invitation failed", error);
-      alert("A apărut o eroare la trimiterea invitației.");
+      setErrorMessage("A aparut o eroare la trimiterea invitatiei.");
     }
   };
 
@@ -555,6 +561,24 @@ const ContactManager = () => {
             </button>
           </div>
         </form>
+      </Modal>
+
+      <InvitationSuccessModal
+        isOpen={!!invitationSuccessData}
+        onClose={() => setInvitationSuccessData(null)}
+        email={invitationSuccessData?.email}
+        invitationLink={invitationSuccessData?.link}
+      />
+
+      <Modal
+        isOpen={!!errorMessage}
+        onClose={() => setErrorMessage("")}
+        title="Atenție"
+      >
+        <p style={{ color: "#ef4444" }}>{errorMessage}</p>
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+          <button className="button button-primary" onClick={() => setErrorMessage("")}>OK</button>
+        </div>
       </Modal>
     </div>
   );

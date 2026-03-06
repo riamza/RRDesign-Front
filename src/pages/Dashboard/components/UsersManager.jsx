@@ -16,6 +16,7 @@ import {
 import { api } from "../../../services/api";
 import Modal from "../../../components/Modal/Modal";
 import ConfirmModal from "../../../components/ConfirmModal/ConfirmModal";
+import InvitationSuccessModal from "../../../components/InvitationSuccessModal/InvitationSuccessModal";
 import {
   fetchUsers,
   toggleUserStatus as toggleUserStatusAction,
@@ -36,6 +37,8 @@ const UsersManager = () => {
   const [actionType, setActionType] = useState(null);
   const [actionUserId, setActionUserId] = useState(null);
   const [actionUserName, setActionUserName] = useState("");
+  const [invitationSuccessData, setInvitationSuccessData] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [inviteForm, setInviteForm] = useState({
     email: "",
@@ -109,19 +112,16 @@ const UsersManager = () => {
     e.preventDefault();
     try {
       const response = await api.auth.inviteUser(inviteForm.email);
-      alert(
-        t("dashboard.usersManager.invitationSent", {
-          email: inviteForm.email,
-        }) +
-          `\n\nLink: ${response.invitationLink}` +
-          `\n\n(In production this would be emailed)`,
-      );
+      setInvitationSuccessData({
+        email: inviteForm.email,
+        link: response.invitationLink
+      });
 
       setShowInviteModal(false);
       setInviteForm({ email: "", name: "", message: "" });
       dispatch(fetchUsers());
     } catch (err) {
-      alert("Failed to send invitation: " + err.message);
+      setErrorMessage("Failed to send invitation: " + err.message);
     }
   };
 
@@ -147,7 +147,7 @@ const UsersManager = () => {
         toggleUserStatusAction({ id: actionUserId, status: newStatus }),
       ).unwrap();
     } catch (error) {
-      alert("Action failed: " + error.message);
+      setErrorMessage("Action failed: " + error.message);
     } finally {
       setActionUserId(null);
       setActionUserName("");
@@ -513,6 +513,25 @@ const UsersManager = () => {
         title={actionType === "suspend" ? "Blocare Cont" : "Activare Cont"}
         message={getActionMessage()}
       />
+
+      {/* Modal Succes Invitație */}
+      <InvitationSuccessModal
+        isOpen={!!invitationSuccessData}
+        onClose={() => setInvitationSuccessData(null)}
+        email={invitationSuccessData?.email}
+        invitationLink={invitationSuccessData?.link}
+      />
+
+      <Modal
+        isOpen={!!errorMessage}
+        onClose={() => setErrorMessage("")}
+        title={t("common.error", "Eroare")}
+      >
+        <p style={{ color: "#ef4444" }}>{errorMessage}</p>
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+          <button className="button button-primary" onClick={() => setErrorMessage("")}>OK</button>
+        </div>
+      </Modal>
     </div>
   );
 };

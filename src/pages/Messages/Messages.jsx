@@ -10,12 +10,16 @@ import {
   Plus,
 } from "lucide-react";
 import PageHeader from "../../components/PageHeader/PageHeader";
+import Modal from "../../components/Modal/Modal";
 import { api } from "../../services/api";
 import "./Messages.css";
 
 const Messages = () => {
   const { t } = useTranslation();
   const [messages, setMessages] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [infoMessage, setInfoMessage] = useState("");
 
   // Get user role from storage or context (assuming stored as 'user_role')
   const userRole = localStorage.getItem("user_role");
@@ -93,11 +97,11 @@ const Messages = () => {
 
     setMessages([messageToAdd, ...messages]);
     handleCloseComposeModal();
-    alert("Mesajul a fost trimis cu succes!");
+    setSuccessMessage("Mesajul a fost trimis cu succes!");
   };
 
   const handleReply = () => {
-    alert(`Răspuns la: ${selectedMessage.subject}`);
+    setInfoMessage(`Răspuns la: ${selectedMessage.subject}`);
   };
 
   const handleStar = () => {
@@ -394,6 +398,39 @@ const Messages = () => {
           </div>
         </div>
       )}
+
+      <Modal
+        isOpen={!!successMessage}
+        onClose={() => setSuccessMessage("")}
+        title={t("common.success", "Succes")}
+      >
+        <p style={{ color: "#16a34a" }}>{successMessage}</p>
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+          <button className="button button-primary" onClick={() => setSuccessMessage("")}>OK</button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={!!infoMessage}
+        onClose={() => setInfoMessage("")}
+        title={t("common.info", "Informație")}
+      >
+        <p style={{ color: "#3b82f6" }}>{infoMessage}</p>
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+          <button className="button button-primary" onClick={() => setInfoMessage("")}>OK</button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={!!errorMessage}
+        onClose={() => setErrorMessage("")}
+        title={t("common.error", "Eroare")}
+      >
+        <p style={{ color: "#ef4444" }}>{errorMessage}</p>
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+          <button className="button button-primary" onClick={() => setErrorMessage("")}>OK</button>
+        </div>
+      </Modal>
     </div>
   );
 };

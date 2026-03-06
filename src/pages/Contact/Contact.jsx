@@ -13,6 +13,7 @@ const Contact = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -51,7 +52,7 @@ const Contact = () => {
       });
     } catch (error) {
       console.error("Error sending message:", error);
-      alert("Could not send message. Please try again later.");
+      setErrorMessage(t("contact.form.errorMessage", "Could not send message. Please try again later."));
     }
   };
 
@@ -208,6 +209,17 @@ const Contact = () => {
           }}
         >
           <Button onClick={() => setIsSuccessModalOpen(false)}>OK</Button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={!!errorMessage}
+        onClose={() => setErrorMessage("")}
+        title={t("common.error", "Eroare")}
+      >
+        <p style={{ color: "#ef4444" }}>{errorMessage}</p>
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+          <Button onClick={() => setErrorMessage("")}>OK</Button>
         </div>
       </Modal>
     </div>

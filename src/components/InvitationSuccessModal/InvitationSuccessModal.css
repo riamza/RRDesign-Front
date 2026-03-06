@@ -1,0 +1,103 @@
+.invitation-success-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 0.5rem;
+}
+
+.success-icon-wrapper {
+  background: #dcfce7;
+  color: #16a34a;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2);
+}
+
+.success-title {
+  color: #0f172a;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.success-message {
+  color: #475569;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.success-message strong {
+  color: #0f172a;
+}
+
+.link-section {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.link-description {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.link-box {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.link-box:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.link-input {
+  flex: 1;
+  border: none;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #334155;
+  background: transparent;
+  outline: none;
+  text-overflow: ellipsis;
+}
+
+.copy-btn {
+  background: #f1f5f9;
+  border: none;
+  border-left: 1px solid #cbd5e1;
+  padding: 0.75rem 1rem;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.copy-btn.copied {
+  background: #dcfce7;
+  color: #16a34a;
+  border-left-color: #bbf7d0;
+}

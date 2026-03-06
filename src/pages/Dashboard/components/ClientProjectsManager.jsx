@@ -20,6 +20,7 @@ import {
 import { api } from "../../../services/api";
 import Modal from "../../../components/Modal/Modal";
 import ConfirmModal from "../../../components/ConfirmModal/ConfirmModal";
+import InvitationSuccessModal from "../../../components/InvitationSuccessModal/InvitationSuccessModal";
 import "./Manager.css";
 
 const ClientProjectsManager = () => {
@@ -39,6 +40,8 @@ const ClientProjectsManager = () => {
   // Data States
   const [editingId, setEditingId] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [invitationSuccessData, setInvitationSuccessData] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Form State
   const [isExistingUser, setIsExistingUser] = useState(false);
@@ -117,9 +120,10 @@ const ClientProjectsManager = () => {
       } else {
         const response = await api.createClientProject(payload);
         if (response && response.invitationLink) {
-          alert(
-            `Invitație trimisă cu succes la ${payload.newUserEmail}!\n\nLink activare: ${response.invitationLink}\n\n(Acest link ar fi trimis pe email în producție)`,
-          );
+          setInvitationSuccessData({
+            email: payload.newUserEmail,
+            link: response.invitationLink
+          });
         }
       }
       setShowForm(false);
@@ -127,7 +131,7 @@ const ClientProjectsManager = () => {
       reloadProjects();
     } catch (error) {
       console.error("Error saving project:", error);
-      alert("Failed to save project. " + error.message);
+      setErrorMessage("Failed to save project. " + error.message);
     }
   };
 
@@ -413,6 +417,24 @@ const ClientProjectsManager = () => {
         title={t("common.confirmDelete")}
         message={t("dashboard.clientProjectsManager.deleteMessage")}
       />
+
+      <InvitationSuccessModal
+        isOpen={!!invitationSuccessData}
+        onClose={() => setInvitationSuccessData(null)}
+        email={invitationSuccessData?.email}
+        invitationLink={invitationSuccessData?.link}
+      />
+
+      <Modal
+        isOpen={!!errorMessage}
+        onClose={() => setErrorMessage("")}
+        title={t("common.error", "Eroare")}
+      >
+        <p style={{ color: "#ef4444" }}>{errorMessage}</p>
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+          <button className="button button-primary" onClick={() => setErrorMessage("")}>OK</button>
+        </div>
+      </Modal>
     </div>
   );
 };
