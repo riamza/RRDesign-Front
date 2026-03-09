@@ -36,10 +36,12 @@ const ClientProjectsManager = () => {
   // Modal States
   const [showForm, setShowForm] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [showConfirmFinish, setShowConfirmFinish] = useState(false);
 
   // Data States
   const [editingId, setEditingId] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [finishProjectData, setFinishProjectData] = useState(null);
   const [invitationSuccessData, setInvitationSuccessData] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -131,7 +133,11 @@ const ClientProjectsManager = () => {
       reloadProjects();
     } catch (error) {
       console.error("Error saving project:", error);
-      setErrorMessage("Failed to save project. " + error.message);
+      if (error.message && error.message.startsWith("error.")) {
+        setErrorMessage(t(error.message, error.message));
+      } else {
+        setErrorMessage(t("dashboard.clientProjects.saveError", "A apărut o eroare la salvarea proiectului:") + " " + error.message);
+      }
     }
   };
 
@@ -154,14 +160,23 @@ const ClientProjectsManager = () => {
     setDeleteId(null);
   };
 
-  const handleFinish = async (id, e) => {
+  const handleFinish = (project, e) => {
     e.stopPropagation();
-    try {
-      await api.markClientProjectFinished(id);
-      reloadProjects();
-    } catch (error) {
-      console.error("Error marking finished:", error);
+    setFinishProjectData(project);
+    setShowConfirmFinish(true);
+  };
+
+  const confirmFinish = async () => {
+    if (finishProjectData) {
+      try {
+        await api.markClientProjectFinished(finishProjectData.id);
+        reloadProjects();
+      } catch (error) {
+        console.error("Error marking finished:", error);
+      }
     }
+    setShowConfirmFinish(false);
+    setFinishProjectData(null);
   };
 
   const handleCardClick = (id) => {
@@ -197,12 +212,8 @@ const ClientProjectsManager = () => {
             <div className="project-card-header">
               <div className="project-card-status">
                 {project.isFinished
-                  ? t(
-                      "dashboard.clientProjectsManager.status.finished",
-                    ).toUpperCase()
-                  : t(
-                      "dashboard.clientProjectsManager.status.active",
-                    ).toUpperCase()}
+                  ? `${t("dashboard.clientProjectsManager.status.finished").toUpperCase()} - ${new Date(project.endDate).toLocaleDateString()}`
+                  : t("dashboard.clientProjectsManager.status.active").toUpperCase()}
               </div>
             </div>
 
@@ -235,22 +246,22 @@ const ClientProjectsManager = () => {
                 {!project.isFinished && (
                   <button
                     className="action-icon-btn finish"
-                    title={t("dashboard.clientProjectsManager.markFinished")}
-                    onClick={(e) => handleFinish(project.id, e)}
+                    title={t("dashboard.clientProjectsManager.markFinished", "Marchează ca finalizat")}
+                    onClick={(e) => handleFinish(project, e)}
                   >
                     <CheckCircle size={18} />
                   </button>
                 )}
                 <button
                   className="action-icon-btn edit"
-                  title={t("dashboard.clientProjectsManager.viewProject")}
+                  title={t("dashboard.clientProjectsManager.editProject", "Editează proiectul")}
                   onClick={(e) => handleEdit(project, e)}
                 >
                   <Edit2 size={18} />
                 </button>
                 <button
                   className="action-icon-btn delete"
-                  title={t("dashboard.clientProjectsManager.delete")}
+                  title={t("dashboard.clientProjectsManager.delete", "Șterge proiectul")}
                   onClick={(e) => handleDeleteClick(project.id, e)}
                 >
                   <Trash2 size={18} />
@@ -414,8 +425,16 @@ const ClientProjectsManager = () => {
         isOpen={showConfirmDelete}
         onClose={() => setShowConfirmDelete(false)}
         onConfirm={confirmDelete}
-        title={t("common.confirmDelete")}
-        message={t("dashboard.clientProjectsManager.deleteMessage")}
+        title={t("common.confirmDelete", "Confirmare ștergere")}
+        message={t("dashboard.clientProjectsManager.deleteMessage", "Ești sigur că vrei să ștergi acest proiect?")}
+      />
+
+      <ConfirmModal
+        isOpen={showConfirmFinish}
+        onClose={() => setShowConfirmFinish(false)}
+        onConfirm={confirmFinish}
+        title={t("dashboard.clientProjectsManager.confirmFinishTitle", "Confirmare Finalizare Proiect")}
+        message={t("dashboard.clientProjectsManager.confirmFinishMessage", "Ești sigur că vrei să marchezi proiectul {name} ca fiind finalizat?", { name: finishProjectData?.title || "" })}
       />
 
       <InvitationSuccessModal

@@ -47,8 +47,8 @@ const MyProjects = () => {
                         >
                             <div className="project-card-header">
                                 <div className="project-card-status">
-                                    {project.isFinished ? 
-                                        t('myProjects.statusCompleted', 'COMPLETED') : 
+                                    {project.isFinished ?
+                                        `${t('myProjects.statusCompleted', 'COMPLETED')} - ${new Date(project.endDate).toLocaleDateString()}` :
                                         t('myProjects.statusInProgress', 'ACTIVE')}
                                 </div>
                             </div>

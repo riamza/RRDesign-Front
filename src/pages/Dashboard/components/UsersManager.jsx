@@ -121,7 +121,11 @@ const UsersManager = () => {
       setInviteForm({ email: "", name: "", message: "" });
       dispatch(fetchUsers());
     } catch (err) {
-      setErrorMessage("Failed to send invitation: " + err.message);
+      if (err.message && err.message.startsWith("error.")) {
+        setErrorMessage(t(err.message, err.message));
+      } else {
+        setErrorMessage(t("dashboard.usersManager.inviteError", "A apărut o eroare la trimiterea invitației: ") + (err.message || "Eroare necunoscută"));
+      }
     }
   };
 
@@ -147,7 +151,7 @@ const UsersManager = () => {
         toggleUserStatusAction({ id: actionUserId, status: newStatus }),
       ).unwrap();
     } catch (error) {
-      setErrorMessage("Action failed: " + error.message);
+      setErrorMessage(t("dashboard.usersManager.actionFailed", "Acțiunea a eșuat:") + " " + error.message);
     } finally {
       setActionUserId(null);
       setActionUserName("");

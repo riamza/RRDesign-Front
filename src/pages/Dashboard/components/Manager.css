@@ -1852,11 +1852,13 @@
   gap: 2.5rem;
   align-items: start;
   margin-top: 2rem;
+  padding-bottom: 3rem;
 }
 
 @media (max-width: 768px) {
   .services-manager-grid {
     grid-template-columns: 1fr;
+    padding-bottom: 5rem;
   }
 }
 

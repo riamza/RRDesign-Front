@@ -201,7 +201,11 @@ const ContactManager = () => {
       setInviteData({ email: "", name: "", message: "" });
     } catch (error) {
       console.error("Invitation failed", error);
-      setErrorMessage("A aparut o eroare la trimiterea invitatiei.");
+      if (error.message && error.message.includes("error.user_already_exists")) {
+        setErrorMessage(t("dashboard.usersManager.userAlreadyExists", "Acest utilizator există deja în platformă."));
+      } else {
+        setErrorMessage(t("dashboard.usersManager.inviteError", "A apărut o eroare la trimiterea invitației: ") + (error.message || "Eroare necunoscută"));
+      }
     }
   };
 

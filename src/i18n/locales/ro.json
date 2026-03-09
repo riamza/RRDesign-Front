@@ -1,4 +1,18 @@
 {
+  "error": {
+    "invalid_or_used_token": "Token-ul pentru invitație este invalid sau a fost deja folosit.",
+    "token_expired": "Token-ul pentru invitație a expirat (valabilitate 7 zile).",
+    "invalid_invitation_user": "Utilizatorul asociat acestei invitații nu este valid.",
+    "user_not_found": "Utilizatorul nu a putut fi găsit în sistem.",
+    "update_profile_failed": "Nu am putut actualiza profilul de utilizator.",
+    "user_creation_failed": "Nu am putut crea noul utilizator din cauza unei erori interne.",
+    "missing_user_info": "Informațiile necesare pentru utilizator lipsesc (email sau nume).",
+    "user_already_exists": "Acest utilizator (sau email) există deja în platformă.",
+    "pricing_package_not_found": "Pachetul de preț solicitat nu a fost găsit.",
+    "invalid_credentials": "Nume de utilizator sau parolă incorectă.",
+    "invalid_token": "Sesiunea a expirat sau token-ul este invalid.",
+    "failed_update_language": "Limba nu a putut fi actualizată."
+  },
   "seo": {
     "defaultDescription": "RRDesign oferă soluții software complete: site-uri de prezentare, magazine online, aplicații web și mobile.",
     "defaultKeywords": "software, web design, dezvoltare aplicatii, magazin online, site prezentare, seo",

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { fetchUserProfile, setUserData } from "../../store/slices/authSlice";
 import { api } from "../../services/api";
 import "./Register.css"; // We'll create this or reuse Login styles
 
 const Register = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
 
@@ -148,6 +151,13 @@ const Register = () => {
         localStorage.setItem("refresh_token", res.refreshToken);
         localStorage.setItem("user_role", res.role);
 
+        try {
+          await dispatch(fetchUserProfile()).unwrap();
+        } catch (e) {
+          console.error("Failed to fetch profile on auto-login", e);
+          dispatch(setUserData({ email: email, role: res.role }));
+        }
+
         if (res.role === "Admin") {
           navigate("/dashboard");
         } else {
@@ -157,9 +167,13 @@ const Register = () => {
         navigate("/login");
       }
     } catch (err) {
-      setGlobalError(
-        err.message || t("register.failed", "Registration failed."),
-      );
+      if (err.message && err.message.startsWith("error.")) {
+        setGlobalError(t(err.message, err.message));
+      } else {
+        setGlobalError(
+          err.message || t("register.failed", "Registration failed.")
+        );
+      }
     }
   };
 

@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 const API_URL = import.meta.env.VITE_API_URL || "/api";
 
 const getHeaders = () => {
@@ -12,44 +14,61 @@ const getHeaders = () => {
 };
 
 // Function to handle token refresh
+let refreshTokenPromise = null;
+
 const refreshTokenFlow = async () => {
-  const accessToken = localStorage.getItem("access_token");
-  const refreshToken = localStorage.getItem("refresh_token");
-
-  if (!accessToken || !refreshToken) return null;
-
-  let attempt = 0;
-  while (attempt < 3) {
-    try {
-      const response = await fetch(`${API_URL}/Auth/refresh-token`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ accessToken, refreshToken }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("access_token", data.accessToken);
-        localStorage.setItem("refresh_token", data.refreshToken);
-        localStorage.setItem("user_role", data.role);
-        return data.accessToken;
-      }
-    } catch (error) {
-      console.warn(`Refresh token attempt ${attempt + 1} failed:`, error);
-    }
-
-    attempt++;
-    if (attempt < 3) {
-      // Așteptăm 1 secundă între reîncercări
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
+  if (refreshTokenPromise) {
+    return refreshTokenPromise;
   }
 
-  // Dacă au eșuat toate cele 3 încercări, abia atunci curățăm sesiunea
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-  localStorage.removeItem("user_role");
-  return null;
+  refreshTokenPromise = (async () => {
+    const accessToken = localStorage.getItem("access_token");
+    const refreshToken = localStorage.getItem("refresh_token");
+
+    if (!accessToken || !refreshToken) return null;
+
+    let attempt = 0;
+    while (attempt < 3) {
+      try {
+        const response = await fetch(`${API_URL}/Auth/refresh-token`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ accessToken, refreshToken }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem("access_token", data.accessToken);
+          localStorage.setItem("refresh_token", data.refreshToken);
+          localStorage.setItem("user_role", data.role);
+          return data.accessToken;
+        } else if (response.status === 400 || response.status === 401) {
+          // Tokens are completely invalid, don't retry
+          break;
+        }
+      } catch (error) {
+        console.warn(`Refresh token attempt ${attempt + 1} failed:`, error);
+      }
+
+      attempt++;
+      if (attempt < 3) {
+        // Așteptăm 1 secundă între reîncercări
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    }
+
+    // Dacă au eșuat toate încercările, curățăm sesiunea
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user_role");
+    return null;
+  })();
+
+  try {
+    return await refreshTokenPromise;
+  } finally {
+    refreshTokenPromise = null; // reset so next time it can refresh again
+  }
 };
 
 const request = async (endpoint, options = {}) => {
@@ -108,12 +127,14 @@ const request = async (endpoint, options = {}) => {
       );
     }
 
+    logger.log('API', `Success ${options.method || 'GET'} ${endpoint}`, `Status ${response.status}`, true);
     return await response.json();
   } catch (error) {
     console.error(`API Error (${endpoint}):`, error);
+    logger.log('API', `Request ${options.method || 'GET'} ${endpoint}`, error.message, false, error.stack);
     throw error;
   }
-};
+}
 
 export const api = {
   auth: {
@@ -364,3 +385,4 @@ export const api = {
     delete: (id) => request(`/FinanceTransactions/${id}`, { method: "DELETE" }),
   },
 };
+

@@ -34,7 +34,11 @@ const Login = () => {
         navigate("/my-projects");
       }
     } else {
-      setError(result.error);
+        if (result.error && result.error.startsWith("error.")) {
+          setError(t(result.error, result.error));
+        } else {
+          setError(result.error);
+        }
     }
   };
 

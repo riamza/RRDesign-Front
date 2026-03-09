@@ -1,4 +1,18 @@
 {
+  "error": {
+    "invalid_or_used_token": "The invitation token is invalid or has already been used.",
+    "token_expired": "The invitation token has expired (7 days validity).",
+    "invalid_invitation_user": "The user associated with this invitation is not valid.",
+    "user_not_found": "The user could not be found in the system.",
+    "update_profile_failed": "Could not update the user profile.",
+    "user_creation_failed": "Could not create the new user due to an internal error.",
+    "missing_user_info": "Required user information is missing (email or name).",
+    "user_already_exists": "This user (or email) already exists in the platform.",
+    "pricing_package_not_found": "The requested pricing package was not found.",
+    "invalid_credentials": "Invalid username or password.",
+    "invalid_token": "The session has expired or the token is invalid.",
+    "failed_update_language": "The language could not be updated."
+  },
   "seo": {
     "defaultDescription": "RRDesign offers complete software solutions: presentation websites, online stores, web and mobile applications.",
     "defaultKeywords": "software, web design, app development, e-commerce, presentation site, seo",

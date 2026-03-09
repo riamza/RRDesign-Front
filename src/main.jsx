@@ -4,13 +4,16 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import App from './App';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './index.css';
 import './i18n/config';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <HelmetProvider>
-      <App />
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </HelmetProvider>
   </Provider>
 );

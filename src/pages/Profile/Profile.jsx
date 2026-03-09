@@ -101,9 +101,10 @@ const Profile = () => {
         setPasswordStatus({ type: "", message: "" });
       }, 2000);
     } catch (error) {
+      const isStr = error?.message && error.message.startsWith("error.");
       setPasswordStatus({
         type: "error",
-        message: error.message || "Failed to change password",
+        message: isStr ? t(error.message, error.message) : (error.message || t("profile.changePasswordError", "Eroare la schimbarea parolei.")),
       });
     }
   };

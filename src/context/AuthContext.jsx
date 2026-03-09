@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserData, clearUserData, fetchUserProfile } from '../store/slices/authSlice';
 import { api } from '../services/api';
+import { logger } from '../services/logger';
 
 const AuthContext = createContext();
 
@@ -48,7 +49,8 @@ export const AuthProvider = ({ children }) => {
       return { success: true, role: data.role };
     } catch (error) {
       console.error(error);
-      return { success: false, error: 'Credențiale invalide' };
+      const isApiErrorStr = error?.message && error.message.startsWith('error.');
+      logger.log(`AuthContext`, `login`, error.message, false, error.stack); return { success: false, error: isApiErrorStr ? error.message : `Creden?iale invalide` };
     }
   };
 
@@ -88,3 +90,4 @@ export const AuthProvider = ({ children }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
