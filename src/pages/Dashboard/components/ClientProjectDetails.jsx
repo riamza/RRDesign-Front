@@ -20,6 +20,7 @@ import {
   ChevronDown,
   Check,
   Info,
+  Layers,
 } from "lucide-react";
 import { api } from "../../../services/api";
 import Modal from "../../../components/Modal/Modal";
@@ -348,12 +349,8 @@ const ClientProjectDetails = () => {
                 <span>{formatDate(estimatedProjectFinishDate.toISOString())}</span>
               </div>
             )}
-            {estimatedProjectFinishDate && (
-              <div className="info-item">
-                <label>{t("dashboard.clientProjectDetails.estimatedEndDate", "Data Estimat Finish")}</label>
-                <span>{formatDate(estimatedProjectFinishDate.toISOString())}</span>
-              </div>
-            )}
+            
+            
           {project.estimatedPrice && (
             <div
               className="info-item price-estimate-container"
@@ -414,21 +411,29 @@ const ClientProjectDetails = () => {
         </div>
 
         <div className="description-section">
-          <h3>{t("dashboard.clientProjectDetails.description")}</h3>
-          <p>{project.description}</p>
-        </div>
+            <h3 className="section-title">
+              <FileText size={18} className="section-icon text-blue-600" />
+              {t("dashboard.clientProjectDetails.description")}
+            </h3>
+            <div className="section-content">
+              {project.description}
+            </div>
+          </div>
 
-        <div className="tech-section">
-          <h3>{t("dashboard.clientProjectDetails.technologies")}</h3>
-          <div className="tech-tags">
-            {project.technologies.split(",").map((tech, i) => (
-              <span key={i} className="tech-tag">
-                {tech.trim()}
-              </span>
-            ))}
+          <div className="tech-section">
+            <h3 className="section-title">
+              <Layers size={18} className="section-icon text-blue-600" />
+              {t("dashboard.clientProjectDetails.technologies")}
+            </h3>
+            <div className="tech-tags">
+              {project.technologies && project.technologies.split(",").map((tech, i) => (
+                <span key={i} className="tech-tag">
+                  {tech.trim()}
+                </span>
+              ))}
+                        </div>
           </div>
         </div>
-      </div>
 
       <div className="requirements-board">
         <div className="board-header">
