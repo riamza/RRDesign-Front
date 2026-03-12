@@ -7,6 +7,7 @@ import Home from "./pages/Home/Home";
 import Projects from "./pages/Projects/Projects";
 import Templates from "./pages/Templates/Templates";
 import Services from "./pages/Services/Services";
+import NotFound from "./pages/NotFound/NotFound";
 import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
@@ -45,6 +46,7 @@ function App() {
               <Route path="/termeni-si-conditii" element={<Terms />} />
               <Route path="/politica-de-confidentialitate" element={<Privacy />} />
               <Route path="/politica-cookies-gdpr" element={<GDPR />} />
+              <Route path="*" element={<NotFound />} />
               <Route
                 path="/login"
                 element={
