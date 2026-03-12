@@ -371,7 +371,8 @@
         "emailHelp": "An invitation/account will be created for this email.",
         "save": "Save Project",
         "create": "Invite & Create",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "estimatedPrice": "Estimated Price (€)"
       },
       "status": {
         "finished": "Finished",
@@ -434,7 +435,8 @@
         "cancel": "Cancel",
         "add": "Add Requirement",
         "save": "Save Changes"
-      }
+      },
+      "estimatedPriceNotice": "This price is strictly an estimate. The final price may vary if the initial requirements change."
     },
     "financeManager": {
       "title": "Financial Management",
@@ -677,5 +679,6 @@
   },
   "app": {
     "back": "Back"
-  }
+  },
+  "estimatedPriceNotice": "This price is strictly an estimate. The final price may vary if the initial requirements change."
 }

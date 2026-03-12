@@ -371,7 +371,8 @@
         "emailHelp": "O invitație și un cont vor fi create pentru acest email.",
         "save": "Salvează Proiect",
         "create": "Invită & Creează",
-        "cancel": "Anulează"
+        "cancel": "Anulează",
+        "estimatedPrice": "Preț Estimat (€)"
       },
       "status": {
         "finished": "Finalizat",
@@ -434,7 +435,8 @@
         "cancel": "Anulează",
         "add": "Adaugă Cerință",
         "save": "Salvează Modificările"
-      }
+      },
+      "estimatedPriceNotice": "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă."
     },
     "financeManager": {
       "title": "Gestiune Financiară",
@@ -677,5 +679,6 @@
   },
   "app": {
     "back": "Înapoi"
-  }
+  },
+  "estimatedPriceNotice": "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă."
 }

@@ -51,6 +51,8 @@ const ClientProjectsManager = () => {
     title: "",
     description: "",
     technologies: "",
+    estimatedPrice: "",
+    currency: "EUR",
     startDate: new Date().toISOString().split("T")[0],
     userId: "",
     newUserEmail: "",
@@ -78,6 +80,8 @@ const ClientProjectsManager = () => {
       title: "",
       description: "",
       technologies: "",
+      estimatedPrice: "",
+      currency: "EUR",
       startDate: new Date().toISOString().split("T")[0],
       userId: "",
       newUserEmail: "",
@@ -93,6 +97,8 @@ const ClientProjectsManager = () => {
       title: project.title,
       description: project.description,
       technologies: project.technologies,
+      estimatedPrice: project.estimatedPrice || "",
+      currency: project.currency || "EUR",
       startDate: project.startDate ? project.startDate.split("T")[0] : "",
       userId: project.userId,
       newUserEmail: "",
@@ -107,6 +113,8 @@ const ClientProjectsManager = () => {
         title: formData.title,
         description: formData.description,
         technologies: formData.technologies,
+        estimatedPrice: formData.estimatedPrice ? parseFloat(formData.estimatedPrice) : null,
+          currency: formData.currency,
         startDate: formData.startDate,
         // If existing user checkbox is checked, send userId. Else send email.
         userId: isExistingUser
@@ -407,6 +415,36 @@ const ClientProjectsManager = () => {
               )}
             />
           </div>
+          
+          <div className="form-group mb-4">
+              <label className="block text-sm font-medium mb-1 font-semibold">
+                {t("dashboard.clientProjectsManager.form.estimatedPrice") || "Estimated Price"}
+              </label>
+              <div className="flex space-x-2">
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  className="w-full p-2 border rounded"
+                  value={formData.estimatedPrice}
+                  onChange={(e) =>
+                    setFormData({ ...formData, estimatedPrice: e.target.value })
+                  }
+                  placeholder="Ex: 500"
+                />
+                <select
+                  className="p-2 border rounded"
+                  value={formData.currency}
+                  onChange={(e) =>
+                    setFormData({ ...formData, currency: e.target.value })
+                  }
+                >
+                  <option value="EUR">€ (EUR)</option>
+                  <option value="RON">Lei (RON)</option>
+                  <option value="USD">$ (USD)</option>
+                </select>
+              </div>
+            </div>
 
           <div className="form-group mb-4">
             <label className="block text-sm font-medium mb-1 font-semibold">
@@ -505,3 +543,4 @@ const ClientProjectsManager = () => {
 };
 
 export default ClientProjectsManager;
+

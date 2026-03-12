@@ -82,8 +82,17 @@ const MyProjects = () => {
                   </span>
                 </div>
 
-                <p className="project-description">{project.description}</p>
-
+                <p className="project-description">{project.description}</p>                  
+                  {project.estimatedPrice && (
+                      <div className="project-price-container" style={{ marginTop: '15px', padding: '12px', backgroundColor: '#f8f9fa', borderLeft: '4px solid #0d6efd', borderRadius: '6px' }}>
+                        <div className="project-price" style={{ fontWeight: 'bold', fontSize: '1.05em', color: '#2c3e50', marginBottom: '6px' }}>
+                          {t("estimatedPrice", "Preț Estimat")}: {project.estimatedPrice} {project.currency || "EUR"}
+                        </div>
+                        <p className="price-notice" style={{ fontSize: '0.85em', color: '#6c757d', fontStyle: 'italic', margin: 0, lineHeight: '1.4' }}>
+                          {t("estimatedPriceNotice", "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă.")}
+                        </p>
+                      </div>
+                    )}
                 <div
                   className="project-technologies"
                   style={{
