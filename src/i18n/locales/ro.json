@@ -436,7 +436,8 @@
         "add": "Adaugă Cerință",
         "save": "Salvează Modificările"
       },
-      "estimatedPriceNotice": "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă."
+      "estimatedPriceNotice": "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă.",
+      "estimatedPrice": "Preț Estimat"
     },
     "financeManager": {
       "title": "Gestiune Financiară",
@@ -680,5 +681,6 @@
   "app": {
     "back": "Înapoi"
   },
-  "estimatedPriceNotice": "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă."
+  "estimatedPriceNotice": "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă.",
+  "estimatedPrice": "Preț Estimat"
 }

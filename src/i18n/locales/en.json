@@ -436,7 +436,8 @@
         "add": "Add Requirement",
         "save": "Save Changes"
       },
-      "estimatedPriceNotice": "This price is strictly an estimate. The final price may vary if the initial requirements change."
+      "estimatedPriceNotice": "This price is strictly an estimate. The final price may vary if the initial requirements change.",
+      "estimatedPrice": "Estimated Price"
     },
     "financeManager": {
       "title": "Financial Management",
@@ -680,5 +681,6 @@
   "app": {
     "back": "Back"
   },
-  "estimatedPriceNotice": "This price is strictly an estimate. The final price may vary if the initial requirements change."
+  "estimatedPriceNotice": "This price is strictly an estimate. The final price may vary if the initial requirements change.",
+  "estimatedPrice": "Estimated Price"
 }
