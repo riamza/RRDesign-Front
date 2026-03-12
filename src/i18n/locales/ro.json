@@ -437,7 +437,8 @@
         "save": "Salvează Modificările"
       },
       "estimatedPriceNotice": "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă.",
-      "estimatedPrice": "Preț Estimat"
+      "estimatedPrice": "Preț Estimat",
+      "estimatedEndDate": "Dată Estimat Finish"
     },
     "financeManager": {
       "title": "Gestiune Financiară",

@@ -437,7 +437,8 @@
         "save": "Save Changes"
       },
       "estimatedPriceNotice": "This price is strictly an estimate. The final price may vary if the initial requirements change.",
-      "estimatedPrice": "Estimated Price"
+      "estimatedPrice": "Estimated Price",
+      "estimatedEndDate": "Estimated Finish Date"
     },
     "financeManager": {
       "title": "Financial Management",

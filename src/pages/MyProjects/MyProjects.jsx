@@ -41,8 +41,19 @@ const MyProjects = () => {
 
       <div className="page-container my-projects-container">
         <div className="services-manager-grid">
-          {projects.map((project) => (
-            <div
+          {projects.map((project) => {
+              let estimatedProjectFinishDate = null;
+              if (project.startDate && project.requirements && project.requirements.length > 0) {
+                const totalEstimatedDays = project.requirements.reduce((acc, req) => acc + (req.estimatedDurationDays || 0), 0);
+                if(totalEstimatedDays > 0) {
+                    const d = new Date(project.startDate);
+                    d.setDate(d.getDate() + totalEstimatedDays);
+                    estimatedProjectFinishDate = d;
+                }
+              }
+
+              return (
+              <div
               key={project.id}
               className={`project-card ${project.isFinished ? "finished opacity-90" : ""}`}
               onClick={() => handleCardClick(project.id)}
@@ -77,10 +88,28 @@ const MyProjects = () => {
                   }}
                 >
                   <Calendar size={14} />
-                  <span>
-                    {new Date(project.startDate).toLocaleDateString()}
-                  </span>
-                </div>
+                    <span>
+                      {new Date(project.startDate).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  {estimatedProjectFinishDate && (
+                     <div
+                        className="project-meta-row"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          color: "#64748b",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        <Calendar size={14} />
+                        <span>
+                           {t("dashboard.clientProjectDetails.estimatedEndDate")}: {estimatedProjectFinishDate.toLocaleDateString()}
+                        </span>
+                     </div>
+                  )}
 
                 <p className="project-description">{project.description}</p>
                 {project.estimatedPrice && (
@@ -137,7 +166,8 @@ const MyProjects = () => {
                 </div>
               </div>
             </div>
-          ))}
+              );
+            })}
 
           {projects.length === 0 && (
             <div

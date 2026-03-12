@@ -289,8 +289,17 @@ const ClientProjectDetails = () => {
     [0, 1, 2].includes(r.status),
   );
   const proposedReqs = project.requirements.filter((r) =>
-    [3, 4].includes(r.status),
-  );
+      [3, 4].includes(r.status),
+    );
+
+    const totalEstimatedDays = project.requirements.reduce((acc, req) => acc + (req.estimatedDurationDays || 0), 0);
+    let estimatedProjectFinishDate = null;
+    if (project.startDate && totalEstimatedDays > 0) {
+      const d = new Date(project.startDate);
+      d.setDate(d.getDate() + totalEstimatedDays);
+      estimatedProjectFinishDate = d;
+    }
+
 
   return (
     <div className="project-details-page">
@@ -330,9 +339,21 @@ const ClientProjectDetails = () => {
             <span>{project.userName}</span>
           </div>
           <div className="info-item">
-            <label>{t("dashboard.clientProjectDetails.startDate")}</label>
-            <span>{formatDate(project.startDate)}</span>
-          </div>
+              <label>{t("dashboard.clientProjectDetails.startDate")}</label>
+              <span>{formatDate(project.startDate)}</span>
+            </div>
+            {estimatedProjectFinishDate && (
+              <div className="info-item">
+                <label>{t("dashboard.clientProjectDetails.estimatedEndDate")}</label>
+                <span>{formatDate(estimatedProjectFinishDate.toISOString())}</span>
+              </div>
+            )}
+            {estimatedProjectFinishDate && (
+              <div className="info-item">
+                <label>{t("dashboard.clientProjectDetails.estimatedEndDate", "Data Estimat Finish")}</label>
+                <span>{formatDate(estimatedProjectFinishDate.toISOString())}</span>
+              </div>
+            )}
           {project.estimatedPrice && (
             <div
               className="info-item price-estimate-container"
@@ -631,7 +652,7 @@ const ClientProjectDetails = () => {
                         </div>
                       )}
                     </div>
-                    <div className="col-est">{req.estimatedDurationDays}d</div>
+                    <div className="col-est">{req.estimatedDurationDays}</div>
                     <div className="col-status">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-bold ${req.status === 3 ? "bg-orange-100 text-orange-800" : "bg-red-100 text-red-800"}`}
@@ -740,7 +761,7 @@ const ClientProjectDetails = () => {
                       dangerouslySetInnerHTML={{ __html: req.description }}
                     />
                   </div>
-                  <div className="col-est">{req.estimatedDurationDays}d</div>
+                  <div className="col-est">{req.estimatedDurationDays}</div>
                   <div className="col-dates">
                     {req.startDate && (
                       <div>
