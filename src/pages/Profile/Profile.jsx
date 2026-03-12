@@ -66,14 +66,20 @@ const Profile = () => {
     setPasswordStatus({ type: "", message: "" });
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setPasswordStatus({ type: "error", message: t("profile.passwordsDontMatch", "Passwords do not match") });
+      setPasswordStatus({
+        type: "error",
+        message: t("profile.passwordsDontMatch", "Passwords do not match"),
+      });
       return;
     }
 
     if (passwordData.newPassword.length < 6) {
       setPasswordStatus({
         type: "error",
-        message: t("profile.passwordTooShort", "Password must be at least 6 characters"),
+        message: t(
+          "profile.passwordTooShort",
+          "Password must be at least 6 characters",
+        ),
       });
       return;
     }
@@ -132,7 +138,10 @@ const Profile = () => {
               className={`profile-role-badge ${(formData.role || "").toLowerCase()}`}
             >
               <Shield size={14} />
-              {t(`roles.${(formData.role || "User").toLowerCase()}`, formData.role || "User")}
+              {t(
+                `roles.${(formData.role || "User").toLowerCase()}`,
+                formData.role || "User",
+              )}
             </div>
 
             <div className="profile-identity">
@@ -150,8 +159,15 @@ const Profile = () => {
               </span>
             </div>
             <div className="stat-item">
-              <span className="stat-value">{t(`roles.${(user?.role || "User").toLowerCase()}`, user?.role || "User")}</span>
-              <span className="stat-label">{t("profile.role", "Role")}</span>{" "}
+              <span className="stat-value">
+                {t(
+                  `roles.${(user?.role || "User").toLowerCase()}`,
+                  user?.role || "User",
+                )}
+              </span>
+              <span className="stat-label">
+                {t("profile.role", "Role")}
+              </span>{" "}
             </div>
           </div>
           {/* Main Content Form */}

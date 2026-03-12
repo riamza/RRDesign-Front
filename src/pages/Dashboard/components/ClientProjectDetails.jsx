@@ -334,16 +334,56 @@ const ClientProjectDetails = () => {
             <span>{formatDate(project.startDate)}</span>
           </div>
           {project.estimatedPrice && (
-              <div className="info-item price-estimate-container" style={{ backgroundColor: '#f8f9fa', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #0d6efd', display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <label style={{ margin: 0 }}>{t("dashboard.clientProjectDetails.estimatedPrice", "Preț Estimat")}</label>
-                  <span style={{ fontWeight: 'bold', fontSize: '1.1em', color: '#2c3e50' }}>{project.estimatedPrice} {project.currency || "EUR"}</span>
-                </div>
-                <div style={{ fontSize: '0.85em', color: '#6c757d', fontStyle: 'italic', lineHeight: '1.4' }}>
-                  {t("dashboard.clientProjectDetails.estimatedPriceNotice", "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă.")}
-                </div>
+            <div
+              className="info-item price-estimate-container"
+              style={{
+                backgroundColor: "#f8f9fa",
+                padding: "12px",
+                borderRadius: "6px",
+                borderLeft: "4px solid #0d6efd",
+                display: "flex",
+                flexDirection: "column",
+                gap: "5px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <label style={{ margin: 0 }}>
+                  {t(
+                    "dashboard.clientProjectDetails.estimatedPrice",
+                    "Preț Estimat",
+                  )}
+                </label>
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "1.1em",
+                    color: "#2c3e50",
+                  }}
+                >
+                  {project.estimatedPrice} {project.currency || "EUR"}
+                </span>
               </div>
-            )}
+              <div
+                style={{
+                  fontSize: "0.85em",
+                  color: "#6c757d",
+                  fontStyle: "italic",
+                  lineHeight: "1.4",
+                }}
+              >
+                {t(
+                  "dashboard.clientProjectDetails.estimatedPriceNotice",
+                  "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă.",
+                )}
+              </div>
+            </div>
+          )}
           {project.endDate && (
             <div className="info-item">
               <label>{t("dashboard.clientProjectDetails.endDate")}</label>
@@ -812,4 +852,3 @@ const ClientProjectDetails = () => {
 };
 
 export default ClientProjectDetails;
-

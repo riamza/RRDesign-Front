@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { fetchUserProfile, setUserData, invalidateUserCache } from "../../store/slices/authSlice";
+import {
+  fetchUserProfile,
+  setUserData,
+  invalidateUserCache,
+} from "../../store/slices/authSlice";
 import { api } from "../../services/api";
 import "./Register.css"; // We'll create this or reuse Login styles
 

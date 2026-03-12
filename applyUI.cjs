@@ -1,22 +1,28 @@
-const fs = require('fs');
+const fs = require("fs");
 
 // 1. Update Translations
-let enPath = 'e:/RRDesign/Site/Front/src/i18n/locales/en.json';
-let roPath = 'e:/RRDesign/Site/Front/src/i18n/locales/ro.json';
+let enPath = "e:/RRDesign/Site/Front/src/i18n/locales/en.json";
+let roPath = "e:/RRDesign/Site/Front/src/i18n/locales/ro.json";
 
-let enData = JSON.parse(fs.readFileSync(enPath, 'utf8'));
-let roData = JSON.parse(fs.readFileSync(roPath, 'utf8'));
+let enData = JSON.parse(fs.readFileSync(enPath, "utf8"));
+let roData = JSON.parse(fs.readFileSync(roPath, "utf8"));
 
-enData.estimatedPriceNotice = "This price is strictly an estimate. The final price may vary if the initial requirements change.";
-roData.estimatedPriceNotice = "Acest pre\u021B este strict estimativ \u0219i se poate modifica dac\u0103 cerin\u021Bele discutate ini\u021Bial se schimb\u0103.";
+enData.estimatedPriceNotice =
+  "This price is strictly an estimate. The final price may vary if the initial requirements change.";
+roData.estimatedPriceNotice =
+  "Acest pre\u021B este strict estimativ \u0219i se poate modifica dac\u0103 cerin\u021Bele discutate ini\u021Bial se schimb\u0103.";
 
-if(!enData.dashboard) enData.dashboard = {};
-if(!enData.dashboard.clientProjectDetails) enData.dashboard.clientProjectDetails = {};
-enData.dashboard.clientProjectDetails.estimatedPriceNotice = "This price is strictly an estimate. The final price may vary if the initial requirements change.";
+if (!enData.dashboard) enData.dashboard = {};
+if (!enData.dashboard.clientProjectDetails)
+  enData.dashboard.clientProjectDetails = {};
+enData.dashboard.clientProjectDetails.estimatedPriceNotice =
+  "This price is strictly an estimate. The final price may vary if the initial requirements change.";
 
-if(!roData.dashboard) roData.dashboard = {};
-if(!roData.dashboard.clientProjectDetails) roData.dashboard.clientProjectDetails = {};
-roData.dashboard.clientProjectDetails.estimatedPriceNotice = "Acest pre\u021B este strict estimativ \u0219i se poate modifica dac\u0103 cerin\u021Bele discutate ini\u021Bial se schimb\u0103.";
+if (!roData.dashboard) roData.dashboard = {};
+if (!roData.dashboard.clientProjectDetails)
+  roData.dashboard.clientProjectDetails = {};
+roData.dashboard.clientProjectDetails.estimatedPriceNotice =
+  "Acest pre\u021B este strict estimativ \u0219i se poate modifica dac\u0103 cerin\u021Bele discutate ini\u021Bial se schimb\u0103.";
 
 fs.writeFileSync(enPath, JSON.stringify(enData, null, 2));
 fs.writeFileSync(roPath, JSON.stringify(roData, null, 2));
@@ -24,8 +30,9 @@ fs.writeFileSync(roPath, JSON.stringify(roData, null, 2));
 console.log("Translations updated.");
 
 // 2. Update MyProjects.jsx
-let myProjectsPath = 'e:/RRDesign/Site/Front/src/pages/MyProjects/MyProjects.jsx';
-let myProjectsSrc = fs.readFileSync(myProjectsPath, 'utf8');
+let myProjectsPath =
+  "e:/RRDesign/Site/Front/src/pages/MyProjects/MyProjects.jsx";
+let myProjectsSrc = fs.readFileSync(myProjectsPath, "utf8");
 
 const myProjectsFind = `{project.estimatedPrice && (
                       <div className="project-price" style={{ marginTop:        
@@ -47,21 +54,24 @@ const myProjectsReplace = `{project.estimatedPrice && (
                     )}`;
 
 // Handle varying line endings and spaces
-let myProjectsRegex = /\{project\.estimatedPrice && \(\s*<div className="project-price" style=\{\{ marginTop:\s*'10px', fontWeight:\s*'bold'\s*\}\}>\s*\{t\("estimatedPrice",\s*"[^"]+"\)\}:\s*\{project\.estimatedPrice\}\s*\{project\.currency\s*\|\|\s*"EUR"\}\s*<\/div>\s*\)\}/g;
+let myProjectsRegex =
+  /\{project\.estimatedPrice && \(\s*<div className="project-price" style=\{\{ marginTop:\s*'10px', fontWeight:\s*'bold'\s*\}\}>\s*\{t\("estimatedPrice",\s*"[^"]+"\)\}:\s*\{project\.estimatedPrice\}\s*\{project\.currency\s*\|\|\s*"EUR"\}\s*<\/div>\s*\)\}/g;
 
 if (myProjectsRegex.test(myProjectsSrc)) {
-    myProjectsSrc = myProjectsSrc.replace(myProjectsRegex, myProjectsReplace);
-    fs.writeFileSync(myProjectsPath, myProjectsSrc);
-    console.log("MyProjects.jsx updated.");
+  myProjectsSrc = myProjectsSrc.replace(myProjectsRegex, myProjectsReplace);
+  fs.writeFileSync(myProjectsPath, myProjectsSrc);
+  console.log("MyProjects.jsx updated.");
 } else {
-    console.log("MyProjects.jsx regex not matched.");
+  console.log("MyProjects.jsx regex not matched.");
 }
 
 // 3. Update ClientProjectDetails.jsx
-let detailsPath = 'e:/RRDesign/Site/Front/src/pages/Dashboard/components/ClientProjectDetails.jsx';
-let detailsSrc = fs.readFileSync(detailsPath, 'utf8');
+let detailsPath =
+  "e:/RRDesign/Site/Front/src/pages/Dashboard/components/ClientProjectDetails.jsx";
+let detailsSrc = fs.readFileSync(detailsPath, "utf8");
 
-const detailsRegex = /\{project\.estimatedPrice && \(\s*<div className="info-item">\s*<label>\{t\("dashboard\.clientProjectDetails\.estimatedPrice",\s*"[^"]+"\)\}<\/label>\s*<span>\{project\.estimatedPrice\}\s*\{project\.currency\s*\|\|\s*"EUR"\}<\/span>\s*<\/div>\s*\)\}/g;
+const detailsRegex =
+  /\{project\.estimatedPrice && \(\s*<div className="info-item">\s*<label>\{t\("dashboard\.clientProjectDetails\.estimatedPrice",\s*"[^"]+"\)\}<\/label>\s*<span>\{project\.estimatedPrice\}\s*\{project\.currency\s*\|\|\s*"EUR"\}<\/span>\s*<\/div>\s*\)\}/g;
 
 const detailsReplace = `{project.estimatedPrice && (
               <div className="info-item price-estimate-container" style={{ backgroundColor: '#f8f9fa', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #0d6efd', display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -76,9 +86,9 @@ const detailsReplace = `{project.estimatedPrice && (
             )}`;
 
 if (detailsRegex.test(detailsSrc)) {
-    detailsSrc = detailsSrc.replace(detailsRegex, detailsReplace);
-    fs.writeFileSync(detailsPath, detailsSrc);
-    console.log("ClientProjectDetails.jsx updated.");
+  detailsSrc = detailsSrc.replace(detailsRegex, detailsReplace);
+  fs.writeFileSync(detailsPath, detailsSrc);
+  console.log("ClientProjectDetails.jsx updated.");
 } else {
-    console.log("ClientProjectDetails.jsx regex not matched.");
+  console.log("ClientProjectDetails.jsx regex not matched.");
 }

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const PrivateRoute = ({ children, roles }) => {
   const { isAuthenticated, user, loading } = useAuth();
@@ -16,9 +16,9 @@ const PrivateRoute = ({ children, roles }) => {
 
   // If roles param is passed, restrict access
   if (roles && !roles.includes(user?.role)) {
-     // If user is logged in but doesn't have the role, maybe redirect to home or profile?
-     // For now, let's redirect to home to avoid infinite loop on login page
-     return <Navigate to="/" replace />;
+    // If user is logged in but doesn't have the role, maybe redirect to home or profile?
+    // For now, let's redirect to home to avoid infinite loop on login page
+    return <Navigate to="/" replace />;
   }
 
   return children;
