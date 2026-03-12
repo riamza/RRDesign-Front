@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <title>RRDesign - Software Solutions</title>
-    <meta name="description" content="RRDesign oferă soluții software complete: site-uri de prezentare, magazine online, aplicații web și mobile, design UX/UI și optimizare SEO." />
+    <title>RRDesign - Agenție Web Design & Dezvoltare Software Custom</title>
+    <meta name="description" content="RRDesign este o agenție de dezvoltare software personalizat, Web Design, magazine online și aplicații mobile. Oferim soluții complete de optimizare SEO și UI/UX pentru afacerea ta." />
     <!-- Open Graph Default -->
     <meta property="og:site_name" content="RRDesign" />
     <meta property="og:locale" content="ro_RO" />
@@ -17,7 +17,13 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
+      "@type": "WebDesignCompany",
+      "sameAs": [
+        "https://facebook.com/rrdesign",
+        "https://instagram.com/rrdesign",
+        "https://linkedin.com/company/rrdesign",
+        "https://x.com/rrdesign"
+      ],
       "name": "RRDesign",
       "url": "https://rrdesign.ro",
       "logo": "https://rrdesign.ro/logo.png",
@@ -30,6 +36,22 @@
     }
     </script>
     
+    <!-- Facebook Pixel Code -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', 'XXXXXXXXXXXXXXX'); // Inlocuieste cu id pixel
+      fbq('track', 'PageView');
+    </script>
+    
+    <!-- End Facebook Pixel Code -->
+
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
@@ -38,9 +60,20 @@
       gtag('js', new Date());
       gtag('config', 'G-XXXXXXXXXX');
     </script>
+    <link rel="canonical" href="https://rrdesign.ro/" />
   </head>
   <body>
-    <div id="root"></div>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=XXXXXXXXXXXXXXX&ev=PageView&noscript=1" /></noscript>
+    <div id="root">
+      <div style="clip: rect(0 0 0 0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px;">
+        <h1>RRDesign - Agenție Web Design și Dezvoltare Software Personalizat</h1>
+        <h2>Platforme e-commerce, Site-uri de Prezentare și Aplicații Web</h2>
+        <p>RRDesign este o agenție de dezvoltare software care inovează mediul digital prin soluții web complete. Suntem experți în web design de înaltă performanță, creând site-uri de prezentare rapide și atractive, dar și magazine online (e-commerce) robuste menite să crească vânzările afacerii tale.</p>
+        <p>Pentru companiile care au nevoie de mai mult decât un site standard, echipa noastră de specialiști dezvoltă aplicații web și platforme custom folosind tehnologii la standarde din industrie precum React și .NET. Asigurăm atât frontend-ul cât și arhitectura de backend, rezultând produse sigure și perfect scalabile.</p>
+        <h3>Servicii Complete de Optimizare SEO și Mentenanță</h3>
+        <p>Proiectele realizate de RRDesign beneficiază de un design UX/UI imaculat, fiind totodată perfect optimizate SEO (On-page SEO, structură ierarhică, micro-date JSON-LD). Oferim asistență tehnică pe termen lung, audit gratuit, și o viziune clară asupra performanței digitale. Prin colaborarea cu noi, te asiguri că ideile tale vor fi transformate într-un ecosistem software de excepție.</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
