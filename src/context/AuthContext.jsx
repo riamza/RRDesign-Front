@@ -50,7 +50,14 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error(error);
       const isApiErrorStr = error?.message && error.message.startsWith('error.');
-      logger.log(`AuthContext`, `login`, error.message, false, error.stack); return { success: false, error: isApiErrorStr ? error.message : `Creden?iale invalide` };
+      logger.log(`AuthContext`, `login`, error.message, false, error.stack); 
+      
+      let errorKey = "error.invalid_credentials";
+      if (!isApiErrorStr && error?.message && error.message.includes("500")) {
+          errorKey = "error.server_error";
+      }
+
+      return { success: false, error: isApiErrorStr ? error.message : errorKey };
     }
   };
 

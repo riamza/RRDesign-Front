@@ -1,4 +1,4 @@
-{
+﻿{
   "error": {
     "invalid_or_used_token": "The invitation token is invalid or has already been used.",
     "token_expired": "The invitation token has expired (7 days validity).",
@@ -11,7 +11,8 @@
     "pricing_package_not_found": "The requested pricing package was not found.",
     "invalid_credentials": "Invalid username or password.",
     "invalid_token": "The session has expired or the token is invalid.",
-    "failed_update_language": "The language could not be updated."
+    "failed_update_language": "The language could not be updated.",
+    "server_error": "A server error occurred (500). We apologize."
   },
   "seo": {
     "defaultDescription": "RRDesign offers complete software solutions: presentation websites, online stores, web and mobile applications.",
@@ -650,5 +651,25 @@
         "p": "These Terms and Conditions are governed by the laws of Romania. Any dispute will initially be resolved amicably; if this is not possible, the dispute will head to the competent courts in Romania."
       }
     }
+  },
+  "register": {
+    "missingToken": "Invalid link. Please check your email.",
+    "passwordTooShort": "Password must be at least 6 characters.",
+    "fullName": "Full Name",
+    "password": "Password",
+    "submit": "Create Account",
+    "completeProfile": "Complete Your Profile",
+    "invalidToken": "This invitation link is invalid or has expired.",
+    "passwordMismatch": "Passwords do not match.",
+    "confirmPassword": "Confirm Password",
+    "location": "Location",
+    "failed": "Registration failed.",
+    "required": "This field is required.",
+    "loading": "Loading...",
+    "error": "Error",
+    "goToLogin": "Go to Login",
+    "accountFor": "Account for:",
+    "fullNamePlaceholder": "John Doe",
+    "locationPlaceholder": "City, Country"
   }
 }

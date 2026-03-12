@@ -27,7 +27,6 @@ const Profile = () => {
     email: "",
     role: "",
     phone: "",
-    dateOfBirth: "",
     location: "",
   });
 
@@ -38,9 +37,6 @@ const Profile = () => {
         email: user.email || "",
         role: user.role || "",
         phone: user.phoneNumber || "",
-        dateOfBirth: user.dateOfBirth
-          ? new Date(user.dateOfBirth).toISOString().split("T")[0]
-          : "", // Format for input date
         location: user.location || "",
       });
     }
@@ -174,25 +170,6 @@ const Profile = () => {
                   />
                 ) : (
                   <div className="info-value">{formData.name}</div>
-                )}
-              </div>
-
-              <div style={{ marginBottom: "20px" }}>
-                <label className="info-label">
-                  {t("profile.dob", "Date of Birth")}
-                </label>
-                {isEditing ? (
-                  <input
-                    className="profile-input"
-                    type="date"
-                    name="dateOfBirth"
-                    value={formData.dateOfBirth}
-                    onChange={handleChange}
-                  />
-                ) : (
-                  <div className="info-value">
-                    {formData.dateOfBirth || "-"}
-                  </div>
                 )}
               </div>
 

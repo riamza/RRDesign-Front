@@ -20,7 +20,6 @@ const Register = () => {
 
   const [formData, setFormData] = useState({
     fullName: "",
-    dateOfBirth: "",
     location: "",
     password: "",
     confirmPassword: "",
@@ -61,9 +60,6 @@ const Register = () => {
       case "fullName":
         if (!value.trim())
           error = t("register.required", "This field is required.");
-        break;
-      case "dateOfBirth":
-        if (!value) error = t("register.required", "This field is required.");
         break;
       case "location":
         if (!value.trim())
@@ -138,7 +134,6 @@ const Register = () => {
       const payload = {
         token,
         fullName: formData.fullName,
-        dateOfBirth: formData.dateOfBirth, // Ensure format is ISO or compatible
         location: formData.location,
         password: formData.password,
       };
@@ -180,7 +175,7 @@ const Register = () => {
   if (loading)
     return (
       <div className="register-container">
-        <div className="loader">Loading...</div>
+        <div className="loader">{t("register.loading", "Loading...")}</div>
       </div>
     );
 
@@ -188,9 +183,9 @@ const Register = () => {
     return (
       <div className="register-container">
         <div className="error-card">
-          <h3>Error</h3>
+          <h3>{t("register.error", "Error")}</h3>
           <p>{globalError}</p>
-          <button onClick={() => navigate("/login")}>Go to Login</button>
+          <button onClick={() => navigate("/login")}>{t("register.goToLogin", "Go to Login")}</button>
         </div>
       </div>
     );
@@ -201,7 +196,7 @@ const Register = () => {
       <div className="register-card">
         <h2>{t("register.completeProfile", "Complete Your Profile")}</h2>
         <p className="register-email">
-          Account for: <strong>{email}</strong>
+          {t("register.accountFor", "Account for:")} <strong>{email}</strong>
         </p>
 
         <form onSubmit={handleSubmit} className="register-form">
@@ -215,26 +210,10 @@ const Register = () => {
               onBlur={handleBlur}
               className={fieldErrors.fullName ? "input-error" : ""}
               required
-              placeholder="John Doe"
+              placeholder={t("register.fullNamePlaceholder", "John Doe")}
             />
             {fieldErrors.fullName && (
               <span className="error-text">{fieldErrors.fullName}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label>{t("register.dob", "Date of Birth")}</label>
-            <input
-              type="date"
-              name="dateOfBirth"
-              value={formData.dateOfBirth}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={fieldErrors.dateOfBirth ? "input-error" : ""}
-              required
-            />
-            {fieldErrors.dateOfBirth && (
-              <span className="error-text">{fieldErrors.dateOfBirth}</span>
             )}
           </div>
 
@@ -248,7 +227,7 @@ const Register = () => {
               onBlur={handleBlur}
               className={fieldErrors.location ? "input-error" : ""}
               required
-              placeholder="City, Country"
+              placeholder={t("register.locationPlaceholder", "City, Country")}
             />
             {fieldErrors.location && (
               <span className="error-text">{fieldErrors.location}</span>

@@ -1,4 +1,4 @@
-{
+﻿{
   "error": {
     "invalid_or_used_token": "Token-ul pentru invitație este invalid sau a fost deja folosit.",
     "token_expired": "Token-ul pentru invitație a expirat (valabilitate 7 zile).",
@@ -11,7 +11,8 @@
     "pricing_package_not_found": "Pachetul de preț solicitat nu a fost găsit.",
     "invalid_credentials": "Nume de utilizator sau parolă incorectă.",
     "invalid_token": "Sesiunea a expirat sau token-ul este invalid.",
-    "failed_update_language": "Limba nu a putut fi actualizată."
+    "failed_update_language": "Limba nu a putut fi actualizată.",
+    "server_error": "A apărut o eroare de server (500). Ne cerem scuze."
   },
   "seo": {
     "defaultDescription": "RRDesign oferă soluții software complete: site-uri de prezentare, magazine online, aplicații web și mobile.",
@@ -650,5 +651,25 @@
         "p": "Acești Temeni și Condiții sunt ghidați de legile din România. Orice diferend va fi rezolvat inițial pe cale amiabilă; dacă acest lucru nu este posibil, litigiul va tinde spre instanțele judecătorești competente din România."
       }
     }
+  },
+  "register": {
+    "missingToken": "Link invalid. Vă rugăm să verificați email-ul.",
+    "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere.",
+    "fullName": "Numele complet",
+    "password": "Parola",
+    "submit": "Creează cont",
+    "completeProfile": "Completează-ți profilul",
+    "invalidToken": "Acest link este invalid sau a expirat.",
+    "passwordMismatch": "Parolele nu coincid.",
+    "confirmPassword": "Confirmare parolă",
+    "location": "Locație",
+    "failed": "Înregistrarea a eșuat.",
+    "required": "Acest câmp este obligatoriu.",
+    "loading": "Se încarcă...",
+    "error": "Eroare",
+    "goToLogin": "Mergi la Autentificare",
+    "accountFor": "Cont pentru:",
+    "fullNamePlaceholder": "Popescu Ion",
+    "locationPlaceholder": "București, România"
   }
 }
