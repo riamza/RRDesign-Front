@@ -223,7 +223,7 @@ const Profile = () => {
               </div>
 
               <div style={{ marginBottom: "20px" }}>
-                <label className="info-label">Password</label>
+                <label className="info-label">{t("profile.password")}</label>
                 <div className="info-value">******</div>
               </div>
 
