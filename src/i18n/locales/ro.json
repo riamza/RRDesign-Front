@@ -1,4 +1,4 @@
-﻿{
+{
   "error": {
     "invalid_or_used_token": "Token-ul pentru invitație este invalid sau a fost deja folosit.",
     "token_expired": "Token-ul pentru invitație a expirat (valabilitate 7 zile).",
@@ -516,23 +516,21 @@
     "accountStats": "Statistici Cont",
     "projectsCompleted": "Proiecte Finalizate",
     "activeProjects": "Proiecte Active",
-    "messagesReceived": "Mesaje Primite"
+    "messagesReceived": "Mesaje Primite",
+    "role": "Rol",
+    "user": "Utilizator",
+    "projects": "Proiecte",
+    "passwordsDontMatch": "Parolele nu coincid",
+    "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
+    "passwordChanged": "Parola a fost schimbată cu succes"
   },
   "myProjects": {
     "title": "Proiectele Mele",
-    "description": "Gestionează și urmărește toate proiectele tale într-un singur loc",
-    "newProject": "Proiect Nou",
-    "requestProject": "Cerere Proiect",
-    "inProgress": "În Desfășurare",
-    "completed": "Finalizate",
-    "planning": "În Planificare",
-    "statusInProgress": "În Desfășurare",
-    "statusCompleted": "Finalizat",
-    "statusPlanning": "Planificare",
-    "viewDetails": "Vezi Detalii",
-    "progress": "Progres",
-    "technologies": "Tehnologii",
-    "dueDate": "Termen Limită"
+    "description": "Gestionează și urmărește proiectele tale",
+    "statusCompleted": "FINALIZAT",
+    "statusInProgress": "ACTIV",
+    "noProjects": "Niciun proiect atribuit încă",
+    "details": "Detalii Proiect"
   },
   "messages": {
     "title": "Mesaje",
@@ -671,5 +669,13 @@
     "accountFor": "Cont pentru:",
     "fullNamePlaceholder": "Popescu Ion",
     "locationPlaceholder": "București, România"
+  },
+  "roles": {
+    "user": "Utilizator",
+    "admin": "Administrator",
+    "client": "Client"
+  },
+  "app": {
+    "back": "Înapoi"
   }
 }

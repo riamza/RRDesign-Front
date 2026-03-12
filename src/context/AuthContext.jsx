@@ -5,6 +5,7 @@ import {
   setUserData,
   clearUserData,
   fetchUserProfile,
+  invalidateUserCache,
 } from "../store/slices/authSlice";
 import { api } from "../services/api";
 import { logger } from "../services/logger";
@@ -40,6 +41,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("user_role", data.role);
 
       try {
+        dispatch(invalidateUserCache());
         await dispatch(fetchUserProfile()).unwrap();
       } catch (e) {
         console.error("Failed to fetch profile on login", e);

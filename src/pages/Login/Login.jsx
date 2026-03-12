@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./Login.css";
 import Button from "../../components/Button/Button";
@@ -14,6 +14,9 @@ const Login = () => {
   const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || null;
 
   const handleChange = (e) => {
     setFormData({
@@ -28,7 +31,9 @@ const Login = () => {
     const result = await login(formData.email, formData.password);
 
     if (result.success) {
-      if (result.role === "Admin") {
+      if (from) {
+        navigate(from, { replace: true });
+      } else if (result.role === "Admin") {
         navigate("/dashboard");
       } else {
         navigate("/my-projects");

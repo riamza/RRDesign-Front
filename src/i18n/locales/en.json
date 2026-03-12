@@ -1,4 +1,4 @@
-﻿{
+{
   "error": {
     "invalid_or_used_token": "The invitation token is invalid or has already been used.",
     "token_expired": "The invitation token has expired (7 days validity).",
@@ -516,23 +516,21 @@
     "accountStats": "Account Statistics",
     "projectsCompleted": "Projects Completed",
     "activeProjects": "Active Projects",
-    "messagesReceived": "Messages Received"
+    "messagesReceived": "Messages Received",
+    "role": "Role",
+    "user": "User",
+    "projects": "Projects",
+    "passwordsDontMatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "passwordChanged": "Password changed successfully"
   },
   "myProjects": {
     "title": "My Projects",
-    "description": "Manage and track all your projects in one place",
-    "newProject": "New Project",
-    "requestProject": "Request Project",
-    "inProgress": "In Progress",
-    "completed": "Completed",
-    "planning": "Planning",
-    "statusInProgress": "In Progress",
-    "statusCompleted": "Completed",
-    "statusPlanning": "Planning",
-    "viewDetails": "View Details",
-    "progress": "Progress",
-    "technologies": "Technologies",
-    "dueDate": "Due Date"
+    "description": "Manage and track your projects",
+    "statusCompleted": "COMPLETED",
+    "statusInProgress": "ACTIVE",
+    "noProjects": "No projects assigned yet",
+    "details": "Project Details"
   },
   "messages": {
     "title": "Messages",
@@ -671,5 +669,13 @@
     "accountFor": "Account for:",
     "fullNamePlaceholder": "John Doe",
     "locationPlaceholder": "City, Country"
+  },
+  "roles": {
+    "user": "User",
+    "admin": "Administrator",
+    "client": "Client"
+  },
+  "app": {
+    "back": "Back"
   }
 }
