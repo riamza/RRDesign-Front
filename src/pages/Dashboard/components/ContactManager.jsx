@@ -195,16 +195,29 @@ const ContactManager = () => {
       const response = await api.auth.inviteUser(inviteData.email);
       setInvitationSuccessData({
         email: inviteData.email,
-        link: response.invitationLink
+        link: response.invitationLink,
       });
       setShowInviteModal(false);
       setInviteData({ email: "", name: "", message: "" });
     } catch (error) {
       console.error("Invitation failed", error);
-      if (error.message && error.message.includes("error.user_already_exists")) {
-        setErrorMessage(t("dashboard.usersManager.userAlreadyExists", "Acest utilizator există deja în platformă."));
+      if (
+        error.message &&
+        error.message.includes("error.user_already_exists")
+      ) {
+        setErrorMessage(
+          t(
+            "dashboard.usersManager.userAlreadyExists",
+            "Acest utilizator există deja în platformă.",
+          ),
+        );
       } else {
-        setErrorMessage(t("dashboard.usersManager.inviteError", "A apărut o eroare la trimiterea invitației: ") + (error.message || "Eroare necunoscută"));
+        setErrorMessage(
+          t(
+            "dashboard.usersManager.inviteError",
+            "A apărut o eroare la trimiterea invitației: ",
+          ) + (error.message || "Eroare necunoscută"),
+        );
       }
     }
   };
@@ -580,8 +593,19 @@ const ContactManager = () => {
         title="Atenție"
       >
         <p style={{ color: "#ef4444" }}>{errorMessage}</p>
-        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
-          <button className="button button-primary" onClick={() => setErrorMessage("")}>OK</button>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="button button-primary"
+            onClick={() => setErrorMessage("")}
+          >
+            OK
+          </button>
         </div>
       </Modal>
     </div>

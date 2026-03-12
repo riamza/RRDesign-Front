@@ -10,14 +10,16 @@ const CookieBanner = () => {
   const COOKIE_NAME = "RRDesign_CookieConsent";
 
   const getConsent = () => {
-    const match = document.cookie.match(new RegExp('(^| )' + COOKIE_NAME + '=([^;]+)'));
+    const match = document.cookie.match(
+      new RegExp("(^| )" + COOKIE_NAME + "=([^;]+)"),
+    );
     if (match) return match[2];
     return localStorage.getItem("cookieConsent");
   };
 
   const setConsent = (value) => {
     const d = new Date();
-    d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000)); // 1 year
+    d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000); // 1 year
     document.cookie = `${COOKIE_NAME}=${value};expires=${d.toUTCString()};path=/;SameSite=Lax`;
     localStorage.setItem("cookieConsent", value);
     setIsVisible(false);

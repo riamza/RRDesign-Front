@@ -405,8 +405,19 @@ const Messages = () => {
         title={t("common.success", "Succes")}
       >
         <p style={{ color: "#16a34a" }}>{successMessage}</p>
-        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
-          <button className="button button-primary" onClick={() => setSuccessMessage("")}>OK</button>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="button button-primary"
+            onClick={() => setSuccessMessage("")}
+          >
+            OK
+          </button>
         </div>
       </Modal>
 
@@ -416,8 +427,19 @@ const Messages = () => {
         title={t("common.info", "Informație")}
       >
         <p style={{ color: "#3b82f6" }}>{infoMessage}</p>
-        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
-          <button className="button button-primary" onClick={() => setInfoMessage("")}>OK</button>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="button button-primary"
+            onClick={() => setInfoMessage("")}
+          >
+            OK
+          </button>
         </div>
       </Modal>
 
@@ -427,8 +449,19 @@ const Messages = () => {
         title={t("common.error", "Eroare")}
       >
         <p style={{ color: "#ef4444" }}>{errorMessage}</p>
-        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
-          <button className="button button-primary" onClick={() => setErrorMessage("")}>OK</button>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="button button-primary"
+            onClick={() => setErrorMessage("")}
+          >
+            OK
+          </button>
         </div>
       </Modal>
     </div>

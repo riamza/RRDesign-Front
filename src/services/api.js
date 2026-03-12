@@ -1,4 +1,4 @@
-import { logger } from './logger';
+import { logger } from "./logger";
 
 const API_URL = import.meta.env.VITE_API_URL || "/api";
 
@@ -127,14 +127,25 @@ const request = async (endpoint, options = {}) => {
       );
     }
 
-    logger.log('API', `Success ${options.method || 'GET'} ${endpoint}`, `Status ${response.status}`, true);
+    logger.log(
+      "API",
+      `Success ${options.method || "GET"} ${endpoint}`,
+      `Status ${response.status}`,
+      true,
+    );
     return await response.json();
   } catch (error) {
     console.error(`API Error (${endpoint}):`, error);
-    logger.log('API', `Request ${options.method || 'GET'} ${endpoint}`, error.message, false, error.stack);
+    logger.log(
+      "API",
+      `Request ${options.method || "GET"} ${endpoint}`,
+      error.message,
+      false,
+      error.stack,
+    );
     throw error;
   }
-}
+};
 
 export const api = {
   auth: {
@@ -385,4 +396,3 @@ export const api = {
     delete: (id) => request(`/FinanceTransactions/${id}`, { method: "DELETE" }),
   },
 };
-

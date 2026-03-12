@@ -166,7 +166,7 @@ const Register = () => {
         setGlobalError(t(err.message, err.message));
       } else {
         setGlobalError(
-          err.message || t("register.failed", "Registration failed.")
+          err.message || t("register.failed", "Registration failed."),
         );
       }
     }
@@ -185,7 +185,9 @@ const Register = () => {
         <div className="error-card">
           <h3>{t("register.error", "Error")}</h3>
           <p>{globalError}</p>
-          <button onClick={() => navigate("/login")}>{t("register.goToLogin", "Go to Login")}</button>
+          <button onClick={() => navigate("/login")}>
+            {t("register.goToLogin", "Go to Login")}
+          </button>
         </div>
       </div>
     );

@@ -52,7 +52,12 @@ const Contact = () => {
       });
     } catch (error) {
       console.error("Error sending message:", error);
-      setErrorMessage(t("contact.form.errorMessage", "Could not send message. Please try again later."));
+      setErrorMessage(
+        t(
+          "contact.form.errorMessage",
+          "Could not send message. Please try again later.",
+        ),
+      );
     }
   };
 
@@ -218,7 +223,13 @@ const Contact = () => {
         title={t("common.error", "Eroare")}
       >
         <p style={{ color: "#ef4444" }}>{errorMessage}</p>
-        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
           <Button onClick={() => setErrorMessage("")}>OK</Button>
         </div>
       </Modal>

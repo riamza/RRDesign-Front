@@ -124,7 +124,7 @@ const ClientProjectsManager = () => {
         if (response && response.invitationLink) {
           setInvitationSuccessData({
             email: payload.newUserEmail,
-            link: response.invitationLink
+            link: response.invitationLink,
           });
         }
       }
@@ -136,7 +136,14 @@ const ClientProjectsManager = () => {
       if (error.message && error.message.startsWith("error.")) {
         setErrorMessage(t(error.message, error.message));
       } else {
-        setErrorMessage(t("dashboard.clientProjects.saveError", "A apărut o eroare la salvarea proiectului:") + " " + error.message);
+        setErrorMessage(
+          t(
+            "dashboard.clientProjects.saveError",
+            "A apărut o eroare la salvarea proiectului:",
+          ) +
+            " " +
+            error.message,
+        );
       }
     }
   };
@@ -213,7 +220,9 @@ const ClientProjectsManager = () => {
               <div className="project-card-status">
                 {project.isFinished
                   ? `${t("dashboard.clientProjectsManager.status.finished").toUpperCase()} - ${new Date(project.endDate).toLocaleDateString()}`
-                  : t("dashboard.clientProjectsManager.status.active").toUpperCase()}
+                  : t(
+                      "dashboard.clientProjectsManager.status.active",
+                    ).toUpperCase()}
               </div>
             </div>
 
@@ -246,7 +255,10 @@ const ClientProjectsManager = () => {
                 {!project.isFinished && (
                   <button
                     className="action-icon-btn finish"
-                    title={t("dashboard.clientProjectsManager.markFinished", "Marchează ca finalizat")}
+                    title={t(
+                      "dashboard.clientProjectsManager.markFinished",
+                      "Marchează ca finalizat",
+                    )}
                     onClick={(e) => handleFinish(project, e)}
                   >
                     <CheckCircle size={18} />
@@ -254,14 +266,20 @@ const ClientProjectsManager = () => {
                 )}
                 <button
                   className="action-icon-btn edit"
-                  title={t("dashboard.clientProjectsManager.editProject", "Editează proiectul")}
+                  title={t(
+                    "dashboard.clientProjectsManager.editProject",
+                    "Editează proiectul",
+                  )}
                   onClick={(e) => handleEdit(project, e)}
                 >
                   <Edit2 size={18} />
                 </button>
                 <button
                   className="action-icon-btn delete"
-                  title={t("dashboard.clientProjectsManager.delete", "Șterge proiectul")}
+                  title={t(
+                    "dashboard.clientProjectsManager.delete",
+                    "Șterge proiectul",
+                  )}
                   onClick={(e) => handleDeleteClick(project, e)}
                 >
                   <Trash2 size={18} />
@@ -426,18 +444,32 @@ const ClientProjectsManager = () => {
         onClose={() => setShowConfirmDelete(false)}
         onConfirm={confirmDelete}
         title={t("common.confirmDelete", "Confirmare ștergere")}
-        message={t("dashboard.clientProjectsManager.deleteMessageFull", "Ești sigur că vrei să ștergi proiectul {{name}} pentru clientul {{client}}?", { 
-          name: deleteProjectData?.title || "", 
-          client: deleteProjectData?.clientName || deleteProjectData?.clientEmail || "" 
-        })}
+        message={t(
+          "dashboard.clientProjectsManager.deleteMessageFull",
+          "Ești sigur că vrei să ștergi proiectul {{name}} pentru clientul {{client}}?",
+          {
+            name: deleteProjectData?.title || "",
+            client:
+              deleteProjectData?.clientName ||
+              deleteProjectData?.clientEmail ||
+              "",
+          },
+        )}
       />
 
       <ConfirmModal
         isOpen={showConfirmFinish}
         onClose={() => setShowConfirmFinish(false)}
         onConfirm={confirmFinish}
-        title={t("dashboard.clientProjectsManager.confirmFinishTitle", "Confirmare Finalizare Proiect")}
-        message={t("dashboard.clientProjectsManager.confirmFinishMessage", "Ești sigur că vrei să marchezi proiectul {{name}} ca fiind finalizat?", { name: finishProjectData?.title || "" })}
+        title={t(
+          "dashboard.clientProjectsManager.confirmFinishTitle",
+          "Confirmare Finalizare Proiect",
+        )}
+        message={t(
+          "dashboard.clientProjectsManager.confirmFinishMessage",
+          "Ești sigur că vrei să marchezi proiectul {{name}} ca fiind finalizat?",
+          { name: finishProjectData?.title || "" },
+        )}
       />
 
       <InvitationSuccessModal
@@ -453,8 +485,19 @@ const ClientProjectsManager = () => {
         title={t("common.error", "Eroare")}
       >
         <p style={{ color: "#ef4444" }}>{errorMessage}</p>
-        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
-          <button className="button button-primary" onClick={() => setErrorMessage("")}>OK</button>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="button button-primary"
+            onClick={() => setErrorMessage("")}
+          >
+            OK
+          </button>
         </div>
       </Modal>
     </div>

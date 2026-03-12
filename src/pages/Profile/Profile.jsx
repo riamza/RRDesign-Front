@@ -100,7 +100,10 @@ const Profile = () => {
       const isStr = error?.message && error.message.startsWith("error.");
       setPasswordStatus({
         type: "error",
-        message: isStr ? t(error.message, error.message) : (error.message || t("profile.changePasswordError", "Eroare la schimbarea parolei.")),
+        message: isStr
+          ? t(error.message, error.message)
+          : error.message ||
+            t("profile.changePasswordError", "Eroare la schimbarea parolei."),
       });
     }
   };
@@ -148,7 +151,8 @@ const Profile = () => {
             </div>
             <div className="stat-item">
               <span className="stat-value">{user?.role || "User"}</span>
-              <span className="stat-label">{"Role" || "Role"}</span>            </div>
+              <span className="stat-label">{"Role" || "Role"}</span>{" "}
+            </div>
           </div>
           {/* Main Content Form */}
           <form onSubmit={handleSubmit} className="profile-content">

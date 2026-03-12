@@ -1,89 +1,97 @@
-import React, { createContext, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserData, clearUserData, fetchUserProfile } from '../store/slices/authSlice';
-import { api } from '../services/api';
-import { logger } from '../services/logger';
+import React, { createContext, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setUserData,
+  clearUserData,
+  fetchUserProfile,
+} from "../store/slices/authSlice";
+import { api } from "../services/api";
+import { logger } from "../services/logger";
 
 const AuthContext = createContext();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
 export const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();
-  const { user, status } = useSelector(state => state.auth);
+  const { user, status } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   // Derived state
   const isAuthenticated = !!user;
   // If we have a token but status is idle, we are initializing (fetching profile)
-  const hasToken = !!localStorage.getItem('access_token');
-  const loading = status === 'loading' || (status === 'idle' && hasToken);
+  const hasToken = !!localStorage.getItem("access_token");
+  const loading = status === "loading" || (status === "idle" && hasToken);
 
   const login = async (email, password) => {
     try {
       const data = await api.auth.login(email, password);
       // data: { accessToken, refreshToken, role }
-      
-      localStorage.setItem('access_token', data.accessToken);
-      localStorage.setItem('refresh_token', data.refreshToken);
-      localStorage.setItem('user_role', data.role);
-      
+
+      localStorage.setItem("access_token", data.accessToken);
+      localStorage.setItem("refresh_token", data.refreshToken);
+      localStorage.setItem("user_role", data.role);
+
       try {
         await dispatch(fetchUserProfile()).unwrap();
       } catch (e) {
         console.error("Failed to fetch profile on login", e);
         const userData = {
-          email: email, 
-          role: data.role
+          email: email,
+          role: data.role,
         };
         dispatch(setUserData(userData));
       }
-      
+
       return { success: true, role: data.role };
     } catch (error) {
       console.error(error);
-      const isApiErrorStr = error?.message && error.message.startsWith('error.');
-      logger.log(`AuthContext`, `login`, error.message, false, error.stack); 
-      
+      const isApiErrorStr =
+        error?.message && error.message.startsWith("error.");
+      logger.log(`AuthContext`, `login`, error.message, false, error.stack);
+
       let errorKey = "error.invalid_credentials";
       if (!isApiErrorStr && error?.message && error.message.includes("500")) {
-          errorKey = "error.server_error";
+        errorKey = "error.server_error";
       }
 
-      return { success: false, error: isApiErrorStr ? error.message : errorKey };
+      return {
+        success: false,
+        error: isApiErrorStr ? error.message : errorKey,
+      };
     }
   };
 
   const logout = () => {
     dispatch(clearUserData());
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user_role');
-    navigate('/login');
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user_role");
+    navigate("/login");
   };
 
   // Check for existing session
   useEffect(() => {
-    const accessToken = localStorage.getItem('access_token');
-    
-    if (accessToken && !user && status === 'idle') {
-       dispatch(fetchUserProfile())
-         .unwrap()
-         .catch(error => {
-            console.error("Failed to fetch profile", error);
-            // If fetch fails (e.g. 401), execute logout
-            // But verify if api interceptor handled it (it might have removed token)
-            if (!localStorage.getItem('access_token')) {
-               logout();
-            }
-         });
+    const accessToken = localStorage.getItem("access_token");
+
+    if (accessToken && !user && status === "idle") {
+      dispatch(fetchUserProfile())
+        .unwrap()
+        .catch((error) => {
+          console.error("Failed to fetch profile", error);
+          // If fetch fails (e.g. 401), execute logout
+          // But verify if api interceptor handled it (it might have removed token)
+          if (!localStorage.getItem("access_token")) {
+            logout();
+          }
+        });
     }
   }, [dispatch, user, status]);
 
@@ -92,9 +100,8 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated,
     loading,
     login,
-    logout
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-

@@ -114,7 +114,7 @@ const UsersManager = () => {
       const response = await api.auth.inviteUser(inviteForm.email);
       setInvitationSuccessData({
         email: inviteForm.email,
-        link: response.invitationLink
+        link: response.invitationLink,
       });
 
       setShowInviteModal(false);
@@ -124,7 +124,12 @@ const UsersManager = () => {
       if (err.message && err.message.startsWith("error.")) {
         setErrorMessage(t(err.message, err.message));
       } else {
-        setErrorMessage(t("dashboard.usersManager.inviteError", "A apărut o eroare la trimiterea invitației: ") + (err.message || "Eroare necunoscută"));
+        setErrorMessage(
+          t(
+            "dashboard.usersManager.inviteError",
+            "A apărut o eroare la trimiterea invitației: ",
+          ) + (err.message || "Eroare necunoscută"),
+        );
       }
     }
   };
@@ -151,7 +156,11 @@ const UsersManager = () => {
         toggleUserStatusAction({ id: actionUserId, status: newStatus }),
       ).unwrap();
     } catch (error) {
-      setErrorMessage(t("dashboard.usersManager.actionFailed", "Acțiunea a eșuat:") + " " + error.message);
+      setErrorMessage(
+        t("dashboard.usersManager.actionFailed", "Acțiunea a eșuat:") +
+          " " +
+          error.message,
+      );
     } finally {
       setActionUserId(null);
       setActionUserName("");
@@ -532,8 +541,19 @@ const UsersManager = () => {
         title={t("common.error", "Eroare")}
       >
         <p style={{ color: "#ef4444" }}>{errorMessage}</p>
-        <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
-          <button className="button button-primary" onClick={() => setErrorMessage("")}>OK</button>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="button button-primary"
+            onClick={() => setErrorMessage("")}
+          >
+            OK
+          </button>
         </div>
       </Modal>
     </div>
