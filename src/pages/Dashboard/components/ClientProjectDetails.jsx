@@ -20,6 +20,7 @@ import {
   ChevronDown,
   Check,
   Info,
+  ClipboardList,
   Layers,
 } from "lucide-react";
 import { api } from "../../../services/api";
@@ -290,17 +291,19 @@ const ClientProjectDetails = () => {
     [0, 1, 2].includes(r.status),
   );
   const proposedReqs = project.requirements.filter((r) =>
-      [3, 4].includes(r.status),
-    );
+    [3, 4].includes(r.status),
+  );
 
-    const totalEstimatedDays = project.requirements.reduce((acc, req) => acc + (req.estimatedDurationDays || 0), 0);
-    let estimatedProjectFinishDate = null;
-    if (project.startDate && totalEstimatedDays > 0) {
-      const d = new Date(project.startDate);
-      d.setDate(d.getDate() + totalEstimatedDays);
-      estimatedProjectFinishDate = d;
-    }
-
+  const totalEstimatedDays = project.requirements.reduce(
+    (acc, req) => acc + (req.estimatedDurationDays || 0),
+    0,
+  );
+  let estimatedProjectFinishDate = null;
+  if (project.startDate && totalEstimatedDays > 0) {
+    const d = new Date(project.startDate);
+    d.setDate(d.getDate() + totalEstimatedDays);
+    estimatedProjectFinishDate = d;
+  }
 
   return (
     <div className="project-details-page">
@@ -334,106 +337,117 @@ const ClientProjectDetails = () => {
           </span>
         </div>
 
-        <div className="info-grid">
-          <div className="info-item">
-            <label>{t("dashboard.clientProjectDetails.client")}</label>
-            <span>{project.userName}</span>
-          </div>
-          <div className="info-item">
+        <div className="general-details-section">
+          <h3 className="section-title">
+            <ClipboardList size={18} className="section-icon text-blue-600" />
+            {t(
+              "dashboard.clientProjectDetails.generalDetails",
+              "Detalii Generale",
+            )}
+          </h3>
+          <div className="info-grid">
+            <div className="info-item">
+              <label>{t("dashboard.clientProjectDetails.client")}</label>
+              <span>{project.userName}</span>
+            </div>
+            <div className="info-item">
               <label>{t("dashboard.clientProjectDetails.startDate")}</label>
               <span>{formatDate(project.startDate)}</span>
             </div>
             {estimatedProjectFinishDate && (
               <div className="info-item">
-                <label>{t("dashboard.clientProjectDetails.estimatedEndDate")}</label>
-                <span>{formatDate(estimatedProjectFinishDate.toISOString())}</span>
-              </div>
-            )}
-            
-            
-          {project.estimatedPrice && (
-            <div
-              className="info-item price-estimate-container"
-              style={{
-                backgroundColor: "#f8f9fa",
-                padding: "12px",
-                borderRadius: "6px",
-                borderLeft: "4px solid #0d6efd",
-                display: "flex",
-                flexDirection: "column",
-                gap: "5px",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <label style={{ margin: 0 }}>
-                  {t(
-                    "dashboard.clientProjectDetails.estimatedPrice",
-                    "Preț Estimat",
-                  )}
+                <label>
+                  {t("dashboard.clientProjectDetails.estimatedEndDate")}
                 </label>
-                <span
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "1.1em",
-                    color: "#2c3e50",
-                  }}
-                >
-                  {project.estimatedPrice} {project.currency || "EUR"}
+                <span>
+                  {formatDate(estimatedProjectFinishDate.toISOString())}
                 </span>
               </div>
+            )}
+
+            {project.estimatedPrice && (
               <div
+                className="info-item price-estimate-container"
                 style={{
-                  fontSize: "0.85em",
-                  color: "#6c757d",
-                  fontStyle: "italic",
-                  lineHeight: "1.4",
+                  backgroundColor: "#f8f9fa",
+                  padding: "12px",
+                  borderRadius: "6px",
+                  borderLeft: "4px solid #0d6efd",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "5px",
                 }}
               >
-                {t(
-                  "dashboard.clientProjectDetails.estimatedPriceNotice",
-                  "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă.",
-                )}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <label style={{ margin: 0 }}>
+                    {t(
+                      "dashboard.clientProjectDetails.estimatedPrice",
+                      "Preț Estimat",
+                    )}
+                  </label>
+                  <span
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: "1.1em",
+                      color: "#2c3e50",
+                    }}
+                  >
+                    {project.estimatedPrice} {project.currency || "EUR"}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    fontSize: "0.85em",
+                    color: "#6c757d",
+                    fontStyle: "italic",
+                    lineHeight: "1.4",
+                  }}
+                >
+                  {t(
+                    "dashboard.clientProjectDetails.estimatedPriceNotice",
+                    "Acest preț este strict estimativ și se poate modifica dacă cerințele discutate inițial se schimbă.",
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-          {project.endDate && (
-            <div className="info-item">
-              <label>{t("dashboard.clientProjectDetails.endDate")}</label>
-              <span>{formatDate(project.endDate)}</span>
-            </div>
-          )}
+            )}
+            {project.endDate && (
+              <div className="info-item">
+                <label>{t("dashboard.clientProjectDetails.endDate")}</label>
+                <span>{formatDate(project.endDate)}</span>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="description-section">
-            <h3 className="section-title">
-              <FileText size={18} className="section-icon text-blue-600" />
-              {t("dashboard.clientProjectDetails.description")}
-            </h3>
-            <div className="section-content">
-              {project.description}
-            </div>
-          </div>
+          <h3 className="section-title">
+            <FileText size={18} className="section-icon text-blue-600" />
+            {t("dashboard.clientProjectDetails.description")}
+          </h3>
+          <div className="section-content">{project.description}</div>
+        </div>
 
-          <div className="tech-section">
-            <h3 className="section-title">
-              <Layers size={18} className="section-icon text-blue-600" />
-              {t("dashboard.clientProjectDetails.technologies")}
-            </h3>
-            <div className="tech-tags">
-              {project.technologies && project.technologies.split(",").map((tech, i) => (
+        <div className="tech-section">
+          <h3 className="section-title">
+            <Layers size={18} className="section-icon text-blue-600" />
+            {t("dashboard.clientProjectDetails.technologies")}
+          </h3>
+          <div className="tech-tags">
+            {project.technologies &&
+              project.technologies.split(",").map((tech, i) => (
                 <span key={i} className="tech-tag">
                   {tech.trim()}
                 </span>
               ))}
-                        </div>
           </div>
         </div>
+      </div>
 
       <div className="requirements-board">
         <div className="board-header">

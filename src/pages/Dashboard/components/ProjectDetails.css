@@ -689,11 +689,11 @@
 
 .section-icon {
   color: #2563eb;
-  background: #eff6ff;
-  padding: 4px;
-  border-radius: 6px;
-  width: 28px;
-  height: 28px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  width: auto;
+  height: auto;
 }
 
 .section-content {

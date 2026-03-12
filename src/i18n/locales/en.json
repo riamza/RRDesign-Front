@@ -438,7 +438,8 @@
       },
       "estimatedPriceNotice": "This price is strictly an estimate. The final price may vary if the initial requirements change.",
       "estimatedPrice": "Estimated Price",
-      "estimatedEndDate": "Estimated Finish Date"
+      "estimatedEndDate": "Estimated Finish Date",
+      "generalDetails": "General Details"
     },
     "financeManager": {
       "title": "Financial Management",
