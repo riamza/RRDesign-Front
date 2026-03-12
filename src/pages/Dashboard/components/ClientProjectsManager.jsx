@@ -521,19 +521,22 @@ const ClientProjectsManager = () => {
       />
 
       <ConfirmModal
-        isOpen={showConfirmFinish}
-        onClose={() => setShowConfirmFinish(false)}
-        onConfirm={confirmFinish}
-        title={t(
-          "dashboard.clientProjectsManager.confirmFinishTitle",
-          "Confirmare Finalizare Proiect",
-        )}
-        message={t(
-          "dashboard.clientProjectsManager.confirmFinishMessage",
-          "Ești sigur că vrei să marchezi proiectul {{name}} ca fiind finalizat?",
-          { name: finishProjectData?.title || "" },
-        )}
-      />
+          isOpen={showConfirmFinish}
+          onClose={() => setShowConfirmFinish(false)}
+          onConfirm={confirmFinish}
+          title={t(
+            "dashboard.clientProjectsManager.confirmFinishTitle",
+            "Confirmare Finalizare Proiect",
+          )}
+          message={t(
+            "dashboard.clientProjectsManager.confirmFinishMessage",
+            "Ești sigur că vrei să marchezi proiectul {{name}} ca fiind finalizat?",
+            { name: finishProjectData?.title || "" },
+          )}
+          confirmText={t("dashboard.clientProjectsManager.finishBtn", "Finalizează")}
+          cancelText={t("common.cancel", "Anulează")}
+          type="success"
+        />
 
       <InvitationSuccessModal
         isOpen={!!invitationSuccessData}

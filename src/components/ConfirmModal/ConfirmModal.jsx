@@ -1,9 +1,18 @@
 import React from "react";
-import { AlertTriangle, X } from "lucide-react";
+import { AlertTriangle, CheckCircle, Info, X } from "lucide-react";
 import { useScrollLock } from "../../hooks/useScrollLock";
 import "./ConfirmModal.css";
 
-const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
+const ConfirmModal = ({ 
+  isOpen, 
+  onClose, 
+  onConfirm, 
+  title, 
+  message, 
+  confirmText = "Șterge", 
+  cancelText = "Anulează", 
+  type = "danger" 
+}) => {
   useScrollLock(isOpen);
 
   if (!isOpen) return null;
@@ -11,6 +20,15 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
   const handleConfirm = () => {
     onConfirm();
     onClose();
+  };
+
+  const getIcon = () => {
+    switch (type) {
+      case "success": return <CheckCircle size={48} />;
+      case "info": return <Info size={48} />;
+      case "danger":
+      default: return <AlertTriangle size={48} />;
+    }
   };
 
   return (
@@ -23,8 +41,8 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
           <X size={20} />
         </button>
 
-        <div className="confirm-modal-icon">
-          <AlertTriangle size={48} />
+        <div className={`confirm-modal-icon icon-${type}`}>
+          {getIcon()}
         </div>
 
         <div className="confirm-modal-body">
@@ -34,10 +52,10 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
 
         <div className="confirm-modal-actions">
           <button className="btn-cancel" onClick={onClose}>
-            Anulează
+            {cancelText}
           </button>
-          <button className="btn-confirm" onClick={handleConfirm}>
-            Șterge
+          <button className={`btn-action btn-${type}`} onClick={handleConfirm}>
+            {confirmText}
           </button>
         </div>
       </div>
