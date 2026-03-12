@@ -40,7 +40,7 @@ const ClientProjectsManager = () => {
 
   // Data States
   const [editingId, setEditingId] = useState(null);
-  const [deleteId, setDeleteId] = useState(null);
+  const [deleteProjectData, setDeleteProjectData] = useState(null);
   const [finishProjectData, setFinishProjectData] = useState(null);
   const [invitationSuccessData, setInvitationSuccessData] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -141,23 +141,23 @@ const ClientProjectsManager = () => {
     }
   };
 
-  const handleDeleteClick = (id, e) => {
+  const handleDeleteClick = (project, e) => {
     e.stopPropagation();
-    setDeleteId(id);
+    setDeleteProjectData(project);
     setShowConfirmDelete(true);
   };
 
   const confirmDelete = async () => {
-    if (deleteId) {
+    if (deleteProjectData) {
       try {
-        await api.deleteClientProject(deleteId);
+        await api.deleteClientProject(deleteProjectData.id);
         reloadProjects();
       } catch (error) {
         console.error("Error deleting project:", error);
       }
     }
     setShowConfirmDelete(false);
-    setDeleteId(null);
+    setDeleteProjectData(null);
   };
 
   const handleFinish = (project, e) => {
@@ -262,7 +262,7 @@ const ClientProjectsManager = () => {
                 <button
                   className="action-icon-btn delete"
                   title={t("dashboard.clientProjectsManager.delete", "Șterge proiectul")}
-                  onClick={(e) => handleDeleteClick(project.id, e)}
+                  onClick={(e) => handleDeleteClick(project, e)}
                 >
                   <Trash2 size={18} />
                 </button>
@@ -426,7 +426,10 @@ const ClientProjectsManager = () => {
         onClose={() => setShowConfirmDelete(false)}
         onConfirm={confirmDelete}
         title={t("common.confirmDelete", "Confirmare ștergere")}
-        message={t("dashboard.clientProjectsManager.deleteMessage", "Ești sigur că vrei să ștergi acest proiect?")}
+        message={t("dashboard.clientProjectsManager.deleteMessageFull", "Ești sigur că vrei să ștergi proiectul {{name}} pentru clientul {{client}}?", { 
+          name: deleteProjectData?.title || "", 
+          client: deleteProjectData?.clientName || deleteProjectData?.clientEmail || "" 
+        })}
       />
 
       <ConfirmModal
@@ -434,7 +437,7 @@ const ClientProjectsManager = () => {
         onClose={() => setShowConfirmFinish(false)}
         onConfirm={confirmFinish}
         title={t("dashboard.clientProjectsManager.confirmFinishTitle", "Confirmare Finalizare Proiect")}
-        message={t("dashboard.clientProjectsManager.confirmFinishMessage", "Ești sigur că vrei să marchezi proiectul {name} ca fiind finalizat?", { name: finishProjectData?.title || "" })}
+        message={t("dashboard.clientProjectsManager.confirmFinishMessage", "Ești sigur că vrei să marchezi proiectul {{name}} ca fiind finalizat?", { name: finishProjectData?.title || "" })}
       />
 
       <InvitationSuccessModal

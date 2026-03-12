@@ -7,10 +7,26 @@ const CookieBanner = () => {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
 
+  const COOKIE_NAME = "RRDesign_CookieConsent";
+
+  const getConsent = () => {
+    const match = document.cookie.match(new RegExp('(^| )' + COOKIE_NAME + '=([^;]+)'));
+    if (match) return match[2];
+    return localStorage.getItem("cookieConsent");
+  };
+
+  const setConsent = (value) => {
+    const d = new Date();
+    d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000)); // 1 year
+    document.cookie = `${COOKIE_NAME}=${value};expires=${d.toUTCString()};path=/;SameSite=Lax`;
+    localStorage.setItem("cookieConsent", value);
+    setIsVisible(false);
+  };
+
   useEffect(() => {
     // Check if user has already made a choice
-    const consent = localStorage.getItem("cookieConsent");
-    if (consent === null) {
+    const consent = getConsent();
+    if (!consent) {
       // Delay slightly for smooth entrance
       const timer = setTimeout(() => setIsVisible(true), 1000);
       return () => clearTimeout(timer);
@@ -18,13 +34,11 @@ const CookieBanner = () => {
   }, []);
 
   const handleAccept = () => {
-    localStorage.setItem("cookieConsent", "true");
-    setIsVisible(false);
+    setConsent("true");
   };
 
   const handleDecline = () => {
-    localStorage.setItem("cookieConsent", "false");
-    setIsVisible(false);
+    setConsent("false");
   };
 
   if (!isVisible) return null;

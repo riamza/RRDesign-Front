@@ -837,7 +837,7 @@ const FinanceManager = () => {
           }}
           onConfirm={confirmDelete}
           title={fm("confirmDeleteTitle")}
-          message={fm("confirmDelete").replace("{name}", deleteItemName)}
+          message={fm("confirmDelete", { name: deleteItemName })}
         />
       )}
     </div>

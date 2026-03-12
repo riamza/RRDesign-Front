@@ -341,8 +341,8 @@
       "projectsCount": "Number of projects",
       "suspendReason": "Suspension reason",
       "confirmSuspend": "Suspend User",
-      "confirmSuspendMessage": "Are you sure you want to suspend user \"{name}\"? They will no longer be able to access the application.",
-      "userActivated": "User {name} has been activated.",
+      "confirmSuspendMessage": "Are you sure you want to suspend user \"{{name}}\"? They will no longer be able to access the application.",
+      "userActivated": "User {{name}} has been activated.",
       "invitationSent": "Invitation sent to {email}!",
       "invitationResent": "Invitation resent to {email}!"
     },
@@ -475,7 +475,7 @@
       "chartIncomeVsExpenses": "Income vs Expenses (Monthly)",
       "chartNetProfit": "Net Profit Evolution",
       "chartTrends": "Financial Trends",
-      "confirmDelete": "Are you sure you want to delete \"{name}\"?",
+      "confirmDelete": "Are you sure you want to delete \"{{name}}\"?",
       "confirmDeleteTitle": "Confirm deletion"
     }
   },

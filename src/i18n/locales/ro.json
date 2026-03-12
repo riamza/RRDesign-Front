@@ -341,8 +341,8 @@
       "projectsCount": "Număr proiecte",
       "suspendReason": "Motiv suspendare",
       "confirmSuspend": "Suspendă Utilizator",
-      "confirmSuspendMessage": "Ești sigur că vrei să suspendezi utilizatorul \"{name}\"? Acesta nu va mai putea accesa aplicația.",
-      "userActivated": "Utilizatorul {name} a fost activat.",
+      "confirmSuspendMessage": "Ești sigur că vrei să suspendezi utilizatorul \"{{name}}\"? Acesta nu va mai putea accesa aplicația.",
+      "userActivated": "Utilizatorul {{name}} a fost activat.",
       "invitationSent": "Invitație trimisă către {email}!",
       "invitationResent": "Invitație retrimisă către {email}!"
     },
@@ -475,7 +475,7 @@
       "chartIncomeVsExpenses": "Încasări vs Cheltuieli (Lunar)",
       "chartNetProfit": "Evoluție Profit Net",
       "chartTrends": "Tendințe Financiare",
-      "confirmDelete": "Sigur vrei să ștergi \"{name}\"?",
+      "confirmDelete": "Sigur vrei să ștergi \"{{name}}\"?",
       "confirmDeleteTitle": "Confirmare ștergere"
     }
   },
