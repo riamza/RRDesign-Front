@@ -66,6 +66,7 @@ const Contact = () => {
       <SEO
         title={t("seo.contact.title")}
         description={t("seo.contact.description")}
+        url="https://rrdesign.ro/contact"
       />
       <section className="page-header">
         <div className="container">

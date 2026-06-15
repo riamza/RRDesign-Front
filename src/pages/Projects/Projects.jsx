@@ -93,6 +93,7 @@ const Projects = () => {
       <SEO
         title={t("seo.projects.title")}
         description={t("seo.projects.description")}
+        url="https://rrdesign.ro/projects"
       />
       <section className="page-header">
         <div className="container">

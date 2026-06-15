@@ -1,14 +1,16 @@
-﻿import React from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
-const SEO = ({ title, description, keywords, image, url, type = 'website', jsonLd }) => {
+const SITE_TITLE = 'RRDesign - Dezvoltare Software & Web Design';
+const DEFAULT_TITLE = 'RRDesign - Aplicații Web & Site-uri pentru Afaceri';
+
+const SEO = ({ title, description, keywords, image, url, type = 'website', jsonLd, noindex = false }) => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language || 'ro';
 
-  const siteTitle = 'RRDesign - Software Solutions';
-  const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+  const fullTitle = title ? `${title} | ${SITE_TITLE}` : DEFAULT_TITLE;
 
   const defaultDescription = 'RRDesign oferă soluții software complete: site-uri de prezentare, magazine online, aplicații web și mobile, design UX/UI și SEO.';
   const metaDescription = description || t('seo.defaultDescription', defaultDescription);
@@ -17,7 +19,7 @@ const SEO = ({ title, description, keywords, image, url, type = 'website', jsonL
   const metaKeywords = keywords || t('seo.defaultKeywords', defaultKeywords);
 
   const metaImage = image || 'https://rrdesign.ro/og-image.jpg';
-  const metaUrl = url || window.location.href;
+  const metaUrl = url || (window.location.origin + window.location.pathname);
 
   return (
     <Helmet>
@@ -29,6 +31,7 @@ const SEO = ({ title, description, keywords, image, url, type = 'website', jsonL
       <meta name="description" content={metaDescription} />
       <meta name="keywords" content={metaKeywords} />
       <link rel="canonical" href={metaUrl} />
+      {noindex && <meta name="robots" content="noindex,nofollow" />}
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
@@ -62,7 +65,8 @@ SEO.propTypes = {
   image: PropTypes.string,
   url: PropTypes.string,
   type: PropTypes.string,
-  jsonLd: PropTypes.object
+  jsonLd: PropTypes.object,
+  noindex: PropTypes.bool,
 };
 
 export default SEO;

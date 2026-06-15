@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Palette, Briefcase, FileText, DollarSign, Mail, LogOut, Users, TrendingUp } from 'lucide-react';
 import './Dashboard.css';
+import SEO from '../../components/SEO/SEO';
 import { useAuth } from '../../context/AuthContext';
 import ServicesManager from './components/ServicesManager';
 import ProjectsManager from './components/ProjectsManager';
@@ -26,7 +27,7 @@ const Dashboard = () => {
 
   return (
     <div className="admin-dashboard-wrapper">
-      
+      <SEO title="Dashboard Admin" noindex />
       <main className="dashboard-content">
         {activeTab === 'services' && <ServicesManager />}
         {activeTab === 'projects' && <ProjectsManager />}

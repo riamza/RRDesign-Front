@@ -57,8 +57,8 @@ const Home = () => {
   return (
     <div className="home">
       <SEO
-        title={t("seo.home.title")}
         description={t("seo.home.description")}
+        url="https://rrdesign.ro/"
       />
       {/* Hero Section */}
       <section className="hero">

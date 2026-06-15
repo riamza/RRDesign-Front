@@ -24,6 +24,8 @@
     "recharts": "^3.7.0"
   },
   "devDependencies": {
+    "@prerenderer/renderer-puppeteer": "^1.2.4",
+    "@prerenderer/rollup-plugin": "^0.3.12",
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.0.8"
   }

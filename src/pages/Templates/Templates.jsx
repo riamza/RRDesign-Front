@@ -59,10 +59,11 @@ const Templates = () => {
 
   return (
     <div className="templates-page">
-      <SEO 
-        title={t('seo.templates.title')} 
-        description={t('seo.templates.description')} 
-        keywords={t('seo.templates.keywords')} 
+      <SEO
+        title={t('seo.templates.title')}
+        description={t('seo.templates.description')}
+        keywords={t('seo.templates.keywords')}
+        url="https://rrdesign.ro/templates"
       />
       <section className="page-header">
         <div className="container">

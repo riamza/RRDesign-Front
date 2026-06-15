@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../../context/AuthContext";
+import SEO from "../../../components/SEO/SEO";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
@@ -307,6 +308,7 @@ const ClientProjectDetails = () => {
 
   return (
     <div className="project-details-page">
+      <SEO title="Detalii Proiect" noindex />
       <div className="details-header">
         <button
           className="btn-back"

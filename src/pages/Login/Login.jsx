@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import "./Login.css";
 import Button from "../../components/Button/Button";
 import { useAuth } from "../../context/AuthContext";
+import SEO from "../../components/SEO/SEO";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -49,6 +50,7 @@ const Login = () => {
 
   return (
     <div className="login-page">
+      <SEO title="Autentificare" url="https://rrdesign.ro/login" noindex />
       <div className="login-container">
         <div className="login-box">
           <div className="login-header">

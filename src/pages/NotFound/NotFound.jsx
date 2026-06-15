@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import { Home } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import "./NotFound.css";
+import SEO from "../../components/SEO/SEO";
 
 const NotFound = () => {
   const { t } = useTranslation();
 
   return (
     <div className="not-found-page">
+      <SEO title="404 - Pagina negăsită" noindex />
       <h1>404</h1>
       <h2>{t("notfound.title", "Oops! Pagina negăsită")}</h2>
       <p>

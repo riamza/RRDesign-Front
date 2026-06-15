@@ -7,6 +7,7 @@ import { api } from "../../services/api";
 import PageHeader from "../../components/PageHeader/PageHeader";
 import "../../pages/Dashboard/components/Manager.css"; // Reusing admin styles
 import "./MyProjects.css";
+import SEO from "../../components/SEO/SEO";
 
 const MyProjects = () => {
   const { t } = useTranslation();
@@ -30,6 +31,7 @@ const MyProjects = () => {
 
   return (
     <div className="page-layout my-projects-page">
+      <SEO title="Proiectele Mele" noindex />
       <PageHeader
         icon={FolderKanban}
         title={t("myProjects.title", "My Projects")}

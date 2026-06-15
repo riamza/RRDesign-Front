@@ -136,6 +136,7 @@ const Services = () => {
         title={t("seo.services.title")}
         description={t("seo.services.description")}
         keywords={t("seo.services.keywords")}
+        url="https://rrdesign.ro/services"
       />
       <section className="page-header">
         <div className="container">

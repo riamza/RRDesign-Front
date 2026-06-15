@@ -6,6 +6,7 @@ import { User, Mail, Shield, Save, Edit2, X, Camera, Lock } from "lucide-react";
 import Modal from "../../components/Modal/Modal";
 import { getInitials } from "../../utils/stringUtils";
 import "./Profile.css";
+import SEO from "../../components/SEO/SEO";
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -116,6 +117,7 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
+      <SEO title="Profilul Meu" noindex />
       <div className="profile-wrapper">
         <div className="profile-card">
           {/* Header Banner */}
@@ -223,7 +225,7 @@ const Profile = () => {
               </div>
 
               <div style={{ marginBottom: "20px" }}>
-                <label className="info-label">{t("profile.password")}</label>
+                <label className="info-label">{t("profile.password", "Password")}</label>
                 <div className="info-value">******</div>
               </div>
 

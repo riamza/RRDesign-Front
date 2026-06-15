@@ -13,6 +13,7 @@ import PageHeader from "../../components/PageHeader/PageHeader";
 import Modal from "../../components/Modal/Modal";
 import { api } from "../../services/api";
 import "./Messages.css";
+import SEO from "../../components/SEO/SEO";
 
 const Messages = () => {
   const { t } = useTranslation();
@@ -183,6 +184,7 @@ const Messages = () => {
 
   return (
     <div className="page-layout messages-page">
+      <SEO title="Mesaje" noindex />
       <PageHeader
         icon={MessageSquare}
         title={t("messages.title")}

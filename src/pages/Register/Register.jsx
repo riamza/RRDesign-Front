@@ -9,6 +9,7 @@ import {
 } from "../../store/slices/authSlice";
 import { api } from "../../services/api";
 import "./Register.css"; // We'll create this or reuse Login styles
+import SEO from "../../components/SEO/SEO";
 
 const Register = () => {
   const { t } = useTranslation();
@@ -200,6 +201,7 @@ const Register = () => {
 
   return (
     <div className="register-container">
+      <SEO title="Creare cont" url="https://rrdesign.ro/register" noindex />
       <div className="register-card">
         <h2>{t("register.completeProfile", "Complete Your Profile")}</h2>
         <p className="register-email">
