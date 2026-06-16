@@ -348,7 +348,7 @@
 
 .manager-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
   gap: 2rem;
 }
 
@@ -487,8 +487,17 @@
   .manager-list {
     grid-template-columns: 1fr;
   }
+
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .manager-form {
+    padding: 1.5rem;
+  }
+
+  .dashboard-content {
+    padding: 0 1rem;
   }
 }
 
@@ -1185,15 +1194,21 @@
 
 .inbox-content {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: min(400px, 45%) 1fr;
   flex: 1;
   overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .inbox-content {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Users Manager Styles */
 .users-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: 2rem;
 }
 
@@ -1350,7 +1365,7 @@
 /* Finance Manager Styles */
 .finance-summary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -1848,7 +1863,7 @@
 
 .services-manager-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(350px, 100%), 1fr));
   gap: 2.5rem;
   align-items: start;
   margin-top: 2rem;

@@ -3,7 +3,8 @@
   align-items: center;
   justify-content: center;
   background: #f8fafc;
-  padding: 20px;
+  padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  min-height: 100vh;
 }
 
 .register-card,
@@ -15,6 +16,17 @@
   width: 100%;
   max-width: 500px;
   animation: fadeIn 0.5s ease-out;
+}
+
+@media (max-width: 480px) {
+  .register-card,
+  .error-card {
+    padding: 24px 20px;
+  }
+
+  .register-card h2 {
+    font-size: 1.5rem;
+  }
 }
 
 .register-card h2 {

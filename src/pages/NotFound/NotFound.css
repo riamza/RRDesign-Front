@@ -5,7 +5,17 @@
   align-items: center;
   min-height: 70vh;
   text-align: center;
-  padding: 40px 20px;
+  padding: 40px max(20px, env(safe-area-inset-right)) 40px max(20px, env(safe-area-inset-left));
+}
+
+@media (max-width: 480px) {
+  .not-found-page h1 {
+    font-size: 4rem;
+  }
+
+  .not-found-page h2 {
+    font-size: 1.5rem;
+  }
 }
 
 .not-found-page h1 {

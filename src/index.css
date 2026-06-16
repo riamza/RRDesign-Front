@@ -44,6 +44,7 @@ body {
   color: var(--text-color);
   background: var(--white);
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 #root {
@@ -55,7 +56,16 @@ body {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 max(1rem, env(safe-area-inset-right, 1rem));
+  padding-left: max(1rem, env(safe-area-inset-left, 1rem));
+  padding-right: max(1rem, env(safe-area-inset-right, 1rem));
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: max(2rem, env(safe-area-inset-left, 2rem));
+    padding-right: max(2rem, env(safe-area-inset-right, 2rem));
+  }
 }
 
 /* Smooth Scrolling */
@@ -132,7 +142,7 @@ a {
 
 /* Page Header - Reusable across all pages */
 .page-header {
-  padding: 3rem 3rem 3rem;
+  padding: 3rem 0;
   background: linear-gradient(135deg, #fff5f5 0%, #fff9e5 100%);
   text-align: center;
 }
@@ -140,7 +150,6 @@ a {
 .page-header .container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 0 2rem;
 }
 
 .page-title {
@@ -216,7 +225,7 @@ a {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
 }
 
 .modal-content {
@@ -408,7 +417,15 @@ a {
 .page-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding-left: max(1rem, env(safe-area-inset-left, 1rem));
+  padding-right: max(1rem, env(safe-area-inset-right, 1rem));
+}
+
+@media (min-width: 640px) {
+  .page-container {
+    padding-left: max(2rem, env(safe-area-inset-left, 2rem));
+    padding-right: max(2rem, env(safe-area-inset-right, 2rem));
+  }
 }
 
 /* Stat Card - Pentru statistici */
@@ -521,6 +538,16 @@ a {
   .modal-body {
     padding: 1.5rem;
   }
+
+  .page-header {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.75rem;
+  }
 }
 
 /* Layout with Sidebar - Reusable for user pages */
@@ -536,6 +563,13 @@ a {
 }
 
 @media (max-width: 1024px) {
+  .page-content {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+}
+
+@media (max-width: 640px) {
   .page-content {
     margin-left: 0;
     width: 100%;

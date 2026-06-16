@@ -1,14 +1,22 @@
 .footer {
   background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
   color: #ECF0F1;
-  padding: 4rem 0 2rem;
+  padding: 4rem 0 max(2rem, env(safe-area-inset-bottom));
   margin-top: 6rem;
 }
 
 .footer .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding-left: max(1rem, env(safe-area-inset-left, 1rem));
+  padding-right: max(1rem, env(safe-area-inset-right, 1rem));
+}
+
+@media (min-width: 640px) {
+  .footer .container {
+    padding-left: max(2rem, env(safe-area-inset-left, 2rem));
+    padding-right: max(2rem, env(safe-area-inset-right, 2rem));
+  }
 }
 
 .footer-content {

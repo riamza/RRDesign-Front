@@ -174,7 +174,7 @@
   color: #dc2626;
 }
 
-/* Mobile responsive */
+/* Tablet: icon-only sidebar */
 @media (max-width: 1024px) {
   .user-sidebar {
     transform: none;
@@ -189,7 +189,7 @@
   }
 
   .user-sidebar .link-label,
-  .user-sidebar .user-details, 
+  .user-sidebar .user-details,
   .user-sidebar .user-badge,
   .user-sidebar .logout-label {
     display: none;
@@ -217,5 +217,12 @@
 
   .user-sidebar .sidebar-footer {
     padding: 1rem 0.5rem;
+  }
+}
+
+/* Mobile: hide sidebar completely */
+@media (max-width: 640px) {
+  .user-sidebar {
+    display: none;
   }
 }
