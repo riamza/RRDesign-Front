@@ -6,7 +6,6 @@ import { fetchServices } from "../../store/slices/servicesSlice";
 import { Monitor, Smartphone, Cloud } from "lucide-react";
 import "./Home.css";
 import Button from "../../components/Button/Button";
-import { companyInfo } from "../../utils/constants";
 import { getIcon } from "../../utils/iconMapper";
 import SEO from "../../components/SEO/SEO";
 
@@ -72,7 +71,7 @@ const Home = () => {
               </span>
               {t("home.hero.titleEnd")}
             </h1>
-            <p className="hero-description">{companyInfo.description}</p>
+            <p className="hero-description">{t("home.hero.description")}</p>
             <div className="hero-buttons">
               <Button variant="primary" onClick={() => navigate("/contact")}>
                 {t("home.cta.button")}
@@ -125,7 +124,7 @@ const Home = () => {
           </div>
           <div className="services-cta">
             <Button variant="primary" onClick={() => navigate("/services")}>
-              Vezi toate serviciile
+              {t("home.services.viewAll")}
             </Button>
           </div>
         </div>

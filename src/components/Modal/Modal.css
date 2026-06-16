@@ -17,12 +17,9 @@
   border-radius: 12px;
   width: 90%;
   max-width: 800px;
-  max-height: calc(
-    90vh - env(safe-area-inset-bottom, 50px) - env(safe-area-inset-top, 20px)
-  );
-  margin-top: env(safe-area-inset-top, 20px);
-  margin-bottom: calc(env(safe-area-inset-bottom, 50px) + 20px);
+  max-height: min(90vh, calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 2rem));
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   position: relative;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -72,7 +69,7 @@
 
 .modal-body {
   padding: 1.5rem;
-  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 20px));
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
 }
 
 /* Scrollbar styling for the modal content */

@@ -15,19 +15,19 @@
     "server_error": "A server error occurred (500). We apologize."
   },
   "seo": {
-    "defaultDescription": "RRDesign offers complete software solutions: presentation websites, online stores, web and mobile applications.",
-    "defaultKeywords": "software, web design, app development, e-commerce, presentation site, seo",
+    "defaultDescription": "We build digital products for startups and companies: web apps, platforms, and MVPs, with React and .NET.",
+    "defaultKeywords": "web product development, web apps, startup mvp, saas platform, react, .net, web design",
     "home": {
-      "description": "RRDesign transforms ideas into digital reality through custom software solutions."
+      "description": "A technical team that builds your digital product — from idea to launch. Web apps, platforms, and MVPs, delivered fast."
     },
     "services": {
       "title": "Software Services",
-      "description": "Discover our services: Web Development, Online Stores, Custom Apps, and SEO Optimization.",
-      "keywords": "web services, create website, online store, custom apps"
+      "description": "Full web product development: custom apps, SaaS platforms, MVPs, and e-commerce. React, .NET, scalable architecture.",
+      "keywords": "web app development, mvp, saas platform, online store, custom apps"
     },
     "projects": {
       "title": "Project Portfolio",
-      "description": "See the latest projects built by the RRDesign team: presentation websites, e-commerce platforms, and web apps."
+      "description": "Products and platforms built by the RRDesign team — web apps, startup MVPs, and e-commerce platforms."
     },
     "templates": {
       "title": "Premium Templates",
@@ -36,7 +36,7 @@
     },
     "contact": {
       "title": "Contact",
-      "description": "Contact the RRDesign team for a custom quote or to discuss your project."
+      "description": "Tell us about your project — we'll reply fast and to the point."
     }
   },
   "header": {
@@ -60,6 +60,7 @@
     "logout": "Logout"
   },
   "footer": {
+    "tagline": "Web products built by engineers, delivered fast.",
     "contact": "Contact",
     "links": "Links",
     "allRightsReserved": "All rights reserved.",
@@ -70,25 +71,27 @@
   },
   "home": {
     "hero": {
-      "title": "Transforming ideas into",
-      "titleHighlight": "exceptional software",
-      "titleEnd": "solutions",
+      "title": "We build your digital product,",
+      "titleHighlight": "from idea to launch",
+      "titleEnd": "",
+      "description": "We're a small, technical team helping startups and companies build their web products — apps, platforms, and MVPs. We use React and .NET, ship fast, and skip the bureaucracy.",
       "viewProjects": "View projects",
-      "contactUs": "Contact us"
+      "contactUs": "Let's talk"
     },
     "services": {
-      "title": "Our services",
-      "description": "We offer complete solutions for your digital needs"
+      "title": "How we can help",
+      "description": "From the first sketch to the launched product — we handle everything on the technical side.",
+      "viewAll": "View all services"
     },
     "cta": {
-      "title": "Ready to get started?",
-      "description": "Let's turn your ideas into reality",
-      "button": "Start a project"
+      "title": "Got a product idea?",
+      "description": "Let's talk about taking it from concept to launch, hassle-free.",
+      "button": "Let's talk"
     }
   },
   "services": {
-    "pageTitle": "Our services",
-    "pageDescription": "We offer complete software development solutions tailored to your business needs",
+    "pageTitle": "How we can help",
+    "pageDescription": "We build complete web products — from fast MVPs for startups to custom platforms and applications.",
     "whatWeOffer": "What we offer:",
     "recommendedFor": "Recommended for:",
     "price": "Price:",
@@ -100,20 +103,20 @@
       "button": "Request Quote"
     },
     "cta": {
-      "title": "Let's talk about your project",
-      "description": "We're ready to turn your vision into reality",
+      "title": "Tell us what you want to build",
+      "description": "Book a call and let's map out the best path to your product together.",
       "button": "Request a free consultation"
     }
   },
   "projects": {
     "pageTitle": "Our projects",
-    "pageDescription": "Discover our portfolio of successfully completed projects",
+    "pageDescription": "Products and platforms we've built — from MVPs to full applications.",
     "viewDetails": "View details",
     "technologies": "Technologies used:",
     "features": "Features:",
     "cta": {
-      "title": "Your next success story starts here",
-      "description": "Let's create something extraordinary together",
+      "title": "Your product could be next",
+      "description": "Let's build something people actually use.",
       "button": "Discuss your project"
     }
   },
@@ -132,7 +135,7 @@
   },
   "contact": {
     "pageTitle": "Contact us",
-    "pageDescription": "Let's discuss how we can help you achieve your goals",
+    "pageDescription": "Tell us about your project — we'll reply fast and to the point.",
     "info": {
       "title": "Contact information",
       "description": "We're here to answer all your questions and help with your project.",
@@ -635,7 +638,7 @@
       "sec3": {
         "title": "3. Intellectual Property Rights",
         "p1": "Original content on rrdesign.ro (texts, logos, portfolio images, interface graphics, front-end/back-end source code) is subject to copyright and is the exclusive intellectual property of RRDesign.",
-        "p2": "You may not copy, reproduce, or distribute sections or templates found on this site without the prior written consent of RRDesign. Products / Websites developed for clients (final deliverables) become the client’s intellectual property only under the terms agreed upon in the final commercial contracts and after payment confirmation."
+        "p2": "You may not copy, reproduce, or distribute sections or templates found on this site without the prior written consent of RRDesign. Products / Websites developed for clients (final deliverables) become the client's intellectual property only under the terms agreed upon in the final commercial contracts and after payment confirmation."
       },
       "sec4": {
         "title": "4. Limitation of Liability",

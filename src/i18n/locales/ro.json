@@ -15,19 +15,19 @@
     "server_error": "A apărut o eroare de server (500). Ne cerem scuze."
   },
   "seo": {
-    "defaultDescription": "RRDesign oferă soluții software complete: site-uri de prezentare, magazine online, aplicații web și mobile.",
-    "defaultKeywords": "software, web design, dezvoltare aplicatii, magazin online, site prezentare, seo",
+    "defaultDescription": "Construim produse digitale pentru startup-uri și companii: aplicații web, platforme și MVP-uri, cu React și .NET.",
+    "defaultKeywords": "dezvoltare produs web, aplicatii web, mvp startup, platforma saas, react, .net, web design",
     "home": {
-      "description": "RRDesign transformă ideile în realitate digitală prin soluții software personalizate."
+      "description": "Echipă tehnică ce construiește produsul tău digital — de la idee la lansare. Aplicații web, platforme și MVP-uri, livrate rapid."
     },
     "services": {
       "title": "Servicii Software",
-      "description": "Descoperă serviciile noastre: Dezvoltare Web, Magazine Online, Aplicații Custom și Optimizare SEO.",
-      "keywords": "servicii web, creare site, magazin online, aplicatii custom"
+      "description": "Dezvoltare de produse web complete: aplicații custom, platforme SaaS, MVP-uri și e-commerce. React, .NET, arhitectură scalabilă.",
+      "keywords": "dezvoltare aplicatii web, mvp, platforma saas, magazin online, aplicatii custom"
     },
     "projects": {
       "title": "Portofoliu Proiecte",
-      "description": "Vezi ultimele proiecte realizate de echipa RRDesign: site-uri de prezentare, platforme e-commerce și aplicații web."
+      "description": "Produse și platforme construite de echipa RRDesign — aplicații web, MVP-uri pentru startup-uri și platforme e-commerce."
     },
     "templates": {
       "title": "Template-uri Premium",
@@ -36,7 +36,7 @@
     },
     "contact": {
       "title": "Contact",
-      "description": "Contactează echipa RRDesign pentru o ofertă personalizată sau pentru a discuta despre proiectul tău."
+      "description": "Spune-ne despre proiectul tău — îți răspundem rapid și concret."
     }
   },
   "header": {
@@ -60,6 +60,7 @@
     "logout": "Deconectare"
   },
   "footer": {
+    "tagline": "Produse web construite de ingineri, livrate rapid.",
     "contact": "Contact",
     "links": "Link-uri",
     "allRightsReserved": "Toate drepturile rezervate.",
@@ -70,25 +71,27 @@
   },
   "home": {
     "hero": {
-      "title": "Transformăm idei în",
-      "titleHighlight": "soluții software",
-      "titleEnd": "de excepție",
+      "title": "Construim produsul tău digital,",
+      "titleHighlight": "de la idee la lansare",
+      "titleEnd": "",
+      "description": "Suntem o echipă mică și tehnică ce ajută startup-uri și companii să-și construiască produsele web — aplicații, platforme și MVP-uri. Folosim React și .NET, livrăm rapid și fără birocrație.",
       "viewProjects": "Vezi proiectele",
-      "contactUs": "Contactează-ne"
+      "contactUs": "Hai să vorbim"
     },
     "services": {
-      "title": "Serviciile noastre",
-      "description": "Oferim soluții complete pentru nevoile tale digitale"
+      "title": "Cu ce te putem ajuta",
+      "description": "De la prima schiță până la produsul lansat — ne ocupăm de tot ce ține de partea tehnică.",
+      "viewAll": "Vezi toate serviciile"
     },
     "cta": {
-      "title": "Pregătit să începem?",
-      "description": "Hai să transformăm ideile tale în realitate",
-      "button": "Începe un proiect"
+      "title": "Ai o idee de produs?",
+      "description": "Hai să discutăm cum o ducem de la concept la lansare, fără bătăi de cap.",
+      "button": "Hai să vorbim"
     }
   },
   "services": {
-    "pageTitle": "Serviciile noastre",
-    "pageDescription": "Oferim soluții complete de dezvoltare software adaptate nevoilor business-ului tău",
+    "pageTitle": "Cu ce te putem ajuta",
+    "pageDescription": "Construim produse web complete — de la MVP-uri rapide pentru startup-uri, la platforme și aplicații custom.",
     "whatWeOffer": "Ce oferim:",
     "recommendedFor": "Recomandat pentru:",
     "price": "Preț:",
@@ -100,20 +103,20 @@
       "button": "Cere ofertă"
     },
     "cta": {
-      "title": "Hai să discutăm despre proiectul tău",
-      "description": "Suntem gata să transformăm viziunea ta în realitate",
+      "title": "Spune-ne ce vrei să construiești",
+      "description": "Programează o discuție și vedem împreună cum arată cel mai bun drum spre produsul tău.",
       "button": "Solicită o consultație gratuită"
     }
   },
   "projects": {
     "pageTitle": "Proiectele noastre",
-    "pageDescription": "Descoperă portofoliul nostru de proiecte realizate cu succes",
+    "pageDescription": "Produse și platforme pe care le-am construit — de la MVP-uri la aplicații complete.",
     "viewDetails": "Vezi detalii",
     "technologies": "Tehnologii folosite:",
     "features": "Caracteristici:",
     "cta": {
-      "title": "Următorul proiect de succes poate fi al tău",
-      "description": "Hai să creăm împreună ceva extraordinar",
+      "title": "Următorul produs poate fi al tău",
+      "description": "Hai să construim împreună ceva ce chiar folosesc oamenii.",
       "button": "Discută proiectul tău"
     }
   },
@@ -132,7 +135,7 @@
   },
   "contact": {
     "pageTitle": "Contactează-ne",
-    "pageDescription": "Hai să discutăm despre cum te putem ajuta să îți atingi obiectivele",
+    "pageDescription": "Spune-ne despre proiectul tău — îți răspundem rapid și concret.",
     "info": {
       "title": "Informații de contact",
       "description": "Suntem aici să răspundem la toate întrebările tale și să te ajutăm cu proiectul tău.",

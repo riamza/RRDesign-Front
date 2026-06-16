@@ -15,7 +15,7 @@ const Footer = () => {
               <span className="logo-rr">RR</span>
               <span className="logo-design">Design</span>
             </h3>
-            <p className="footer-tagline">{companyInfo.tagline}</p>
+            <p className="footer-tagline">{t('footer.tagline')}</p>
           </div>
 
           <div className="footer-section">

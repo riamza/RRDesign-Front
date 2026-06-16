@@ -32,6 +32,8 @@
 
 .user-sidebar .sidebar-nav {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
@@ -220,9 +222,16 @@
   }
 }
 
-/* Mobile: hide sidebar completely */
+/* Mobile: keep icon-only sidebar, ensure nav scrolls so footer/logout stays visible */
 @media (max-width: 640px) {
   .user-sidebar {
-    display: none;
+    min-width: 60px;
+    width: 60px;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
+  .user-sidebar .sidebar-link {
+    padding: 0.75rem 0.25rem;
   }
 }
