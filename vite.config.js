@@ -22,6 +22,7 @@ export default defineConfig({
         maxConcurrentRoutes: 1,
         headless: true,
         launchOptions: {
+          executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
           args: ["--no-sandbox", "--disable-setuid-sandbox"],
         },
       }),
