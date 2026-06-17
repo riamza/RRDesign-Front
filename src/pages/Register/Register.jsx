@@ -8,6 +8,7 @@ import {
   invalidateUserCache,
 } from "../../store/slices/authSlice";
 import { api } from "../../services/api";
+import { tokenStorage } from "../../utils/tokenStorage";
 import "./Register.css"; // We'll create this or reuse Login styles
 import SEO from "../../components/SEO/SEO";
 
@@ -147,9 +148,7 @@ const Register = () => {
 
       // Auto login with the response
       if (res.accessToken) {
-        localStorage.setItem("access_token", res.accessToken);
-        localStorage.setItem("refresh_token", res.refreshToken);
-        localStorage.setItem("user_role", res.role);
+        tokenStorage.setTokens(res.accessToken, res.refreshToken, res.role);
 
         try {
           dispatch(invalidateUserCache());

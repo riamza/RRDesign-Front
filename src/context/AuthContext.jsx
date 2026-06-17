@@ -8,6 +8,7 @@ import {
   invalidateUserCache,
 } from "../store/slices/authSlice";
 import { api } from "../services/api";
+import { tokenStorage } from "../utils/tokenStorage";
 import { logger } from "../services/logger";
 
 const AuthContext = createContext();
@@ -27,36 +28,27 @@ export const AuthProvider = ({ children }) => {
 
   // Derived state
   const isAuthenticated = !!user;
-  // If we have a token but status is idle, we are initializing (fetching profile)
-  const hasToken = !!localStorage.getItem("access_token");
-  const loading = status === "loading" || (status === "idle" && hasToken);
+  const hasSession = tokenStorage.hasSession();
+  const loading = status === "loading" || (status === "idle" && hasSession);
 
   const login = async (email, password) => {
     try {
       const data = await api.auth.login(email, password);
-      // data: { accessToken, refreshToken, role }
 
-      localStorage.setItem("access_token", data.accessToken);
-      localStorage.setItem("refresh_token", data.refreshToken);
-      localStorage.setItem("user_role", data.role);
+      tokenStorage.setTokens(data.accessToken, data.refreshToken, data.role);
 
       try {
         dispatch(invalidateUserCache());
         await dispatch(fetchUserProfile()).unwrap();
       } catch (e) {
         console.error("Failed to fetch profile on login", e);
-        const userData = {
-          email: email,
-          role: data.role,
-        };
-        dispatch(setUserData(userData));
+        dispatch(setUserData({ email, role: data.role }));
       }
 
       return { success: true, role: data.role };
     } catch (error) {
       console.error(error);
-      const isApiErrorStr =
-        error?.message && error.message.startsWith("error.");
+      const isApiErrorStr = error?.message && error.message.startsWith("error.");
       logger.log(`AuthContext`, `login`, error.message, false, error.stack);
 
       let errorKey = "error.invalid_credentials";
@@ -73,26 +65,25 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     dispatch(clearUserData());
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user_role");
+    tokenStorage.clearAll();
     navigate("/login");
   };
 
-  // Check for existing session
+  // Restore session on page load
   useEffect(() => {
-    const accessToken = localStorage.getItem("access_token");
-
-    if (accessToken && !user && status === "idle") {
+    if (tokenStorage.hasSession() && !user && status === "idle") {
       dispatch(fetchUserProfile())
         .unwrap()
         .catch((error) => {
-          console.error("Failed to fetch profile", error);
-          // If fetch fails (e.g. 401), execute logout
-          // But verify if api interceptor handled it (it might have removed token)
-          if (!localStorage.getItem("access_token")) {
-            logout();
+          console.error("Failed to restore session:", error);
+          // Dacă tokenStorage a fost curătat de refreshTokenFlow (sesiune expirată)
+          // sau dacă eroarea este explicită de sesiune expirată, logout
+          if (!tokenStorage.hasSession() || error?.message === "Session expired") {
+            tokenStorage.clearAll();
+            dispatch(clearUserData());
+            navigate("/login");
           }
+          // Altfel (eroare de rețea etc.) nu forța logout — user rămâne offline temporar
         });
     }
   }, [dispatch, user, status]);

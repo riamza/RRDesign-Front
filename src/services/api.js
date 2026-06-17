@@ -1,4 +1,5 @@
 import { logger } from "./logger";
+import { tokenStorage } from "../utils/tokenStorage";
 
 const API_URL = import.meta.env.VITE_API_URL || "/api";
 
@@ -6,14 +7,14 @@ const getHeaders = () => {
   const headers = {
     "Content-Type": "application/json",
   };
-  const token = localStorage.getItem("access_token");
+  const token = tokenStorage.getAccessToken();
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
   return headers;
 };
 
-// Function to handle token refresh
+// Singleton promise — prevents parallel refresh races
 let refreshTokenPromise = null;
 
 const refreshTokenFlow = async () => {
@@ -22,8 +23,8 @@ const refreshTokenFlow = async () => {
   }
 
   refreshTokenPromise = (async () => {
-    const accessToken = localStorage.getItem("access_token");
-    const refreshToken = localStorage.getItem("refresh_token");
+    const accessToken = tokenStorage.getAccessToken();
+    const refreshToken = tokenStorage.getRefreshToken();
 
     if (!accessToken || !refreshToken) return null;
 
@@ -38,12 +39,10 @@ const refreshTokenFlow = async () => {
 
         if (response.ok) {
           const data = await response.json();
-          localStorage.setItem("access_token", data.accessToken);
-          localStorage.setItem("refresh_token", data.refreshToken);
-          localStorage.setItem("user_role", data.role);
+          tokenStorage.setTokens(data.accessToken, data.refreshToken, data.role);
           return data.accessToken;
         } else if (response.status === 400 || response.status === 401) {
-          // Tokens are completely invalid, don't retry
+          // Tokens definitiv invalide — nu mai reîncerca
           break;
         }
       } catch (error) {
@@ -52,22 +51,19 @@ const refreshTokenFlow = async () => {
 
       attempt++;
       if (attempt < 3) {
-        // Așteptăm 1 secundă între reîncercări
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
 
-    // Dacă au eșuat toate încercările, curățăm sesiunea
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user_role");
+    // Toate încercările au eșuat — curăță sesiunea
+    tokenStorage.clearAll();
     return null;
   })();
 
   try {
     return await refreshTokenPromise;
   } finally {
-    refreshTokenPromise = null; // reset so next time it can refresh again
+    refreshTokenPromise = null;
   }
 };
 
@@ -105,12 +101,10 @@ const request = async (endpoint, options = {}) => {
 
       const newToken = await refreshTokenFlow();
       if (newToken) {
-        // Retry request with new token
         config.headers["Authorization"] = `Bearer ${newToken}`;
         response = await fetch(url, config);
       } else {
-        // Refresh failed - force disconnect and redirect
-        window.location.href = "/login";
+        // Refresh failed — aruncă eroare, AuthContext gestionează redirect-ul
         throw new Error("Session expired");
       }
     }

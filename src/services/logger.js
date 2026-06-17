@@ -1,3 +1,5 @@
+import { tokenStorage } from "../utils/tokenStorage";
+
 const API_URL = import.meta.env.VITE_API_URL || "/api";
 
 export const logger = {
@@ -9,12 +11,7 @@ export const logger = {
     stackTrace = null,
   ) => {
     try {
-      // Remove console.log for API calls to keep console clean.
-      // if (!isSuccess) {
-      //    console.error(`[${component}] ${action}: ${message} \n${stackTrace || ""}`);
-      // }
-
-      const token = localStorage.getItem("access_token");
+      const token = tokenStorage.getAccessToken();
       await fetch(`${API_URL}/Logs/frontend`, {
         method: "POST",
         headers: {

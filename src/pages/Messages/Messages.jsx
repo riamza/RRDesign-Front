@@ -12,19 +12,19 @@ import {
 import PageHeader from "../../components/PageHeader/PageHeader";
 import Modal from "../../components/Modal/Modal";
 import { api } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 import "./Messages.css";
 import SEO from "../../components/SEO/SEO";
 
 const Messages = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
 
-  // Get user role from storage or context (assuming stored as 'user_role')
-  const userRole = localStorage.getItem("user_role");
-  const isAdmin = userRole === "Admin";
+  const isAdmin = user?.role === "Admin";
 
   useEffect(() => {
     fetchMessages();
